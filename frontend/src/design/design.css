@@ -1,0 +1,46 @@
+/* Les quelques classes du design system. Préfixe ra- (Rescue Atlas) pour ne rien percuter. */
+
+/* Logo et pictos : le SVG sert de masque, la couleur est celle du texte (currentColor). */
+.ra-logo,
+.ra-picto {
+  display: inline-block;
+  vertical-align: middle;
+  background-color: currentColor;
+  mask: var(--ra-masque) center / contain no-repeat;
+}
+
+.ra-logo {
+  --ra-masque: url('../assets/logo/sos-mediterranee.svg');
+  --ra-logo-h: max(var(--ra-logo-hauteur, var(--logo-hauteur-min)), var(--logo-hauteur-min));
+  block-size: var(--ra-logo-h);
+  /* Zone de protection de la charte : la largeur du « E », environ 0,4 fois la hauteur. */
+  margin-block-end: calc(var(--ra-logo-h) * 0.4);
+  aspect-ratio: 491.86 / 158.44;
+  color: var(--couleur-principale);
+}
+
+.ra-logo--blanc {
+  color: var(--couleur-fond); /* blanc, sur fond sombre uniquement, comme le veut la charte */
+}
+
+/* Mode contraste élevé (Windows) : le navigateur force les fonds à la couleur de la page, le
+   masque deviendrait invisible. Une couleur système n'est pas forcée.
+   https://www.w3.org/TR/css-color-adjust-1/ */
+@media (forced-colors: active) {
+  .ra-logo,
+  .ra-picto {
+    background-color: CanvasText;
+  }
+}
+
+.ra-picto {
+  inline-size: var(--ra-picto-taille, 1.5em);
+  block-size: var(--ra-picto-taille, 1.5em);
+}
+
+/* Un bloc sur le fond de la charte (bleu à 10 %). */
+.ra-bloc {
+  padding: var(--espace-2);
+  border-radius: var(--rayon);
+  background: var(--couleur-fond-bloc);
+}

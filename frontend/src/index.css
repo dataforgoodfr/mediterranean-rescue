@@ -1,0 +1,62 @@
+/* Le design system minimal (charte de SOS MEDITERRANEE) : jetons, police, styles de base.
+   Ce qui est fixé et ce qui reste libre : docs/design-system.md */
+@import './design/tokens.css';
+@import './design/design.css';
+
+/* Raleway, la police de la charte, servie depuis le site. Licence SIL OFL 1.1 : assets/fonts/OFL.txt */
+@font-face {
+  font-family: 'Raleway';
+  src: url('./assets/fonts/Raleway-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Raleway';
+  src: url('./assets/fonts/Raleway-Italic-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+body {
+  margin: 0;
+  font-family: var(--police);
+  font-size: var(--taille-texte);
+  line-height: 1.5;
+  color: var(--couleur-texte);
+  background: var(--couleur-fond);
+}
+
+/* Titres : gras, majuscules, en orange (charte). Les titres longs peuvent passer en bleu. */
+h1 {
+  margin: 0 0 var(--espace-2);
+  font-size: var(--taille-titre);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--couleur-secondaire);
+}
+
+/* Intertitres : semi-gras, en gris 90 % (charte). */
+h2 {
+  margin: var(--espace-3) 0 var(--espace-1);
+  font-size: var(--taille-intertitre);
+  font-weight: 600;
+  color: var(--couleur-texte);
+}
+
+a {
+  color: var(--couleur-principale);
+}
+
+:focus-visible {
+  outline: var(--focus);
+  outline-offset: 2px;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--espace-3) var(--espace-2);
+}

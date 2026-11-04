@@ -1,0 +1,43 @@
+# Dependabot propose chaque mois la mise à jour des dépendances, une pull request par zone.
+# Doc : https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: uv
+    directory: "/backend"
+    schedule:
+      interval: monthly
+    groups:
+      backend:
+        patterns: ["*"]
+
+  - package-ecosystem: npm # pnpm se déclare sous « npm »
+    directory: "/frontend"
+    schedule:
+      interval: monthly
+    groups:
+      frontend:
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directories: ["/backend", "/frontend"]
+    schedule:
+      interval: monthly
+    groups:
+      docker:
+        patterns: ["*"]
+
+  - package-ecosystem: pre-commit
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      pre-commit:
+        patterns: ["*"]

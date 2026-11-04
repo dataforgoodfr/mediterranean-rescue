@@ -1,12 +1,38 @@
+# Contrôles lancés à chaque `git commit`, sur les fichiers modifiés seulement.
+# Installation, une fois : voir TECHNICAL.md. Doc : https://pre-commit.com
+# Restent tels qu'ils arrivent : la police et sa licence, qu'on ne retouche pas.
+# 4.4.0 : la première version qui connaît `language: unsupported` (le hook oxlint plus bas).
+minimum_pre_commit_version: "4.4.0"
+exclude: ^frontend/src/assets/fonts/
 repos:
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    # Ruff version.
-    rev: "v0.2.1"
-    hooks:
-      - id: ruff
-        args: [--fix]
+  # Petits contrôles de base, communs à tous les fichiers.
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v6.0.0
     hooks:
-      - id: check-merge-conflict
+      - id: check-merge-conflict # un marqueur <<<<<<< oublié
+      - id: check-added-large-files # un gros fichier, souvent une donnée réelle
+      - id: check-yaml
+        args: [--allow-multiple-documents] # le pnpm-lock.yaml de pnpm 12 en a deux
+      - id: check-json
+        # Les tsconfig de Vite et les réglages de VS Code contiennent des commentaires.
+        exclude: ^(frontend/tsconfig.*\.json|\.vscode/.*\.json)$
       - id: mixed-line-ending
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  # Python : ruff vérifie le style et met en forme le code du backend.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+  # Frontend : oxlint, le même contrôle que `pnpm lint`. Il demande `pnpm install` dans frontend/.
+  # En CI, c'est le job frontend qui le lance (SKIP=oxlint dans le job pre-commit).
+  - repo: local
+    hooks:
+      - id: oxlint
+        name: oxlint (frontend)
+        language: unsupported
+        entry: pnpm --dir frontend lint
+        files: ^frontend/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false

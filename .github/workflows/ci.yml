@@ -1,0 +1,142 @@
+# Intégration continue : GitHub relance ici les vérifications de TECHNICAL.md sur chaque
+# pull request vers main. Une PR ne se merge que si le job « CI terminée » est vert.
+# Doc : https://docs.github.com/fr/actions
+# Les actions sont figées sur un commit (le commentaire donne la version), comme le conseille
+# https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions
+# Dependabot les met à jour (.github/dependabot.yml).
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Un nouveau push sur la même PR annule les vérifications encore en cours. Sur main, chaque
+# commit garde sa vérification complète.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Quelles zones la PR touche-t-elle ? Une PR de documentation ne relance ni le backend ni le
+  # frontend.
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read # pour lister les fichiers modifiés de la PR
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      docker: ${{ steps.filter.outputs.docker }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - '.github/workflows/**'
+            frontend:
+              - 'frontend/**'
+              - '.github/workflows/**'
+            docker:
+              - '**/Dockerfile'
+              - '**/.dockerignore'
+              - 'docker-compose*.yaml'
+              - 'frontend/nginx.conf'
+              - 'backend/uv.lock'
+              - 'frontend/pnpm-lock.yaml'
+              - '.github/workflows/**'
+
+  # Les contrôles de pre-commit (fichiers, style Python), sur tout le dépôt.
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.12.22" # la même que backend/Dockerfile
+      - run: uv run --project backend pre-commit run --all-files --show-diff-on-failure
+        env:
+          SKIP: oxlint # lancé par le job frontend, qui installe les paquets
+
+  # Le backend FastAPI, sur la plus ancienne version de Python acceptée (3.12) :
+  # en local on développe sur une version plus récente.
+  backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.12.22" # la même que backend/Dockerfile
+          python-version: "3.12"
+      - run: uv sync --locked # échoue si uv.lock ne suit pas pyproject.toml
+      - run: uv run pytest
+
+  # Le frontend React : style, tests, types et construction.
+  frontend:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          package_json_file: frontend/package.json # la version de pnpm vient de packageManager
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build # vérifie aussi les types (tsc)
+
+  # Les images Docker se construisent : celles de la prod, et celle du frontend en dev.
+  docker:
+    needs: changes
+    if: needs.changes.outputs.docker == 'true'
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_PASSWORD: ci-seulement # la prod l'exige ; rien n'est lancé ici
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: docker compose -f docker-compose.prod.yaml build
+      - run: docker compose -f docker-compose.dev.yaml build
+
+  # Le seul contrôle à rendre obligatoire sur main. Un job sauté (zone non touchée) compte comme
+  # réussi, un job en échec ou annulé fait échouer celui-ci.
+  ci-terminee:
+    name: CI terminée
+    needs: [changes, pre-commit, backend, frontend, docker]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
+      - run: echo "Tout est vert."

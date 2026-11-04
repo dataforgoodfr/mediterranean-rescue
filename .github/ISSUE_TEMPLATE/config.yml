@@ -1,0 +1,8 @@
+# Pas d'issue libre : chaque issue part d'un modèle, pour que la spec soit complète.
+# Une question ou une idée à discuter se pose d'abord sur le Mattermost de Data for Good.
+blank_issues_enabled: false
+# À ajouter dès que l'adresse du canal du projet est connue :
+# contact_links:
+#   - name: Une question, une idée, je ne connais pas GitHub
+#     url: <adresse du canal Mattermost du projet>
+#     about: Pose-la sur le canal du projet, quelqu'un te répond.

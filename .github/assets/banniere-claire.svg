@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="240" viewBox="0 0 1200 240" role="img" aria-labelledby="t d">
+  <title id="t">Rescue Atlas</title>
+  <desc id="d">La carte des opérations de sauvetage de SOS MEDITERRANEE, construite par des bénévoles de Data for Good.</desc>
+  <rect width="1200" height="240" fill="#EEEDF2"/>
+  <path d="M0 196 C 150 176, 300 216, 450 196 S 750 176, 900 196 S 1100 216, 1200 196" fill="none" stroke="#C9C8D3" stroke-width="3"/>
+  <path d="M0 214 C 150 194, 300 234, 450 214 S 750 194, 900 214 S 1100 234, 1200 214" fill="none" stroke="#C9C8D3" stroke-width="2" opacity="0.6"/>
+  <circle cx="1010" cy="96" r="9" fill="#f03e1b"/>
+  <circle cx="1052" cy="124" r="9" fill="#f03e1b"/>
+  <circle cx="968" cy="132" r="9" fill="#f03e1b"/>
+  <text x="72" y="104" font-family="Raleway, Helvetica, Arial, sans-serif" font-size="56" font-weight="800" fill="#1a2747">Rescue Atlas</text>
+  <text x="74" y="148" font-family="Raleway, Helvetica, Arial, sans-serif" font-size="24" font-weight="500" fill="#1a2747">La carte des opérations de sauvetage en Méditerranée centrale</text>
+</svg>

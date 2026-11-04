@@ -1,0 +1,40 @@
+[project]
+name = "rescue-atlas-backend"
+version = "0.1.0"
+description = "L'API de Rescue Atlas : les opérations de sauvetage de SOS MEDITERRANEE"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.162.0",
+    "psycopg[binary]>=3.3.8",
+    "pydantic-settings>=2.16.2",
+    "sqlmodel>=0.0.48",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.7.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.3",
+]
+
+# Ce dossier est une application, pas un paquet à publier.
+[tool.uv]
+package = false
+
+# `uv run fastapi dev` lance cette app (https://fastapi.tiangolo.com/fastapi-cli/).
+[tool.fastapi]
+entrypoint = "app.main:app"
+
+# Réglages conseillés pour un nouveau projet : https://docs.pytest.org/en/stable/explanation/goodpractices.html
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = ["--import-mode=importlib"]
+strict = true
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+# Les règles de base, plus les imports triés, les bugs probables et la syntaxe récente.
+select = ["E", "F", "I", "B", "UP"]

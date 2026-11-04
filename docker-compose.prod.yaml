@@ -1,0 +1,43 @@
+# Le projet en production : `docker compose -f docker-compose.prod.yaml up -d --build`.
+# Le mot de passe de la base vient du fichier .env du serveur, jamais de Git. Il entre dans une
+# URL : pas de caractères @ : / % dedans. Postgres ne le lit qu'à la création de la base : le
+# changer ensuite dans .env ne change pas celui de la base existante.
+# Le site écoute sur le port 80 ; le HTTPS et le nom de domaine se règlent sur le serveur.
+name: rescue-atlas
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: rescue
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?à définir dans .env}
+      POSTGRES_DB: rescue_atlas
+    volumes:
+      - db-data:/var/lib/postgresql # le chemin des images Postgres 18 et plus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://rescue:${POSTGRES_PASSWORD:?à définir dans .env}@db:5432/rescue_atlas
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db-data:
