@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-# Tout est sous /api : c'est le seul chemin que Vite (en dev) et nginx (en prod) renvoient vers
+# Tout est sous /api : c'est le seul chemin que Vite (en dev) et Traefik (en prod) envoient à
 # l'API. https://fastapi.tiangolo.com/tutorial/metadata/#docs-urls
 app = FastAPI(
     title="Rescue Atlas",

@@ -1,8 +1,11 @@
-# Le projet en production : `docker compose -f docker-compose.prod.yaml up -d --build`.
-# Le mot de passe de la base vient du fichier .env du serveur, jamais de Git. Il entre dans une
-# URL : pas de caractères @ : / % dedans. Postgres ne le lit qu'à la création de la base : le
-# changer ensuite dans .env ne change pas celui de la base existante.
-# Le site écoute sur le port 80 ; le HTTPS et le nom de domaine se règlent sur le serveur.
+# Le projet en production, sur le Coolify de Data for Good : guide de Ronan, « Env de staging
+# avec Coolify » (https://outline.services.dataforgood.fr/s/4e6180dd-3c86-421e-a6b3-0064dc4cd34e/doc/env-de-staging-avec-coolify-qXqPd4uhck).
+# Aucun port publié sur l'hôte : le Traefik du serveur envoie /api au backend et le reste au
+# site, sur le même domaine. Il passe d'abord le routeur dont la règle est la plus longue, celui
+# de /api (https://doc.traefik.io/traefik/reference/routing-configuration/http/routing/rules-and-priority/).
+# Le mot de passe de la base se saisit dans Coolify, jamais dans Git. Il entre dans une URL :
+# pas de caractères @ : / % dedans. Postgres ne le lit qu'à la création de la base : le changer
+# ensuite ne change pas celui de la base existante.
 name: rescue-atlas
 
 services:
@@ -10,7 +13,7 @@ services:
     image: postgres:18
     environment:
       POSTGRES_USER: rescue
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?à définir dans .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?à définir dans Coolify}
       POSTGRES_DB: rescue_atlas
     volumes:
       - db-data:/var/lib/postgresql # le chemin des images Postgres 18 et plus
@@ -24,20 +27,36 @@ services:
   backend:
     build: ./backend
     environment:
-      DATABASE_URL: postgresql+psycopg://rescue:${POSTGRES_PASSWORD:?à définir dans .env}@db:5432/rescue_atlas
+      DATABASE_URL: postgresql+psycopg://rescue:${POSTGRES_PASSWORD:?à définir dans Coolify}@db:5432/rescue_atlas
     depends_on:
       db:
         condition: service_healthy
         restart: true
+    networks: [default, d4g-internal] # default pour joindre la base
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.rescue-atlas-api.rule=Host(`rescue-atlas.services.d4g.fr`) && PathPrefix(`/api`)
+      - traefik.http.routers.rescue-atlas-api.entryPoints=webtls
+      - traefik.http.routers.rescue-atlas-api.tls=true
+      - traefik.docker.network=d4g-internal
+      - traefik.http.services.rescue-atlas-api.loadbalancer.server.port=8000
     restart: unless-stopped
 
   frontend:
     build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
+    networks: [d4g-internal]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.rescue-atlas.rule=Host(`rescue-atlas.services.d4g.fr`)
+      - traefik.http.routers.rescue-atlas.entryPoints=webtls
+      - traefik.http.routers.rescue-atlas.tls=true
+      - traefik.docker.network=d4g-internal
+      - traefik.http.services.rescue-atlas.loadbalancer.server.port=80
     restart: unless-stopped
+
+networks:
+  d4g-internal:
+    external: true # le réseau du Traefik de Data for Good, déjà créé sur le serveur
 
 volumes:
   db-data:

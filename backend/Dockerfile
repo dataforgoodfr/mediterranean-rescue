@@ -23,8 +23,8 @@ USER nonroot
 
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
-# Derrière nginx (docker-compose.prod.yaml) : --proxy-headers, comme le recommande
+# Derrière Traefik (docker-compose.prod.yaml) : --proxy-headers, comme le recommande
 # https://fastapi.tiangolo.com/deployment/docker/ . Par défaut, Uvicorn ne fait confiance
-# qu'à 127.0.0.1 (https://uvicorn.dev/settings/) ; ici seul nginx joint ce conteneur, qui
-# n'ouvre aucun port vers l'extérieur.
+# qu'à 127.0.0.1 (https://uvicorn.dev/settings/) ; ici le conteneur n'ouvre aucun port vers
+# l'extérieur et n'est joint que par les réseaux internes du serveur.
 CMD ["fastapi", "run", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]

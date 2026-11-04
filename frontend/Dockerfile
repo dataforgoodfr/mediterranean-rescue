@@ -17,7 +17,7 @@ RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm \
 COPY . .
 RUN pnpm build
 
-# Production : nginx sert les fichiers construits et renvoie /api vers le backend.
+# Production : nginx sert les fichiers construits ; Traefik envoie /api au backend.
 FROM nginx:1-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
