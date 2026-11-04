@@ -35,7 +35,7 @@ services:
     networks: [default, d4g-internal] # default pour joindre la base
     labels:
       - traefik.enable=true
-      - traefik.http.routers.rescue-atlas-api.rule=Host(`rescue-atlas.services.d4g.fr`) && PathPrefix(`/api`)
+      - traefik.http.routers.rescue-atlas-api.rule=Host(`rescue-atlas.services.d4g.fr`) && (Path(`/api`) || PathPrefix(`/api/`))
       - traefik.http.routers.rescue-atlas-api.entryPoints=webtls
       - traefik.http.routers.rescue-atlas-api.tls=true
       - traefik.docker.network=d4g-internal

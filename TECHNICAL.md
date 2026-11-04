@@ -45,7 +45,8 @@ docker compose -f docker-compose.dev.yaml up
 Le premier lancement télécharge les images et prend quelques minutes. Ensuite :
 
 - le site sur http://localhost:5173 : la page doit afficher « API : ok » ;
-- l'API sur http://localhost:8000, et sa doc sur http://localhost:8000/api/docs ;
+- l'API sur http://localhost:8000, et sa doc sur http://localhost:8000/api/docs (pas sur `/docs`,
+  que la console de `fastapi dev` affiche) ;
 - Postgres sur `localhost:5432`.
 
 Un port déjà pris (« port is already allocated », souvent un Postgres déjà installé) ? Choisis-en
@@ -57,7 +58,13 @@ Le code est monté dans les conteneurs : une modification relance l'API ou recha
 Après un changement de dépendances, reconstruis les images et leurs paquets :
 `docker compose -f docker-compose.dev.yaml up --build --renew-anon-volumes`.
 
-`docker-compose.prod.yaml` sert au déploiement : son mode d'emploi est en tête du fichier.
+Sous Linux, Docker crée `backend/.venv` et `frontend/node_modules` au nom de root : si `uv` ou
+`pnpm` refusent ensuite d'y écrire sur ta machine, supprime-les (`sudo rm -rf backend/.venv
+frontend/node_modules`).
+
+`docker-compose.prod.yaml` sert au déploiement sur le Coolify de Data for Good : son mode
+d'emploi est en tête du fichier. Dans Coolify, remplace l'adresse http générée dans « Domains »
+par `https://rescue-atlas.services.d4g.fr`, celle des labels Traefik.
 
 ## Lancer le projet sans Docker
 
@@ -95,8 +102,8 @@ pnpm test
 pnpm build
 ```
 
-La CI relance tout cela sur chaque pull request, et construit les images Docker quand elles
-changent. On merge quand « CI terminée » et « titre » sont verts : le second vérifie que le
+La CI relance sur chaque pull request ce qu'elle touche (backend, frontend, images Docker), et
+pre-commit partout. On merge quand « CI terminée » et « titre » sont verts : le second vérifie que le
 titre de la pull request suit les commits conventionnels. Chaque mois, Dependabot propose la
 mise à jour des dépendances.
 

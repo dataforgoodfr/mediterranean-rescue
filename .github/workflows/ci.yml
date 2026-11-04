@@ -38,7 +38,8 @@ jobs:
         with:
           persist-credentials: false
           # Sur un push, le filtre compare avec le commit d'avant, par git : il doit déjà être
-          # là, car sans identifiants git ne peut pas le chercher dans un dépôt privé.
+          # là, car sans identifiants git ne peut pas le chercher dans un dépôt privé (le miroir
+          # des tech leads utilise ce même fichier).
           fetch-depth: 0
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: filter

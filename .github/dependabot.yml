@@ -25,6 +25,9 @@ updates:
     groups:
       frontend:
         patterns: ["*"]
+    ignore: # Node suit la version de la CI (24), on la change à la main
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: docker
     directories: ["/backend", "/frontend"]
@@ -33,6 +36,9 @@ updates:
     groups:
       docker:
         patterns: ["*"]
+    ignore:
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: pre-commit
     directory: "/"
