@@ -16,7 +16,8 @@ rendez-vous. Présente-toi en arrivant et demande l'accès en écriture à ce d�
 4. **Committe.** pre-commit (à installer une fois, voir [TECHNICAL.md](TECHNICAL.md)) vérifie tes
    fichiers. S'il en corrige un, refais `git add` puis
    `git commit` : c'est normal.
-5. **Ouvre la pull request** vers `main`, même tôt, en brouillon, et remplis son modèle.
+5. **Ouvre la pull request** vers `main`, même tôt, en brouillon, et remplis son modèle. Quand
+   elle est prête, sors-la du brouillon et passe l'issue dans « In review » sur le tableau.
 6. **Réponds à la relecture.** Un tech lead approuve et merge.
 
 Bloqué ? Écris-le dans l'issue ou sur le canal, c'est normal. Sans nouvelles au bout d'une
