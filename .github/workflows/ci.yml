@@ -69,7 +69,7 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "0.12.22" # la même que backend/Dockerfile
+          version: "0.13.7" # la même que backend/Dockerfile
       - run: uv run --project backend pre-commit run --all-files --show-diff-on-failure
         env:
           SKIP: oxlint # lancé par le job frontend, qui installe les paquets
@@ -89,7 +89,7 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "0.12.22" # la même que backend/Dockerfile
+          version: "0.13.7" # la même que backend/Dockerfile
           python-version: "3.12"
       - run: uv sync --locked # échoue si uv.lock ne suit pas pyproject.toml
       - run: uv run pytest
@@ -111,7 +111,7 @@ jobs:
           package_json_file: frontend/package.json # la version de pnpm vient de packageManager
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26 # la LTS active (https://nodejs.org/en/about/previous-releases)
           cache: pnpm
           cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile

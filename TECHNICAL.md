@@ -69,9 +69,9 @@ par `https://rescue-atlas.services.d4g.fr`, celle des labels Traefik.
 ## Lancer le projet sans Docker
 
 Pour les tests et l'éditeur, il faut de toute façon les outils sur ta machine :
-[uv](https://docs.astral.sh/uv/getting-started/installation/) (il installe Python), Node.js
-22.22.2+, 24.15+ ou 26+ (pas 23 ni 25, que les outils de test refusent), et
-[pnpm](https://pnpm.io/installation) 12.
+[uv](https://docs.astral.sh/uv/getting-started/installation/) (il installe Python 3.15, celui
+du projet), Node.js 26, la version LTS (22.22.2+ et 24.15+ marchent aussi, pas 23 ni 25, que les
+outils de test refusent), et [pnpm](https://pnpm.io/installation) 12.
 
 ```sh
 docker compose -f docker-compose.dev.yaml up -d db   # la base seule, ou ton propre Postgres

@@ -25,7 +25,7 @@ updates:
     groups:
       frontend:
         patterns: ["*"]
-    ignore: # Node suit la version de la CI (24), on la change à la main
+    ignore: # Node suit la LTS de la CI (26) ; on passe à la suivante à la main
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
 

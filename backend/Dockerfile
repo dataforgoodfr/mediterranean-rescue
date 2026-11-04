@@ -1,7 +1,7 @@
 # L'image de l'API, d'après le guide officiel d'uv : https://docs.astral.sh/uv/guides/integration/docker/
-FROM python:3.14-slim
+FROM python:3.15-slim
 
-COPY --from=ghcr.io/astral-sh/uv:0.12.22 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.7 /uv /uvx /bin/
 
 # Le Python de l'image, des fichiers .pyc prêts, et les paquets copiés plutôt que liés.
 ENV UV_PYTHON_DOWNLOADS=0 UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy

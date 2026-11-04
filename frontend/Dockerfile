@@ -1,6 +1,6 @@
 # Les images du site. pnpm vient de son image officielle, pas de Corepack (retiré de Node 25) :
 # https://pnpm.io/docker
-FROM node:24-slim AS base
+FROM node:26-slim AS base
 COPY --from=ghcr.io/pnpm/pnpm:12 /opt/pnpm /opt/pnpm
 RUN for bin in pnpm pn pnpx pnx; do ln -s "/opt/pnpm/$bin" "/usr/local/bin/$bin"; done
 WORKDIR /app
