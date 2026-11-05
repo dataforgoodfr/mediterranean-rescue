@@ -108,6 +108,29 @@ pre-commit partout. On merge quand « CI terminée » et « titre » sont verts 
 titre de la pull request suit les commits conventionnels. Chaque mois, Dependabot propose la
 mise à jour des dépendances.
 
+## Le contrat entre l'API et le frontend
+
+Les types de l'API ne s'écrivent qu'une fois, dans le backend (les modèles pydantic de
+`backend/app/`). Le frontend tire les siens du schéma OpenAPI, comme le conseille FastAPI
+(https://fastapi.tiangolo.com/advanced/generate-clients/) :
+
+```sh
+# 1. Dans backend/ : écrire le schéma de l'API dans backend/openapi.json
+uv run python -m app.schema_openapi
+# 2. Dans frontend/ : en tirer les types TypeScript, dans src/api/schema.ts
+pnpm api:types
+```
+
+Les deux fichiers sont versionnés et ne se retouchent jamais à la main. Un test du backend
+échoue si `openapi.json` est en retard sur l'API, et `pnpm api:verifier` échoue si `schema.ts`
+est en retard sur `openapi.json`. pre-commit lance les deux quand un fichier de l'API ou du
+schéma change, et la CI aussi. Le front utilise ces types dans `src/api.ts` : quand l'API ajoute,
+retire ou change un champ, tsc montre chaque endroit du front à reprendre.
+
+Le générateur, [openapi-typescript](https://openapi-ts.dev/), vit dans `frontend/outils/types-api/`,
+avec son propre TypeScript 6 : TypeScript 7, celui du frontend, n'a plus l'API JavaScript dont
+il a besoin. On le ramènera dans `frontend/` quand il saura lire TypeScript 7.
+
 ## Les types : aucun contournement
 
 Les types du frontend et du backend se vérifient à chaque commit et en CI, sans échappatoire. Un
@@ -139,6 +162,9 @@ ne refuse que le `Any` écrit, pas celui qui circule.
 
 | Chemin | Rôle |
 |---|---|
+| `backend/openapi.json` | Le schéma OpenAPI de l'API, généré (`python -m app.schema_openapi`) |
+| `frontend/src/api/schema.ts` | Les types TypeScript de l'API, générés depuis ce schéma (`pnpm api:types`) |
+| `frontend/outils/types-api/` | Le générateur de ces types, avec son TypeScript 6 |
 | `backend/app/` | L'API : `main.py` (les routes), `db.py` (la base), `config.py` (les réglages) |
 | `backend/tests/` | Les tests du backend ; `conftest.py` fournit la base des tests |
 | `frontend/src/` | L'app React : `App.tsx` (les pages), `pages/`, `api.ts` (les appels à l'API) |

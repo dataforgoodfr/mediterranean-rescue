@@ -50,6 +50,7 @@ jobs:
               - '.github/workflows/**'
             frontend:
               - 'frontend/**'
+              - 'backend/openapi.json' # les types du frontend en viennent
               - '.github/workflows/**'
             docker:
               - '**/Dockerfile'
@@ -72,7 +73,7 @@ jobs:
           version: "0.13.7" # la même que backend/Dockerfile
       - run: uv run --project backend pre-commit run --all-files --show-diff-on-failure
         env:
-          SKIP: oxlint,tsc,mypy # lancés par les jobs frontend et backend, qui installent les paquets
+          SKIP: oxlint,tsc,mypy,schema-api,types-api # lancés par les jobs frontend et backend
 
   # Le backend FastAPI, sur la plus ancienne version de Python acceptée (3.12) :
   # en local on développe sur une version plus récente.
@@ -114,9 +115,12 @@ jobs:
         with:
           node-version: 26 # la LTS active (https://nodejs.org/en/about/previous-releases)
           cache: pnpm
-          cache-dependency-path: frontend/pnpm-lock.yaml
+          cache-dependency-path: |
+            frontend/pnpm-lock.yaml
+            frontend/outils/types-api/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint # avec les règles qui lisent les types (aucun any, aucun as)
+      - run: pnpm api:verifier # src/api/schema.ts suit backend/openapi.json
       - run: pnpm test
       - run: pnpm build # vérifie aussi les types (tsc)
 

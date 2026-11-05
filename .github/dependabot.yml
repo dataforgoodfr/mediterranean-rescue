@@ -29,6 +29,18 @@ updates:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
 
+  # Le générateur des types de l'API, à part : il a besoin de TypeScript 6 (TECHNICAL.md).
+  - package-ecosystem: npm
+    directory: "/frontend/outils/types-api"
+    schedule:
+      interval: monthly
+    groups:
+      types-api:
+        patterns: ["*"]
+    ignore: # TypeScript 7 n'a plus l'API JavaScript dont openapi-typescript a besoin
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
   - package-ecosystem: docker
     directories: ["/backend", "/frontend"]
     schedule:

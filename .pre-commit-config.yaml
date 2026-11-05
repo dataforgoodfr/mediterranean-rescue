@@ -51,6 +51,20 @@ repos:
         entry: uv run --directory backend mypy
         files: ^backend/.*\.py$
         pass_filenames: false
+      # Le contrat entre l'API et le frontend (TECHNICAL.md) : le schéma suit l'API, et les types du
+      # frontend suivent le schéma. En CI, les jobs backend et frontend le vérifient (SKIP).
+      - id: schema-api
+        name: schéma OpenAPI à jour (backend)
+        language: unsupported
+        entry: uv run --directory backend pytest -q tests/test_schema_openapi.py
+        files: ^backend/app/.*\.py$
+        pass_filenames: false
+      - id: types-api
+        name: types de l'API à jour (frontend)
+        language: unsupported
+        entry: pnpm --dir frontend api:verifier
+        files: ^(backend/openapi\.json|frontend/src/api/schema\.ts)$
+        pass_filenames: false
       # Aucun contournement de types, nulle part. Refusés : `# type: ignore`, `# mypy:`,
       # `# pyright:`, `@no_type_check`, `cast` de typing ; `@ts-ignore`, `@ts-nocheck`,
       # `@ts-expect-error`, et les commentaires `oxlint-disable` ou `eslint-disable`, qui
