@@ -13,8 +13,11 @@ Consignes pour un assistant de code qui travaille dans ce dépôt. Elles complè
 - FastAPI : suis la doc officielle de la version installée (https://fastapi.tiangolo.com/).
   `Annotated` pour les dépendances, `lifespan` pour le démarrage (pas `on_event`, déprécié).
 - React : pas de `useMemo` ni `useCallback` par défaut, seulement pour un besoin mesuré. Les
-  appels à l'API passent par `frontend/src/api.ts` et TanStack Query ; pas de `any`. Les autres
+  appels à l'API passent par `frontend/src/api.ts` et TanStack Query. Les autres
   conventions sont dans TECHNICAL.md (« Les conventions »).
+- **Les types ne se contournent jamais** : ni `any`, ni `as`, ni `!`, ni `@ts-ignore` en
+  TypeScript ; ni `Any`, ni `cast`, ni `# type: ignore` en Python. Un type faux se corrige.
+  Règles et outils : TECHNICAL.md (« Les types : aucun contournement »).
 - Interface : suis [docs/design-system.md](docs/design-system.md). Les variables de
   `frontend/src/design/tokens.css`, jamais une valeur en dur ; `<Logo />` et `<Picto />` pour le
   logo et les pictos. « SOS MEDITERRANEE » s'écrit en majuscules, sans accent.

@@ -36,3 +36,29 @@ repos:
         entry: pnpm --dir frontend lint
         files: ^frontend/.*\.(ts|tsx|js|jsx)$
         pass_filenames: false
+      # Frontend : tsc, les types (mode strict). En CI, `pnpm build` le lance (SKIP=tsc).
+      - id: tsc
+        name: tsc (frontend)
+        language: unsupported
+        entry: pnpm --dir frontend exec tsc -b
+        files: ^frontend/.*\.(ts|tsx)$
+        pass_filenames: false
+      # Python : mypy en mode strict (backend/pyproject.toml). En CI, c'est le job backend qui le
+      # lance (SKIP=mypy dans le job pre-commit).
+      - id: mypy
+        name: mypy (backend)
+        language: unsupported
+        entry: uv run --directory backend mypy
+        files: ^backend/.*\.py$
+        pass_filenames: false
+      # Aucun contournement de types, nulle part. Refusés : `# type: ignore`, `# mypy:`,
+      # `# pyright:`, `@no_type_check`, `cast` de typing ; `@ts-ignore`, `@ts-nocheck`,
+      # `@ts-expect-error`, et les commentaires `oxlint-disable` ou `eslint-disable`, qui
+      # couperaient n'importe quelle règle. Une exception se déclare dans .oxlintrc.json, relue.
+      # `--multiline` : un import `from typing import (\n cast,\n)` sur plusieurs lignes est vu.
+      - id: aucun-contournement-de-types
+        name: aucun contournement de types
+        language: pygrep
+        args: [--multiline]
+        entry: '#[ \t]*(type:[ \t]*ignore|mypy:|pyright:)|\bno_type_check\b|\btyping(_extensions)?\.cast\b|^[ \t]*from[ \t]+typing(_extensions)?[ \t]+import[ \t]+(\([^)]*|[^#\n]*)\bcast\b|@ts-(ignore|nocheck|expect-error)|\b(ox|es)lint-disable'
+        files: \.(py|ts|tsx|mts|cts|js|jsx|mjs|cjs)$

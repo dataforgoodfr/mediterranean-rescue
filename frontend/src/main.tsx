@@ -8,7 +8,11 @@ import App from './App.tsx'
 // Le cache des appels à l'API, partagé par toute l'app. https://tanstack.com/query/latest
 const queryClient = new QueryClient()
 
-createRoot(document.getElementById('root')!).render(
+// index.html porte toujours #root ; s'il manque, on le dit au lieu de faire comme s'il était là.
+const racine = document.getElementById('root')
+if (!racine) throw new Error('index.html : élément #root introuvable')
+
+createRoot(racine).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

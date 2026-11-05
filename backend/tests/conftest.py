@@ -3,6 +3,8 @@ Postgres. Le motif officiel : https://sqlmodel.tiangolo.com/tutorial/fastapi/tes
 Un test qui a besoin de la base demande `session` ou `client` en paramètre.
 """
 
+from collections.abc import Iterator
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
@@ -13,7 +15,7 @@ from app.main import app
 
 
 @pytest.fixture(name="session")
-def session_fixture():
+def session_fixture() -> Iterator[Session]:
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
@@ -23,7 +25,7 @@ def session_fixture():
 
 
 @pytest.fixture(name="client")
-def client_fixture(session: Session):
+def client_fixture(session: Session) -> Iterator[TestClient]:
     app.dependency_overrides[get_session] = lambda: session
     yield TestClient(app)
     app.dependency_overrides.clear()

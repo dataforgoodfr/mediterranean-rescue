@@ -30,11 +30,15 @@ On suit les [commits conventionnels](https://www.conventionalcommits.org/fr/v1.0
 C'est surtout le **titre de la pull request** qui compte : il devient le commit sur `main`, et
 la CI le vérifie.
 
-## Deux règles
+## Trois règles
 
 - **Aucune donnée réelle, aucun secret** dans Git, une issue ou une pull request. Les exemples
   sont fictifs et marqués `FICTIF`.
 - **Inconnu reste vide, jamais zéro.**
+- **Les types ne se contournent jamais.** Pas de `any`, de `as`, de `!` ni de `@ts-ignore` en
+  TypeScript, pas de `Any`, de `cast` ni de `# type: ignore` en Python. Si le compilateur refuse,
+  c'est le code qui change, même si ça prend du temps : demande de l'aide sur le canal. Le détail
+  est dans [TECHNICAL.md](TECHNICAL.md) (« Les types : aucun contournement »).
 
 Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le canal, ça compte
 aussi.

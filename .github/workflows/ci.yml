@@ -72,7 +72,7 @@ jobs:
           version: "0.13.7" # la même que backend/Dockerfile
       - run: uv run --project backend pre-commit run --all-files --show-diff-on-failure
         env:
-          SKIP: oxlint # lancé par le job frontend, qui installe les paquets
+          SKIP: oxlint,tsc,mypy # lancés par les jobs frontend et backend, qui installent les paquets
 
   # Le backend FastAPI, sur la plus ancienne version de Python acceptée (3.12) :
   # en local on développe sur une version plus récente.
@@ -92,6 +92,7 @@ jobs:
           version: "0.13.7" # la même que backend/Dockerfile
           python-version: "3.12"
       - run: uv sync --locked # échoue si uv.lock ne suit pas pyproject.toml
+      - run: uv run mypy # les types, en mode strict, sans échappatoire (pyproject.toml)
       - run: uv run pytest
 
   # Le frontend React : style, tests, types et construction.
@@ -115,7 +116,7 @@ jobs:
           cache: pnpm
           cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
+      - run: pnpm lint # avec les règles qui lisent les types (aucun any, aucun as)
       - run: pnpm test
       - run: pnpm build # vérifie aussi les types (tsc)
 

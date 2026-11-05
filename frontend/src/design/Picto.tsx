@@ -17,7 +17,7 @@ export function Picto({ name, label, size }: PictoProps) {
     if (import.meta.env.DEV) console.warn(`Picto inconnu : ${name}`)
     return null
   }
-  const style = { '--ra-masque': `url("${url}")`, '--ra-picto-taille': size } as CSSProperties
+  const style: CSSProperties = { '--ra-masque': `url("${url}")`, '--ra-picto-taille': size }
   return label ? (
     <span role="img" aria-label={label} className="ra-picto" style={style} />
   ) : (

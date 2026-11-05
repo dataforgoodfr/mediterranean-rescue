@@ -10,7 +10,7 @@ type LogoProps = {
 // Le logo de SOS MEDITERRANEE. Règles d'usage : docs/design-system.md (ni rotation,
 // ni autre couleur, ni contour, ni déformation).
 export function Logo({ variant = 'couleur', height }: LogoProps) {
-  const style = height ? ({ '--ra-logo-hauteur': height } as CSSProperties) : undefined
+  const style: CSSProperties | undefined = height ? { '--ra-logo-hauteur': height } : undefined
   return (
     <span
       role="img"

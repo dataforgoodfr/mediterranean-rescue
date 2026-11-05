@@ -5,8 +5,8 @@
 - **FastAPI** et **SQLModel** pour le backend (l'API), **Postgres** pour la base.
 - **React**, **Vite** et **TypeScript** pour le frontend, avec **TanStack Query** pour les appels à
   l'API et **React Router** pour les pages. La carte viendra avec **MapLibre**.
-- **pre-commit**, **ruff**, **pytest**, **Oxlint**, **Vitest** et **Testing Library** pour les
-  vérifications.
+- **pre-commit**, **ruff**, **mypy**, **pytest**, **Oxlint**, **Vitest** et **Testing Library** pour
+  les vérifications.
 
 Le backend est une app FastAPI avec une seule route, `/api/health`, et la connexion à Postgres
 prête à servir (`app/db.py`). Le frontend est l'app créée par `pnpm create vite --template
@@ -94,6 +94,7 @@ Ils vérifient aussi le frontend : lance d'abord `pnpm install` dans `frontend/`
 ```sh
 # Dans backend/
 uv run pre-commit run --all-files
+uv run mypy
 uv run pytest
 
 # Dans frontend/
@@ -106,6 +107,33 @@ La CI relance sur chaque pull request ce qu'elle touche (backend, frontend, imag
 pre-commit partout. On merge quand « CI terminée » et « titre » sont verts : le second vérifie que le
 titre de la pull request suit les commits conventionnels. Chaque mois, Dependabot propose la
 mise à jour des dépendances.
+
+## Les types : aucun contournement
+
+Les types du frontend et du backend se vérifient à chaque commit et en CI, sans échappatoire. Un
+type qui ne correspond pas se corrige, même si ça prend du temps ; il ne se fait jamais taire.
+
+- **TypeScript** : `tsc` en mode `strict`, avec `noUncheckedIndexedAccess` (une case d'un
+  tableau peut être vide). Oxlint lit les types (`--type-aware`) et refuse `any`, toute
+  assertion `as` (sauf `as const`), l'assertion non nulle `!`, et toute valeur `any` qui circule
+  (`no-unsafe-*`). Les règles sont dans `frontend/.oxlintrc.json`.
+- **Python** : mypy en mode `strict`, avec le plugin de pydantic, refuse un `Any` écrit et une
+  fonction sans types. Les réglages sont dans `backend/pyproject.toml`.
+- **Partout** : le hook pre-commit « aucun contournement de types » refuse `# type: ignore`,
+  `# mypy:`, `# pyright:`, `@no_type_check`, l'import de `cast` depuis typing, `@ts-ignore`,
+  `@ts-nocheck`, `@ts-expect-error`, et les commentaires `oxlint-disable` et `eslint-disable`.
+  Une exception à une règle se déclare dans `frontend/.oxlintrc.json` (`overrides`), où elle se
+  relit.
+
+Ce qui arrive de l'extérieur (une réponse de l'API, un fichier) est de type `unknown` en
+TypeScript et `object` en Python, puis se vérifie champ par champ (`frontend/src/lire.ts`). Pour
+une variable CSS passée dans `style`, on l'ajoute au type de React
+(`frontend/src/design/variables-css.d.ts`) au lieu de forcer le type.
+
+Ce que les outils ne voient pas, et que la relecture vérifie : une déclaration `declare` ou un
+ajout à un type existant (comme `variables-css.d.ts`), une garde `x is T` dont le corps ment, et
+en Python une valeur `Any` venue d'une bibliothèque (`json.loads`, `TestClient.json()`) : mypy
+ne refuse que le `Any` écrit, pas celui qui circule.
 
 ## Où est quoi
 

@@ -14,6 +14,10 @@
     "noEmit": true,
 
     /* Linting */
+    // Le mode strict, plus la case vide d'un tableau ou d'un objet : `liste[0]` peut être
+    // undefined. https://www.typescriptlang.org/tsconfig/#strict
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,

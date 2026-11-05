@@ -2,6 +2,7 @@
 https://fastapi.tiangolo.com/tutorial/sql-databases/
 """
 
+from collections.abc import Iterator
 from typing import Annotated
 
 from fastapi import Depends
@@ -14,7 +15,7 @@ from app.config import settings
 engine = create_engine(settings.database_url, pool_pre_ping=True)
 
 
-def get_session():
+def get_session() -> Iterator[Session]:
     with Session(engine) as session:
         yield session
 
