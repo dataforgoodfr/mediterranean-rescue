@@ -33,9 +33,6 @@ plaidoyer et la collecte de fonds.
 3. Lance le projet avec [TECHNICAL.md](TECHNICAL.md) : `docker compose -f docker-compose.dev.yaml up` suffit.
 4. Prends une issue `good first issue`, puis suis la [progression](docs/progression.md).
 
-Épopée, activité, jalon, sprint : [De la storymap à GitHub](docs/storymap-et-github.md) explique
-comment le travail de l'équipe produit devient des issues.
-
 Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le canal, ça compte
 aussi.
 

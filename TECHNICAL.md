@@ -247,7 +247,7 @@ return <h2>{t('carte.legende')}</h2>
 | `docker-compose.dev.yaml` | Tout le projet pour développer, avec rechargement automatique |
 | `docker-compose.prod.yaml` | Le projet en production |
 | `data/` | Les données locales, jamais committées |
-| `docs/` | Les données de la carte actuelle ([docs/donnees.md](docs/donnees.md)), le design system, la progression des bénévoles, le glossaire, [la storymap et GitHub](docs/storymap-et-github.md) |
+| `docs/` | Les données de la carte actuelle ([docs/donnees.md](docs/donnees.md)), le design system, la progression des bénévoles, le glossaire |
 | `.github/` | CI, modèles d'issue et de pull request |
 
 Code en anglais ; commentaires et documentation en français.
