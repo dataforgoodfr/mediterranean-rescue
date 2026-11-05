@@ -11,16 +11,23 @@ que chacun parle des mêmes choses avec les mêmes mots.
 | Sur la storymap | Ce que c'est | Dans GitHub |
 |---|---|---|
 | **Vision** (en haut du FigJam) | « Une carte qui ne s'éteint jamais » : ce qu'on vise, à relire avant chaque choix | En tête du [README](../README.md) |
-| **Épopée** (post-it jaune) | Un grand domaine et le résultat qu'on en attend : Data management, Transparence, Plaidoyer, Levée de fonds, Cybersécurité | Une issue parente « Épopée : … », étiquette `épopée`. Ses sous-issues donnent l'avancement |
-| **Activité** (post-it bleu) | Ce qu'une personne peut faire avec le produit : retrouver une opération par date, lire le bilan cumulé | Une issue, sous-issue de son épopée, rédigée « En tant que…, je veux…, afin de… » avec ses critères |
+| **Épopée** (post-it jaune) | Un grand domaine et le résultat qu'on en attend : Data management, Transparence, Plaidoyer, Levée de fonds, Cybersécurité | Une issue de type **Epic**, « Épopée : … ». Ses sous-issues donnent l'avancement |
+| **Activité** (post-it bleu) | Ce qu'une personne peut faire avec le produit : retrouver une opération par date, lire le bilan cumulé | Une issue de type **Feature**, sous-issue de son épopée, rédigée « En tant que…, je veux…, afin de… » avec ses critères |
 | **Étape** (post-it vert) | Le chemin pour réaliser une activité : du logbook du navire au logbook web, du Survival Form au Monster puis à la carte | Des cases à cocher dans l'issue de l'activité, ou une sous-issue quand l'étape est un vrai travail |
-| **Issue** (post-it violet) | Le travail concret, posé sur la ligne de sa livraison | Une issue prête à prendre : jalon, sprint, taille, colonne du tableau. Une pull request la ferme |
+| **Issue** (post-it violet) | Le travail concret, posé sur la ligne de sa livraison | Une issue de type **Task**, prête à prendre : jalon, sprint, taille, colonne du tableau. Une pull request la ferme |
 | **Post-it rose** | Une question ou un entretien à mener | Le suivi des PO/PM ; une issue seulement si du code en dépend |
 | **Ligne P0, P1, P2, P3** | Une livraison datée : P0 (MVP) fin novembre, P1 fin décembre, P2 fin janvier, P3 fin février | Un [jalon](https://github.com/dataforgoodfr/mediterranean-rescue/milestones) avec sa date |
 | **Horizon** | Horizon 1 : réparer et élever le produit existant (P0, P1). Horizon 2 : en faire un outil de plaidoyer et de levée de fonds (P2, P3) | Écrit dans la description des jalons |
 
 P0 à P3 sont des **livraisons**, pas des priorités : une issue de P2 n'est pas moins importante,
 elle vient plus tard.
+
+Les cinq épopées existent déjà : [#11 Data management](https://github.com/dataforgoodfr/mediterranean-rescue/issues/11),
+[#12 Transparence](https://github.com/dataforgoodfr/mediterranean-rescue/issues/12),
+[#13 Plaidoyer](https://github.com/dataforgoodfr/mediterranean-rescue/issues/13),
+[#14 Levée de fonds](https://github.com/dataforgoodfr/mediterranean-rescue/issues/14) et
+[#15 Cybersécurité](https://github.com/dataforgoodfr/mediterranean-rescue/issues/15). Le type
+d'une issue se choisit dans sa colonne de droite, « Type ».
 
 ## Le rythme
 

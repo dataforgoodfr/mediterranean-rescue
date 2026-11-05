@@ -22,8 +22,8 @@
   <text x="80" y="236" font-size="14" fill="#1a2747">données, transparence, plaidoyer, fonds, sécurité</text>
   <line x1="510" y1="204" x2="690" y2="204" stroke="#1a2747" stroke-width="2" marker-end="url(#fleche)"/>
   <rect x="700" y="156" width="440" height="96" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
-  <text x="720" y="190" font-size="19" font-weight="800" fill="#1a2747">Issue parente « Épopée : … »</text>
-  <text x="720" y="216" font-size="14" fill="#3c3c3b">Étiquette épopée. Ses sous-issues donnent</text>
+  <text x="720" y="190" font-size="19" font-weight="800" fill="#1a2747">Issue de type Epic</text>
+  <text x="720" y="216" font-size="14" fill="#3c3c3b">« Épopée : … ». Ses sous-issues donnent</text>
   <text x="720" y="236" font-size="14" fill="#3c3c3b">la barre d'avancement.</text>
 
   <!-- 2. Activité -->
@@ -33,8 +33,8 @@
   <text x="80" y="352" font-size="14" fill="#1a2747">« retrouver une opération par date »</text>
   <line x1="510" y1="320" x2="690" y2="320" stroke="#1a2747" stroke-width="2" marker-end="url(#fleche)"/>
   <rect x="700" y="272" width="440" height="96" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
-  <text x="720" y="306" font-size="19" font-weight="800" fill="#1a2747">Issue, sous-issue de l'épopée</text>
-  <text x="720" y="332" font-size="14" fill="#3c3c3b">Rédigée « En tant que…, je veux…, afin de… »,</text>
+  <text x="720" y="306" font-size="19" font-weight="800" fill="#1a2747">Issue de type Feature</text>
+  <text x="720" y="332" font-size="14" fill="#3c3c3b">Sous-issue de l'épopée, « En tant que… »,</text>
   <text x="720" y="352" font-size="14" fill="#3c3c3b">avec ses critères d'acceptation.</text>
 
   <!-- 3. Étape -->
@@ -55,9 +55,9 @@
   <text x="80" y="584" font-size="14" fill="#1a2747">« afficher les zones SAR »</text>
   <line x1="510" y1="552" x2="690" y2="552" stroke="#1a2747" stroke-width="2" marker-end="url(#fleche)"/>
   <rect x="700" y="504" width="440" height="96" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
-  <text x="720" y="538" font-size="19" font-weight="800" fill="#1a2747">Issue qu'un ou une bénévole prend</text>
-  <text x="720" y="564" font-size="14" fill="#3c3c3b">Avec son jalon, son sprint, sa taille et sa</text>
-  <text x="720" y="584" font-size="14" fill="#3c3c3b">colonne sur le tableau. Une PR la ferme.</text>
+  <text x="720" y="538" font-size="19" font-weight="800" fill="#1a2747">Issue de type Task</text>
+  <text x="720" y="564" font-size="14" fill="#3c3c3b">Prise par un ou une bénévole : jalon, sprint,</text>
+  <text x="720" y="584" font-size="14" fill="#3c3c3b">taille, colonne. Une pull request la ferme.</text>
 
   <!-- Les lignes datées -->
   <line x1="60" y1="636" x2="1140" y2="636" stroke="#e3e2e9" stroke-width="2"/>
