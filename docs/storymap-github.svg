@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="1200" height="860" font-family="Raleway, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>De la storymap à GitHub</title>
+  <desc>Chaque couleur de post-it de la storymap FigJam correspond à un objet de GitHub, et chaque ligne datée à un jalon.</desc>
+  <defs>
+    <marker id="fleche" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1a2747"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="860" fill="#ffffff"/>
+
+  <text x="60" y="58" font-size="30" font-weight="800" fill="#1a2747">De la storymap à GitHub</text>
+  <text x="60" y="88" font-size="16" fill="#3c3c3b">Une couleur de post-it = un objet GitHub. Une ligne datée = un jalon.</text>
+
+  <text x="60" y="140" font-size="14" font-weight="700" fill="#3c3c3b" letter-spacing="1">SUR LA STORYMAP (FIGJAM)</text>
+  <text x="700" y="140" font-size="14" font-weight="700" fill="#3c3c3b" letter-spacing="1">DANS GITHUB</text>
+
+  <!-- 1. Épopée -->
+  <rect x="60" y="156" width="440" height="96" rx="4" fill="#ffe299"/>
+  <text x="80" y="190" font-size="19" font-weight="800" fill="#1a2747">Épopée (jaune)</text>
+  <text x="80" y="216" font-size="14" fill="#1a2747">Un grand domaine et le résultat attendu :</text>
+  <text x="80" y="236" font-size="14" fill="#1a2747">données, transparence, plaidoyer, fonds, sécurité</text>
+  <line x1="510" y1="204" x2="690" y2="204" stroke="#1a2747" stroke-width="2" marker-end="url(#fleche)"/>
+  <rect x="700" y="156" width="440" height="96" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="720" y="190" font-size="19" font-weight="800" fill="#1a2747">Issue parente « Épopée : … »</text>
+  <text x="720" y="216" font-size="14" fill="#3c3c3b">Étiquette épopée. Ses sous-issues donnent</text>
+  <text x="720" y="236" font-size="14" fill="#3c3c3b">la barre d'avancement.</text>
+
+  <!-- 2. Activité -->
+  <rect x="60" y="272" width="440" height="96" rx="4" fill="#a8daff"/>
+  <text x="80" y="306" font-size="19" font-weight="800" fill="#1a2747">Activité (bleu)</text>
+  <text x="80" y="332" font-size="14" fill="#1a2747">Ce qu'une personne peut faire avec la carte :</text>
+  <text x="80" y="352" font-size="14" fill="#1a2747">« retrouver une opération par date »</text>
+  <line x1="510" y1="320" x2="690" y2="320" stroke="#1a2747" stroke-width="2" marker-end="url(#fleche)"/>
+  <rect x="700" y="272" width="440" height="96" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="720" y="306" font-size="19" font-weight="800" fill="#1a2747">Issue, sous-issue de l'épopée</text>
+  <text x="720" y="332" font-size="14" fill="#3c3c3b">Rédigée « En tant que…, je veux…, afin de… »,</text>
+  <text x="720" y="352" font-size="14" fill="#3c3c3b">avec ses critères d'acceptation.</text>
+
+  <!-- 3. Étape -->
+  <rect x="60" y="388" width="440" height="96" rx="4" fill="#b3efbd"/>
+  <text x="80" y="422" font-size="19" font-weight="800" fill="#1a2747">Étape (vert)</text>
+  <text x="80" y="448" font-size="14" fill="#1a2747">Le chemin pour faire l'activité :</text>
+  <text x="80" y="468" font-size="14" fill="#1a2747">« du Survival Form au Monster, puis à la carte »</text>
+  <line x1="510" y1="436" x2="690" y2="436" stroke="#1a2747" stroke-width="2" marker-end="url(#fleche)"/>
+  <rect x="700" y="388" width="440" height="96" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="720" y="422" font-size="19" font-weight="800" fill="#1a2747">Cases à cocher dans l'issue</text>
+  <text x="720" y="448" font-size="14" fill="#3c3c3b">Ou une sous-issue, quand l'étape est un</text>
+  <text x="720" y="468" font-size="14" fill="#3c3c3b">travail à part entière.</text>
+
+  <!-- 4. Issue -->
+  <rect x="60" y="504" width="440" height="96" rx="4" fill="#d3bdff"/>
+  <text x="80" y="538" font-size="19" font-weight="800" fill="#1a2747">Issue (violet)</text>
+  <text x="80" y="564" font-size="14" fill="#1a2747">Le travail concret, posé sur une ligne datée :</text>
+  <text x="80" y="584" font-size="14" fill="#1a2747">« afficher les zones SAR »</text>
+  <line x1="510" y1="552" x2="690" y2="552" stroke="#1a2747" stroke-width="2" marker-end="url(#fleche)"/>
+  <rect x="700" y="504" width="440" height="96" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="720" y="538" font-size="19" font-weight="800" fill="#1a2747">Issue qu'un ou une bénévole prend</text>
+  <text x="720" y="564" font-size="14" fill="#3c3c3b">Avec son jalon, son sprint, sa taille et sa</text>
+  <text x="720" y="584" font-size="14" fill="#3c3c3b">colonne sur le tableau. Une PR la ferme.</text>
+
+  <!-- Les lignes datées -->
+  <line x1="60" y1="636" x2="1140" y2="636" stroke="#e3e2e9" stroke-width="2"/>
+  <text x="60" y="672" font-size="14" font-weight="700" fill="#3c3c3b" letter-spacing="1">LES LIGNES DE LA STORYMAP = LES JALONS</text>
+
+  <text x="60" y="706" font-size="14" font-weight="700" fill="#1a2747">Horizon 1 : réparer et élever</text>
+  <line x1="60" y1="716" x2="590" y2="716" stroke="#1a2747" stroke-width="2"/>
+  <text x="610" y="706" font-size="14" font-weight="700" fill="#1a2747">Horizon 2 : plaidoyer et levée de fonds</text>
+  <line x1="610" y1="716" x2="1140" y2="716" stroke="#1a2747" stroke-width="2"/>
+
+  <rect x="60" y="730" width="255" height="72" rx="8" fill="#ffc943"/>
+  <text x="78" y="760" font-size="18" font-weight="800" fill="#1a2747">P0 · MVP</text>
+  <text x="78" y="786" font-size="14" fill="#1a2747">fin novembre</text>
+  <rect x="335" y="730" width="255" height="72" rx="8" fill="#ff9e42"/>
+  <text x="353" y="760" font-size="18" font-weight="800" fill="#1a2747">P1</text>
+  <text x="353" y="786" font-size="14" fill="#1a2747">fin décembre</text>
+  <rect x="610" y="730" width="255" height="72" rx="8" fill="#66d575"/>
+  <text x="628" y="760" font-size="18" font-weight="800" fill="#1a2747">P2</text>
+  <text x="628" y="786" font-size="14" fill="#1a2747">fin janvier</text>
+  <rect x="885" y="730" width="255" height="72" rx="8" fill="#a8daff"/>
+  <text x="903" y="760" font-size="18" font-weight="800" fill="#1a2747">P3</text>
+  <text x="903" y="786" font-size="14" fill="#1a2747">fin février</text>
+
+  <text x="60" y="836" font-size="14" fill="#3c3c3b">P0 à P3 sont des livraisons datées, pas des priorités. Un sprint d'une semaine découpe chaque jalon.</text>
+</svg>
