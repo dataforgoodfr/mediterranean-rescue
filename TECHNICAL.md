@@ -153,6 +153,54 @@ TypeScript et `object` en Python, puis se vérifie champ par champ (`frontend/sr
 une variable CSS passée dans `style`, on l'ajoute au type de React
 (`frontend/src/design/variables-css.d.ts`) au lieu de forcer le type.
 
+### Typer une donnée qui vient de l'extérieur
+
+Une réponse de l'API, un fichier ou un champ de formulaire ne sont pas encore du type qu'on
+attend : on ne le suppose pas avec `as` ou `cast`, on le vérifie. En TypeScript, la valeur entre
+en `unknown`, puis chaque champ se teste ; une fois testé, TypeScript connaît son type.
+
+```ts
+import { estObjet, lireJson } from './lire'
+
+type Port = { nom: string; latitude: number; longitude: number }
+
+export function lirePort(texte: string): Port | null {
+  const brut = lireJson(texte) // unknown : on ne sait encore rien
+  if (!estObjet(brut)) return null
+  const { nom, latitude, longitude } = brut // chacun est unknown
+  if (typeof nom !== 'string' || typeof latitude !== 'number' || typeof longitude !== 'number') return null
+  return { nom, latitude, longitude } // ici, TypeScript sait que les types sont justes
+}
+
+// Une case d'un tableau peut être vide (noUncheckedIndexedAccess) : on le traite.
+export function premierPort(ports: Port[]): string {
+  const premier = ports[0]
+  return premier ? premier.nom : 'aucun port'
+}
+```
+
+En Python, c'est la même idée avec `object` et `isinstance` :
+
+```python
+def lire_port(texte: str) -> Port | None:
+    brut: object = json.loads(texte)
+    if not isinstance(brut, dict):
+        return None
+    nom = brut.get("nom")
+    latitude = brut.get("latitude")
+    longitude = brut.get("longitude")
+    if not isinstance(nom, str):
+        return None
+    if not isinstance(latitude, float | int) or not isinstance(longitude, float | int):
+        return None
+    return Port(nom=nom, latitude=float(latitude), longitude=float(longitude))
+```
+
+Ces deux exemples passent tous les contrôles du dépôt (tsc, oxlint, mypy, le hook). Pour une
+réponse de l'API, le type attendu vient de `src/api/schema.ts`, jamais d'un type écrit à la main.
+Bloqué malgré tout ? Écris-le dans l'issue ou sur le canal : une vraie exception se discute, puis
+se déclare dans `frontend/.oxlintrc.json` (`overrides`, avec la raison), où elle se relit.
+
 Ce que les outils ne voient pas, et que la relecture vérifie : une déclaration `declare` ou un
 ajout à un type existant (comme `variables-css.d.ts`), une garde `x is T` dont le corps ment, et
 en Python une valeur `Any` venue d'une bibliothèque (`json.loads`, `TestClient.json()`) : mypy
