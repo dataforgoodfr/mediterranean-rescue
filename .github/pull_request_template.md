@@ -14,6 +14,8 @@ Closes #
 - [ ] Aucune donnée réelle, aucun secret.
 - [ ] Je peux expliquer chaque ligne.
 - [ ] La doc ou le README est à jour si le comportement change.
+- [ ] Les textes affichés passent par `t()`. S'il manque une langue, l'étiquette `traduction`
+      est posée et les langues manquantes sont écrites ici.
 
 ## Relecture (pour le tech lead qui relit)
 

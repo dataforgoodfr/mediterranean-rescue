@@ -15,4 +15,5 @@ gh label create "back" --color 0E7C86 --description "L'API et la base" --force
 gh label create "data" --color C69026 --description "Sources et données" --force
 gh label create "docs" --color 8B949E --description "Documentation" --force
 gh label create "ci" --color BFD4F2 --description "CI et outillage" --force
+gh label create "traduction" --color FBCA04 --description "Un texte attend sa traduction dans une langue" --force
 gh label create "bug" --color D93F0B --description "Quelque chose ne marche pas" --force

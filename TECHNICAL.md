@@ -206,6 +206,31 @@ ajout à un type existant (comme `variables-css.d.ts`), une garde `x is T` dont 
 en Python une valeur `Any` venue d'une bibliothèque (`json.loads`, `TestClient.json()`) : mypy
 ne refuse que le `Any` écrit, pas celui qui circule.
 
+## Les langues
+
+L'app est en anglais (la langue par défaut), en français et, plus tard, en arabe. Tout est dans
+`frontend/src/i18n/`, sans bibliothèque : une clé par texte, un fichier par langue.
+
+```tsx
+// 1. frontend/src/i18n/cles.ts : la clé, avec une note pour qui traduira
+'carte.legende': 'Le titre de la légende de la carte',
+
+// 2. en.ts et fr.ts (et ar.ts si tu le parles) : le texte
+'carte.legende': 'Legend',
+
+// 3. Dans le composant
+const t = useTraduction()
+return <h2>{t('carte.legende')}</h2>
+```
+
+- La langue vient du navigateur (`choisirLangue(navigator.languages)` dans `main.tsx`).
+  `FournisseurLangue` la reporte sur `<html lang dir>` : l'arabe passe la page en `dir="rtl"`.
+- Un texte peut porter des valeurs : `'API : {etat}'`, puis `t('accueil.api', { etat })`.
+- Une clé absente d'une langue s'affiche en anglais, puis en français, puis `[la.cle]` : un oubli
+  se voit sans casser l'app. `pnpm i18n:manquantes` liste ce qui manque, langue par langue.
+- Dans les tests, `renderAvecApp` affiche en français ; `renderAvecApp(<App />, { langue: 'en' })`
+  pour une autre langue.
+
 ## Où est quoi
 
 | Chemin | Rôle |
@@ -216,6 +241,7 @@ ne refuse que le `Any` écrit, pas celui qui circule.
 | `backend/app/` | L'API : `main.py` (les routes), `db.py` (la base), `config.py` (les réglages) |
 | `backend/tests/` | Les tests du backend ; `conftest.py` fournit la base des tests |
 | `frontend/src/` | L'app React : `App.tsx` (les pages), `pages/`, `api.ts` (les appels à l'API) |
+| `frontend/src/i18n/` | Les langues : les clés des textes, une traduction par langue, `useTraduction` |
 | `frontend/src/design/` | Le design system : couleurs et tailles en variables, `Logo`, `Picto` ([docs/design-system.md](docs/design-system.md)) |
 | `frontend/src/assets/` | Le logo, les 53 pictos, la police Raleway et sa licence (SIL OFL) |
 | `docker-compose.dev.yaml` | Tout le projet pour développer, avec rechargement automatique |

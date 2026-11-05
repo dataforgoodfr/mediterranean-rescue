@@ -30,6 +30,22 @@ On suit les [commits conventionnels](https://www.conventionalcommits.org/fr/v1.0
 C'est surtout le **titre de la pull request** qui compte : il devient le commit sur `main`, et
 la CI le vérifie.
 
+## Les langues
+
+La carte parle anglais d'abord, puis français ; l'arabe est prévu, en option. Le code, les
+issues et la doc restent comme avant (code en anglais, le reste en français).
+
+- **Un texte affiché passe par une clé**, jamais écrit en dur dans un composant : la clé dans
+  `frontend/src/i18n/cles.ts`, le texte dans `en.ts`, `fr.ts` ou `ar.ts`, et `t('ma.cle')` dans
+  le composant. Le mode d'emploi est dans [TECHNICAL.md](TECHNICAL.md) (« Les langues »).
+- **Traduire n'est pas obligatoire.** Écris le texte dans les langues que tu maîtrises, au moins
+  une. Si tu n'es pas sûr·e d'une langue, laisse sa clé absente : pas de traduction approximative,
+  ni de traduction automatique que personne n'a relue. L'app affiche alors l'anglais, ou le
+  français.
+- **Une langue manque ? Dis-le.** Pose l'étiquette `traduction` sur ta pull request et écris dans
+  sa description les langues qui manquent. `pnpm i18n:manquantes` (dans `frontend/`) liste tout
+  ce qui reste à traduire.
+
 ## Trois règles
 
 - **Aucune donnée réelle, aucun secret** dans Git, une issue ou une pull request. Les exemples

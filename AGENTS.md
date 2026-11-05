@@ -9,6 +9,9 @@ Consignes pour un assistant de code qui travaille dans ce dépôt. Elles complè
 - Une issue à la fois. Ne touche que la zone de l'issue.
 - Aucune donnée réelle, aucun secret, ni dans le code, ni dans les tests, ni dans les exemples.
 - Le code en anglais ; les commentaires et la documentation en français.
+- Un texte affiché passe par une clé et `t()` (`frontend/src/i18n/`), jamais en dur. Une
+  langue que tu ne maîtrises pas reste absente, avec l'étiquette `traduction` : CONTRIBUTING.md
+  (« Les langues »).
 - Les mots du métier sont dans [docs/glossaire.md](docs/glossaire.md) : reprends-les.
 - FastAPI : suis la doc officielle de la version installée (https://fastapi.tiangolo.com/).
   `Annotated` pour les dépendances, `lifespan` pour le démarrage (pas `on_event`, déprécié).

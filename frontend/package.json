@@ -9,6 +9,7 @@
     "lint": "oxlint --type-aware --deny-warnings",
     "preview": "vite preview",
     "test": "vitest run",
+    "i18n:manquantes": "node outils/i18n-manquantes.ts",
     "api:types": "pnpm --dir outils/types-api install --frozen-lockfile && pnpm --dir outils/types-api generer",
     "api:verifier": "pnpm --dir outils/types-api install --frozen-lockfile && pnpm --dir outils/types-api verifier"
   },

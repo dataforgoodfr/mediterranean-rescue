@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import './index.css'
 import App from './App.tsx'
+import { choisirLangue, FournisseurLangue } from './i18n'
 
 // Le cache des appels à l'API, partagé par toute l'app. https://tanstack.com/query/latest
 const queryClient = new QueryClient()
@@ -14,10 +15,12 @@ if (!racine) throw new Error('index.html : élément #root introuvable')
 
 createRoot(racine).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </QueryClientProvider>
+    <FournisseurLangue langue={choisirLangue(navigator.languages)}>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </FournisseurLangue>
   </StrictMode>,
 )
