@@ -4,7 +4,7 @@ name: Fonctionnalité
 description: Une chose que la carte ou l'API doit savoir faire.
 body:
   - type: textarea
-    id: besoin
+    id: need
     attributes:
       label: Le besoin
       description: Une phrase d'utilisateur.
@@ -12,7 +12,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: criteres
+    id: criteria
     attributes:
       label: Critères d'acceptation
       description: Vérifiables, un par ligne. Chacun aura au moins un test.
@@ -22,7 +22,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: hors-perimetre
+    id: out-of-scope
     attributes:
       label: Hors du périmètre
       placeholder: Ce qui est traité dans une autre issue, avec son numéro.
@@ -32,7 +32,7 @@ body:
       label: Zone de fichiers
       placeholder: frontend/src/, backend/app/main.py
   - type: dropdown
-    id: niveau
+    id: level
     attributes:
       label: Niveau
       options: ["à définir", "good first issue (débutant)", "niveau-2 (intermédiaire)", "niveau-3 (confirmé)"]
@@ -43,7 +43,7 @@ body:
       description: Fichiers à lire, maquette, exemple, données fictives à utiliser.
 
   - type: checkboxes
-    id: prete
+    id: ready
     attributes:
       label: Prête à prendre
       description: Un tech lead coche ces cases avant de passer l'issue dans la colonne « Ready » du tableau (Definition of Ready).

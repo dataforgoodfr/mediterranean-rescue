@@ -31,7 +31,7 @@ updates:
 
   # Le générateur des types de l'API, à part : il a besoin de TypeScript 6 (TECHNICAL.md).
   - package-ecosystem: npm
-    directory: "/frontend/outils/types-api"
+    directory: "/frontend/tools/api-types"
     schedule:
       interval: monthly
     groups:

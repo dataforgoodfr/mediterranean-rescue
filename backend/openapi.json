@@ -1,7 +1,7 @@
 {
   "components": {
     "schemas": {
-      "Sante": {
+      "Health": {
         "properties": {
           "status": {
             "const": "ok",
@@ -12,7 +12,7 @@
         "required": [
           "status"
         ],
-        "title": "Sante",
+        "title": "Health",
         "type": "object"
       }
     }
@@ -25,14 +25,14 @@
   "paths": {
     "/api/health": {
       "get": {
-        "description": "Répond tant que le serveur tourne, sans toucher à la base.",
+        "description": "Answers while the server runs, without touching the database.",
         "operationId": "health_api_health_get",
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Sante"
+                  "$ref": "#/components/schemas/Health"
                 }
               }
             },

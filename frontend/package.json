@@ -9,9 +9,9 @@
     "lint": "oxlint --type-aware --deny-warnings",
     "preview": "vite preview",
     "test": "vitest run",
-    "i18n:manquantes": "node outils/i18n-manquantes.ts",
-    "api:types": "pnpm --dir outils/types-api install --frozen-lockfile && pnpm --dir outils/types-api generer",
-    "api:verifier": "pnpm --dir outils/types-api install --frozen-lockfile && pnpm --dir outils/types-api verifier"
+    "i18n:missing": "node tools/i18n-missing.ts",
+    "api:types": "pnpm --dir tools/api-types install --frozen-lockfile && pnpm --dir tools/api-types generate",
+    "api:check": "pnpm --dir tools/api-types install --frozen-lockfile && pnpm --dir tools/api-types check"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.105.3",

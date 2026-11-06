@@ -41,7 +41,7 @@ line-length = 100
 select = ["E", "F", "I", "B", "UP"]
 
 # Les types : mypy en mode strict, sans échappatoire. Aucun `Any` écrit, aucun `# type: ignore`
-# (le hook pre-commit « aucun contournement de types » les refuse aussi). Doc :
+# (le hook pre-commit « no type suppressions » les refuse aussi). Doc :
 # https://mypy.readthedocs.io/en/stable/config_file.html
 [tool.mypy]
 strict = true

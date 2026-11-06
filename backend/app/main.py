@@ -15,11 +15,11 @@ app = FastAPI(
 )
 
 
-class Sante(BaseModel):
+class Health(BaseModel):
     status: Literal["ok"]
 
 
 @app.get("/api/health")
-def health() -> Sante:
-    """Répond tant que le serveur tourne, sans toucher à la base."""
-    return Sante(status="ok")
+def health() -> Health:
+    """Answers while the server runs, without touching the database."""
+    return Health(status="ok")

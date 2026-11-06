@@ -20,7 +20,7 @@ Les conventions, pour que le code se ressemble :
 - **Une page** : un fichier dans `frontend/src/pages/` et une ligne dans `frontend/src/App.tsx`.
 - **Pas de `any`** en TypeScript : le build refuse le `any` implicite, le lint le `any` écrit.
   `unknown` à la place, puis on vérifie le type.
-- **Les tests du frontend** affichent un composant avec `renderAvecApp` (`frontend/src/test-utils.tsx`),
+- **Les tests du frontend** affichent un composant avec `renderWithProviders` (`frontend/src/test-utils.tsx`),
   qui fournit le cache de l'API et le routeur.
 - **Les tests du backend** demandent `client` ou `session` (`backend/tests/conftest.py`) : une
   base SQLite en mémoire, neuve pour chaque test, remplace Postgres.
@@ -104,7 +104,7 @@ pnpm build
 ```
 
 La CI relance sur chaque pull request ce qu'elle touche (backend, frontend, images Docker), et
-pre-commit partout. On merge quand « CI terminée » et « titre » sont verts : le second vérifie que le
+pre-commit partout. On merge quand « CI done » et « pr-title » sont verts : le second vérifie que le
 titre de la pull request suit les commits conventionnels. Chaque mois, Dependabot propose la
 mise à jour des dépendances.
 
@@ -116,18 +116,18 @@ Les types de l'API ne s'écrivent qu'une fois, dans le backend (les modèles pyd
 
 ```sh
 # 1. Dans backend/ : écrire le schéma de l'API dans backend/openapi.json
-uv run python -m app.schema_openapi
+uv run python -m app.openapi_schema
 # 2. Dans frontend/ : en tirer les types TypeScript, dans src/api/schema.ts
 pnpm api:types
 ```
 
 Les deux fichiers sont versionnés et ne se retouchent jamais à la main. Un test du backend
-échoue si `openapi.json` est en retard sur l'API, et `pnpm api:verifier` échoue si `schema.ts`
+échoue si `openapi.json` est en retard sur l'API, et `pnpm api:check` échoue si `schema.ts`
 est en retard sur `openapi.json`. pre-commit lance les deux quand un fichier de l'API ou du
 schéma change, et la CI aussi. Le front utilise ces types dans `src/api.ts` : quand l'API ajoute,
 retire ou change un champ, tsc montre chaque endroit du front à reprendre.
 
-Le générateur, [openapi-typescript](https://openapi-ts.dev/), vit dans `frontend/outils/types-api/`,
+Le générateur, [openapi-typescript](https://openapi-ts.dev/), vit dans `frontend/tools/api-types/`,
 avec son propre TypeScript 6 : TypeScript 7, celui du frontend, n'a plus l'API JavaScript dont
 il a besoin. On le ramènera dans `frontend/` quand il saura lire TypeScript 7.
 
@@ -142,16 +142,16 @@ type qui ne correspond pas se corrige, même si ça prend du temps ; il ne se fa
   (`no-unsafe-*`). Les règles sont dans `frontend/.oxlintrc.json`.
 - **Python** : mypy en mode `strict`, avec le plugin de pydantic, refuse un `Any` écrit et une
   fonction sans types. Les réglages sont dans `backend/pyproject.toml`.
-- **Partout** : le hook pre-commit « aucun contournement de types » refuse `# type: ignore`,
+- **Partout** : le hook pre-commit « no type suppressions » refuse `# type: ignore`,
   `# mypy:`, `# pyright:`, `@no_type_check`, l'import de `cast` depuis typing, `@ts-ignore`,
   `@ts-nocheck`, `@ts-expect-error`, et les commentaires `oxlint-disable` et `eslint-disable`.
   Une exception à une règle se déclare dans `frontend/.oxlintrc.json` (`overrides`), où elle se
   relit.
 
 Ce qui arrive de l'extérieur (une réponse de l'API, un fichier) est de type `unknown` en
-TypeScript et `object` en Python, puis se vérifie champ par champ (`frontend/src/lire.ts`). Pour
+TypeScript et `object` en Python, puis se vérifie champ par champ (`frontend/src/parse.ts`). Pour
 une variable CSS passée dans `style`, on l'ajoute au type de React
-(`frontend/src/design/variables-css.d.ts`) au lieu de forcer le type.
+(`frontend/src/design/css-variables.d.ts`) au lieu de forcer le type.
 
 ### Typer une donnée qui vient de l'extérieur
 
@@ -160,40 +160,40 @@ attend : on ne le suppose pas avec `as` ou `cast`, on le vérifie. En TypeScript
 en `unknown`, puis chaque champ se teste ; une fois testé, TypeScript connaît son type.
 
 ```ts
-import { estObjet, lireJson } from './lire'
+import { isRecord, parseJson } from './parse'
 
-type Port = { nom: string; latitude: number; longitude: number }
+type Port = { name: string; latitude: number; longitude: number }
 
-export function lirePort(texte: string): Port | null {
-  const brut = lireJson(texte) // unknown : on ne sait encore rien
-  if (!estObjet(brut)) return null
-  const { nom, latitude, longitude } = brut // chacun est unknown
-  if (typeof nom !== 'string' || typeof latitude !== 'number' || typeof longitude !== 'number') return null
-  return { nom, latitude, longitude } // ici, TypeScript sait que les types sont justes
+export function parsePort(text: string): Port | null {
+  const raw = parseJson(text) // unknown : on ne sait encore rien
+  if (!isRecord(raw)) return null
+  const { name, latitude, longitude } = raw // chacun est unknown
+  if (typeof name !== 'string' || typeof latitude !== 'number' || typeof longitude !== 'number') return null
+  return { name, latitude, longitude } // ici, TypeScript sait que les types sont justes
 }
 
 // Une case d'un tableau peut être vide (noUncheckedIndexedAccess) : on le traite.
-export function premierPort(ports: Port[]): string {
-  const premier = ports[0]
-  return premier ? premier.nom : 'aucun port'
+export function firstPortName(ports: Port[]): string {
+  const first = ports[0]
+  return first ? first.name : 'no port'
 }
 ```
 
 En Python, c'est la même idée avec `object` et `isinstance` :
 
 ```python
-def lire_port(texte: str) -> Port | None:
-    brut: object = json.loads(texte)
-    if not isinstance(brut, dict):
+def parse_port(text: str) -> Port | None:
+    raw: object = json.loads(text)
+    if not isinstance(raw, dict):
         return None
-    nom = brut.get("nom")
-    latitude = brut.get("latitude")
-    longitude = brut.get("longitude")
-    if not isinstance(nom, str):
+    name = raw.get("name")
+    latitude = raw.get("latitude")
+    longitude = raw.get("longitude")
+    if not isinstance(name, str):
         return None
     if not isinstance(latitude, float | int) or not isinstance(longitude, float | int):
         return None
-    return Port(nom=nom, latitude=float(latitude), longitude=float(longitude))
+    return Port(name=name, latitude=float(latitude), longitude=float(longitude))
 ```
 
 Ces deux exemples passent tous les contrôles du dépôt (tsc, oxlint, mypy, le hook). Pour une
@@ -202,47 +202,51 @@ Bloqué malgré tout ? Écris-le dans l'issue ou sur le canal : une vraie except
 se déclare dans `frontend/.oxlintrc.json` (`overrides`, avec la raison), où elle se relit.
 
 Ce que les outils ne voient pas, et que la relecture vérifie : une déclaration `declare` ou un
-ajout à un type existant (comme `variables-css.d.ts`), une garde `x is T` dont le corps ment, et
+ajout à un type existant (comme `css-variables.d.ts`), une garde `x is T` dont le corps ment, et
 en Python une valeur `Any` venue d'une bibliothèque (`json.loads`, `TestClient.json()`) : mypy
 ne refuse que le `Any` écrit, pas celui qui circule.
 
 ## Les langues
 
-L'app est en anglais (la langue par défaut), en français et, plus tard, en arabe. Tout est dans
+L'app est en anglais (la langue par défaut) et en français. D'autres langues suivront : l'arabe,
+que les équipes de SOS utilisent beaucoup, puis l'italien et l'allemand. Tout est dans
 `frontend/src/i18n/`, sans bibliothèque : une clé par texte, un fichier par langue.
 
 ```tsx
-// 1. frontend/src/i18n/cles.ts : la clé, avec une note pour qui traduira
-'carte.legende': 'Le titre de la légende de la carte',
+// 1. frontend/src/i18n/keys.ts : la clé, en anglais, avec une note pour qui traduira
+'map.legend': 'Le titre de la légende de la carte',
 
 // 2. en.ts et fr.ts (et ar.ts si tu le parles) : le texte
-'carte.legende': 'Legend',
+'map.legend': 'Legend',
 
 // 3. Dans le composant
-const t = useTraduction()
-return <h2>{t('carte.legende')}</h2>
+const t = useTranslation()
+return <h2>{t('map.legend')}</h2>
 ```
 
-- La langue vient du navigateur (`choisirLangue(navigator.languages)` dans `main.tsx`).
-  `FournisseurLangue` la reporte sur `<html lang dir>` : l'arabe passe la page en `dir="rtl"`.
-- Un texte peut porter des valeurs : `'API : {etat}'`, puis `t('accueil.api', { etat })`.
+- La langue vient du navigateur (`detectLanguage(navigator.languages)` dans `main.tsx`).
+  `LanguageProvider` la reporte sur `<html lang dir>` : l'arabe passe la page en `dir="rtl"`.
+- Un texte peut porter des valeurs : `'API : {status}'`, puis `t('home.apiStatus', { status })`.
 - Une clé absente d'une langue s'affiche en anglais, puis en français, puis `[la.cle]` : un oubli
-  se voit sans casser l'app. `pnpm i18n:manquantes` liste ce qui manque, langue par langue.
-- Dans les tests, `renderAvecApp` affiche en français ; `renderAvecApp(<App />, { langue: 'en' })`
-  pour une autre langue.
+  se voit sans casser l'app. `pnpm i18n:missing` liste ce qui manque, langue par langue.
+- Dans les tests, `renderWithProviders` affiche en français ;
+  `renderWithProviders(<App />, { language: 'en' })` pour une autre langue.
+- **Une langue de plus** (italien, allemand…) : un fichier comme `fr.ts` (par exemple `it.ts`),
+  puis une entrée dans `translations` et une dans `LANGUAGES` (`frontend/src/i18n/translate.ts`).
+  Une langue qui s'écrit de droite à gauche s'ajoute aussi à `RIGHT_TO_LEFT`.
 
 ## Où est quoi
 
 | Chemin | Rôle |
 |---|---|
-| `backend/openapi.json` | Le schéma OpenAPI de l'API, généré (`python -m app.schema_openapi`) |
+| `backend/openapi.json` | Le schéma OpenAPI de l'API, généré (`python -m app.openapi_schema`) |
 | `frontend/src/api/schema.ts` | Les types TypeScript de l'API, générés depuis ce schéma (`pnpm api:types`) |
-| `frontend/outils/types-api/` | Le générateur de ces types, avec son TypeScript 6 |
+| `frontend/tools/api-types/` | Le générateur de ces types, avec son TypeScript 6 |
 | `backend/app/` | L'API : `main.py` (les routes), `db.py` (la base), `config.py` (les réglages) |
 | `backend/tests/` | Les tests du backend ; `conftest.py` fournit la base des tests |
 | `frontend/src/` | L'app React : `App.tsx` (les pages), `pages/`, `api.ts` (les appels à l'API) |
-| `frontend/src/i18n/` | Les langues : les clés des textes, une traduction par langue, `useTraduction` |
-| `frontend/src/design/` | Le design system : couleurs et tailles en variables, `Logo`, `Picto` ([docs/design-system.md](docs/design-system.md)) |
+| `frontend/src/i18n/` | Les langues : les clés des textes, une traduction par langue, `useTranslation` |
+| `frontend/src/design/` | Le design system : couleurs et tailles en variables, `Logo`, `Icon` ([docs/design-system.md](docs/design-system.md)) |
 | `frontend/src/assets/` | Le logo, les 53 pictos, la police Raleway et sa licence (SIL OFL) |
 | `docker-compose.dev.yaml` | Tout le projet pour développer, avec rechargement automatique |
 | `docker-compose.prod.yaml` | Le projet en production |
@@ -250,4 +254,6 @@ return <h2>{t('carte.legende')}</h2>
 | `docs/` | Les données de la carte actuelle ([docs/donnees.md](docs/donnees.md)), le design system, la progression des bénévoles, le glossaire |
 | `.github/` | CI, modèles d'issue et de pull request |
 
-Code en anglais ; commentaires et documentation en français.
+**Code en anglais** : noms de fichiers et de dossiers, composants, fonctions, variables, types,
+clés de traduction, jetons CSS, scripts et noms des tests. **Commentaires et documentation en
+français.** Les textes affichés vivent dans les fichiers de langue (`frontend/src/i18n/`).

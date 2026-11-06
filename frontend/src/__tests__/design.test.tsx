@@ -1,30 +1,30 @@
 import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
-import { Logo, Picto, pictos } from '../design'
+import { Icon, icons, Logo } from '../design'
 
-test('le logo est une image nommée SOS MEDITERRANEE', () => {
+test('the logo is an image named SOS MEDITERRANEE', () => {
   render(<Logo />)
   expect(screen.getByRole('img', { name: 'SOS MEDITERRANEE' })).toBeInTheDocument()
 })
 
-test('tous les pictos de la charte sont chargés', () => {
-  expect(Object.keys(pictos)).toHaveLength(53)
-  expect(pictos.lifebuoy).toBeTruthy()
+test('loads every icon of the brand guidelines', () => {
+  expect(Object.keys(icons)).toHaveLength(53)
+  expect(icons.lifebuoy).toBeTruthy()
 })
 
-test('un picto avec un texte est lu par les lecteurs d’écran', () => {
-  render(<Picto name="anchor" label="Port de débarquement" />)
-  expect(screen.getByRole('img', { name: 'Port de débarquement' })).toBeInTheDocument()
+test('an icon with a label is read by screen readers', () => {
+  render(<Icon name="anchor" label="Disembarkation port" />)
+  expect(screen.getByRole('img', { name: 'Disembarkation port' })).toBeInTheDocument()
 })
 
-test('un picto sans texte est décoratif, un nom inconnu ne rend rien', () => {
+test('an icon without a label is decorative, an unknown name renders nothing', () => {
   const { container } = render(
     <>
-      <Picto name="anchor" />
-      <Picto name="inconnu" />
-      <Picto name="toString" />
+      <Icon name="anchor" />
+      <Icon name="unknown" />
+      <Icon name="toString" />
     </>,
   )
   expect(screen.queryByRole('img')).not.toBeInTheDocument()
-  expect(container.querySelectorAll('.ra-picto')).toHaveLength(1)
+  expect(container.querySelectorAll('.ra-icon')).toHaveLength(1)
 })

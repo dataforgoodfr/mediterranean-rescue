@@ -23,5 +23,5 @@ Consignes pour un assistant de code qui travaille dans ce dépôt. Elles complè
   TypeScript ; ni `Any`, ni `cast`, ni `# type: ignore` en Python. Un type faux se corrige.
   Règles et outils : TECHNICAL.md (« Les types : aucun contournement »).
 - Interface : suis [docs/design-system.md](docs/design-system.md). Les variables de
-  `frontend/src/design/tokens.css`, jamais une valeur en dur ; `<Logo />` et `<Picto />` pour le
+  `frontend/src/design/tokens.css`, jamais une valeur en dur ; `<Logo />` et `<Icon />` pour le
   logo et les pictos. « SOS MEDITERRANEE » s'écrit en majuscules, sans accent.
