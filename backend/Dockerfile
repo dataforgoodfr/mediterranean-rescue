@@ -23,8 +23,8 @@ USER nonroot
 
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
-# Derrière Traefik (docker-compose.prod.yaml) : --proxy-headers, comme le recommande
+# Derrière le proxy de Clever Cloud : --proxy-headers, comme le recommande
 # https://fastapi.tiangolo.com/deployment/docker/ . Par défaut, Uvicorn ne fait confiance
-# qu'à 127.0.0.1 (https://uvicorn.dev/settings/) ; ici le conteneur n'ouvre aucun port vers
-# l'extérieur et n'est joint que par les réseaux internes du serveur.
+# qu'à 127.0.0.1 (https://uvicorn.dev/settings/) ; l'adresse du proxy n'est pas fixe, d'où
+# « * ». Aucune route ne s'appuie encore sur l'IP du client ni sur le schéma.
 CMD ["fastapi", "run", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]

@@ -65,8 +65,7 @@ frontend/node_modules`).
 Le staging tourne sur Clever Cloud : https://rescue-atlas-staging.cleverapps.io (`/api` va au
 backend). Il se redéploie à chaque merge sur `main`, avec les deux Dockerfiles ; la base est un
 Postgres lié, lu dans `POSTGRESQL_ADDON_URI` (`backend/app/config.py`). Les tech leads le créent
-et le suppriment avec les scripts du dépôt privé (`deploy/`). `docker-compose.prod.yaml`, prévu
-pour Coolify, n'est plus utilisé.
+et le suppriment avec les scripts du dépôt privé (`deploy/`).
 
 ## Lancer le projet sans Docker
 
@@ -247,7 +246,6 @@ return <h2>{t('carte.legende')}</h2>
 | `frontend/src/design/` | Le design system : couleurs et tailles en variables, `Logo`, `Picto` ([docs/design-system.md](docs/design-system.md)) |
 | `frontend/src/assets/` | Le logo, les 53 pictos, la police Raleway et sa licence (SIL OFL) |
 | `docker-compose.dev.yaml` | Tout le projet pour développer, avec rechargement automatique |
-| `docker-compose.prod.yaml` | Le projet en production |
 | `data/` | Les données locales, jamais committées |
 | `docs/` | Les données de la carte actuelle ([docs/donnees.md](docs/donnees.md)), le design system, la progression des bénévoles, le glossaire |
 | `.github/` | CI, modèles d'issue et de pull request |

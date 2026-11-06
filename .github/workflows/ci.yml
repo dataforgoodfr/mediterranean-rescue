@@ -127,18 +127,18 @@ jobs:
       - run: pnpm test
       - run: pnpm build # vérifie aussi les types (tsc)
 
-  # Les images Docker se construisent : celles de la prod, et celle du frontend en dev.
+  # Les images Docker se construisent : celles que Clever Cloud déploie (les deux
+  # Dockerfiles), et celles du dev.
   docker:
     needs: changes
     if: needs.changes.outputs.docker == 'true'
     runs-on: ubuntu-latest
-    env:
-      POSTGRES_PASSWORD: ci-seulement # la prod l'exige ; rien n'est lancé ici
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - run: docker compose -f docker-compose.prod.yaml build
+      - run: docker build backend
+      - run: docker build frontend
       - run: docker compose -f docker-compose.dev.yaml build
 
   # Le seul contrôle à rendre obligatoire sur main. Un job sauté (zone non touchée) compte comme
