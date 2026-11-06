@@ -1,0 +1,61 @@
+# Dependabot propose chaque mois la mise à jour des dépendances, une pull request par zone.
+# Doc : https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: uv
+    directory: "/backend"
+    schedule:
+      interval: monthly
+    groups:
+      backend:
+        patterns: ["*"]
+
+  - package-ecosystem: npm # pnpm se déclare sous « npm »
+    directory: "/frontend"
+    schedule:
+      interval: monthly
+    groups:
+      frontend:
+        patterns: ["*"]
+    ignore: # Node suit la LTS de la CI (26) ; on passe à la suivante à la main
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  # Le générateur des types de l'API, à part : il a besoin de TypeScript 6 (TECHNICAL.md).
+  - package-ecosystem: npm
+    directory: "/frontend/outils/types-api"
+    schedule:
+      interval: monthly
+    groups:
+      types-api:
+        patterns: ["*"]
+    ignore: # TypeScript 7 n'a plus l'API JavaScript dont openapi-typescript a besoin
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: docker
+    directories: ["/backend", "/frontend"]
+    schedule:
+      interval: monthly
+    groups:
+      docker:
+        patterns: ["*"]
+    ignore:
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: pre-commit
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      pre-commit:
+        patterns: ["*"]

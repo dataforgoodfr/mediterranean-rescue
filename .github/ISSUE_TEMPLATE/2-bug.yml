@@ -1,0 +1,43 @@
+# Modèle d'issue « bug ». Le test qui reproduit le bug s'écrit avant la correction.
+name: Bug
+description: Quelque chose ne marche pas comme prévu.
+labels: [bug]
+body:
+  - type: textarea
+    id: etapes
+    attributes:
+      label: Pour reproduire
+      placeholder: |
+        1. Ouvrir la carte
+        2. Cliquer sur…
+    validations:
+      required: true
+  - type: textarea
+    id: attendu
+    attributes:
+      label: Ce qui devrait se passer
+    validations:
+      required: true
+  - type: textarea
+    id: observe
+    attributes:
+      label: Ce qui se passe
+      description: Message d'erreur, capture d'écran. Rien de sensible, aucune donnée réelle.
+    validations:
+      required: true
+  - type: input
+    id: environnement
+    attributes:
+      label: Navigateur et système
+      placeholder: Firefox 150, macOS
+
+  - type: checkboxes
+    id: prete
+    attributes:
+      label: Prête à prendre
+      description: Un tech lead coche ces cases avant de passer l'issue dans la colonne « Ready » du tableau (Definition of Ready).
+      options:
+        - label: "On sait le reproduire."
+        - label: "Il tient en une journée au plus."
+        - label: "On sait où travailler (zone et fichiers)."
+        - label: "Son niveau est choisi."

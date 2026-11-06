@@ -1,0 +1,15 @@
+{
+  "name": "rescue-atlas-types-api",
+  "private": true,
+  "description": "Génère frontend/src/api/schema.ts depuis backend/openapi.json. Dossier à part : openapi-typescript a besoin de l'API JavaScript de TypeScript, que TypeScript 7 (celui du frontend) n'a plus.",
+  "type": "module",
+  "scripts": {
+    "generer": "openapi-typescript ../../../backend/openapi.json -o ../../src/api/schema.ts",
+    "verifier": "openapi-typescript ../../../backend/openapi.json -o ../../src/api/schema.ts --check"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0",
+    "typescript": "6.0.3"
+  },
+  "packageManager": "pnpm@12.10.1"
+}

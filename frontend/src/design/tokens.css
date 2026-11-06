@@ -1,0 +1,36 @@
+/* Les jetons du design system : la charte graphique de SOS MEDITERRANEE, plus une échelle
+   d'espaces et de tailles. Le code lit ces variables, jamais une valeur en dur.
+   Règles et marge de liberté : docs/design-system.md */
+
+:root {
+  /* Couleurs de la charte graphique simplifiée (2024), page couleurs datée de décembre 2019 */
+  --couleur-principale: #1a2747; /* bleu marine : texte fort, titres longs, fonds sombres */
+  --couleur-secondaire: #f03e1b; /* orange : titres, accents. Contraste 3,9:1 sur blanc,
+                                    réservé aux grands titres (24 px ou plus) et aux pictos */
+  --couleur-texte: #3c3c3b; /* gris 90 % : texte courant */
+  --couleur-fond-bloc: #e3e2e9; /* bleu à 10 % : fonds de blocs */
+  --couleur-fond: #ffffff;
+
+  /* Police de la charte : Raleway, servie par le site (index.css) */
+  --police: 'Raleway', system-ui, sans-serif;
+
+  /* Tailles de texte */
+  --taille-texte: 1rem;
+  --taille-intertitre: 1.25rem;
+  --taille-titre: 2rem;
+
+  /* Espaces */
+  --espace-1: 0.5rem;
+  --espace-2: 1rem;
+  --espace-3: 2rem;
+  --espace-4: 4rem;
+
+  /* Formes et focus */
+  --rayon: 0.25rem;
+  --focus: 3px solid var(--couleur-principale);
+
+  /* Logo : 10 mm de haut au minimum dans la charte, soit environ 38 px à l'écran */
+  --logo-hauteur-min: 2.375rem;
+
+  color-scheme: light;
+}

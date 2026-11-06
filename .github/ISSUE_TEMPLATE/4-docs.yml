@@ -1,0 +1,22 @@
+# Modèle d'issue « documentation » : une explication qui manque, une erreur, ce qui a bloqué.
+name: Documentation
+description: Une explication qui manque, une erreur dans la doc, ce qui t'a bloqué en arrivant.
+labels: [docs]
+body:
+  - type: textarea
+    id: probleme
+    attributes:
+      label: Ce qui manque ou bloque
+      placeholder: Dans TECHNICAL.md, je ne savais pas quel port choisir quand le 5432 était pris.
+    validations:
+      required: true
+  - type: input
+    id: ou
+    attributes:
+      label: Où
+      placeholder: TECHNICAL.md, docs/glossaire.md
+  - type: textarea
+    id: proposition
+    attributes:
+      label: Ce que tu proposes
+      placeholder: Une phrase, un exemple, un lien.
