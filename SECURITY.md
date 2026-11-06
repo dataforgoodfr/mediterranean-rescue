@@ -20,7 +20,7 @@ Ce projet alimente une carte publique documentant les opérations de recherche e
 **Règles non négociables :**
 
 1. **Aucune donnée nominative.** Les sources fournies par SOS Méditerranée ne contiennent que des effectifs et des pays d'origine. Il est interdit d'introduire, même en test, des noms, identifiants, photos ou tout élément permettant d'identifier une personne secourue.
-2. **Données d'exemple fictives obligatoires.** Tout développement, test, issue ou maquette utilise exclusivement le jeu de données fictives du projet (voir DoR). Aucune donnée réelle de mission ne figure dans le dépôt, les issues, les pull requests ou les environnements de développement.
+2. **Données d'exemple fictives obligatoires.** Tout développement, test, issue ou maquette utilise exclusivement le jeu de données fictives du projet (voir DoR - CONTRIBUTING.md). Aucune donnée réelle de mission ne figure dans le dépôt, les issues, les pull requests ou les environnements de développement.
 3. **Gouvernance des accès.** Tout accès aux données de production passe par l'équipe OPS de SOS Méditerranée. Les accès sont attribués par rôles (RBAC) selon le principe du moindre privilège.
 4. **Traçabilité.** Chaque publication de données doit être horodatée, attribuée à un auteur identifié et journalisée de manière infalsifiable.
 
@@ -38,7 +38,7 @@ Cette policy s'applique à :
 **Ne créez pas d'issue publique pour une faille de sécurité.**
 
 Signalez-la en privé, par email à : **[À COMPLÉTER : securite@sosmediterranee.org]**
-ou via le formulaire GitHub « Report a vulnerability » (Private vulnerability reporting) si activé sur le dépôt.
+ou via le formulaire GitHub « Report a vulnerability » (Private vulnerability reporting).
 
 Merci d'inclure :
 
@@ -67,9 +67,9 @@ La sécurité est collective : toute recherche de failles effectuée de bonne fo
 ## Bonnes pratiques contributeurs
 
 - **Secrets** : jamais de clé, token ou mot de passe dans le code, l'historique ou les issues. Utilisez des variables d'environnement ; les secrets commis par erreur doivent être révoqués immédiatement et signalés.
-- **Dépendances** : vérifiez les vulnérabilités connues avant d'ajouter une dépendance (audit automatique en CI).
+- **Dépendances** : vérifiez les vulnérabilités connues avant d'ajouter une dépendance. Une analyse automatique est opérée par GitHub (Dependabot, CodeQL).
 - **Revue de code** : toute PR touchant l'authentification, les accès, le pipeline de données ou la publication passe par la relecture d'au moins un tech lead.
-- **Avant mise en production** : revue de sécurité passée, test d'intrusion à jour, plan de réponse aux incidents vérifié.
+- **Avant mise en production** : revue de sécurité passée, test d'intrusion « à venir », plan de réponse aux incidents vérifié « à venir ».
 
 ## Incident response (résumé)
 
