@@ -37,7 +37,7 @@ Cette policy s'applique à :
 
 **Ne créez pas d'issue publique pour une faille de sécurité.**
 
-Signalez-la en privé, par email à : **[À COMPLÉTER : sécurité@sosmediterranee.org]**
+Signalez-la en privé, par email à : **[À COMPLÉTER : securite@sosmediterranee.org]**
 ou via le formulaire GitHub « Report a vulnerability » (Private vulnerability reporting) si activé sur le dépôt.
 
 Merci d'inclure :
