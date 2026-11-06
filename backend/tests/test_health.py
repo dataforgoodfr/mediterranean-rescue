@@ -11,7 +11,7 @@ def test_health_answers_ok(client: TestClient) -> None:
 
 
 def test_api_docs_live_under_api(client: TestClient) -> None:
-    # Traefik et Vite n'envoient que /api au backend : la doc doit y être.
+    # Clever Cloud et Vite n'envoient que /api au backend : la doc doit y être.
     assert client.get("/api/docs").status_code == 200
     assert client.get("/api/openapi.json").json()["info"]["title"] == "Rescue Atlas"
 

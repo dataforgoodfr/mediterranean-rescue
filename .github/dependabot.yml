@@ -1,11 +1,15 @@
 # Dependabot propose chaque mois la mise à jour des dépendances, une pull request par zone.
 # Doc : https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+# Chaque zone a `commit-message.prefix` : le titre de la PR suit les commits conventionnels,
+# sinon le check « titre » (pr-title.yml) la bloque.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: monthly
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       actions:
         patterns: ["*"]
@@ -14,6 +18,8 @@ updates:
     directory: "/backend"
     schedule:
       interval: monthly
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       backend:
         patterns: ["*"]
@@ -22,6 +28,8 @@ updates:
     directory: "/frontend"
     schedule:
       interval: monthly
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       frontend:
         patterns: ["*"]
@@ -34,6 +42,8 @@ updates:
     directory: "/frontend/tools/api-types"
     schedule:
       interval: monthly
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       types-api:
         patterns: ["*"]
@@ -45,6 +55,8 @@ updates:
     directories: ["/backend", "/frontend"]
     schedule:
       interval: monthly
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       docker:
         patterns: ["*"]
@@ -56,6 +68,8 @@ updates:
     directory: "/"
     schedule:
       interval: monthly
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       pre-commit:
         patterns: ["*"]

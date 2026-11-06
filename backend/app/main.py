@@ -5,7 +5,7 @@ from typing import Literal
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-# Tout est sous /api : c'est le seul chemin que Vite (en dev) et Traefik (en prod) envoient à
+# Tout est sous /api : c'est le seul chemin que Vite (en dev) et Clever Cloud (en prod) envoient à
 # l'API. https://fastapi.tiangolo.com/tutorial/metadata/#docs-urls
 app = FastAPI(
     title="Rescue Atlas",
