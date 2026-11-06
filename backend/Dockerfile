@@ -23,6 +23,8 @@ USER nonroot
 
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
+# Passe la base de l'hébergeur en DATABASE_URL, puis lance la commande (entrypoint.sh).
+ENTRYPOINT ["/app/entrypoint.sh"]
 # Derrière le proxy de Clever Cloud : --proxy-headers, comme le recommande
 # https://fastapi.tiangolo.com/deployment/docker/ . Par défaut, Uvicorn ne fait confiance
 # qu'à 127.0.0.1 (https://uvicorn.dev/settings/) ; l'adresse du proxy n'est pas fixe, d'où

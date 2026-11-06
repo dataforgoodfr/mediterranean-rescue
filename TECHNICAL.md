@@ -63,8 +63,9 @@ Sous Linux, Docker crée `backend/.venv` et `frontend/node_modules` au nom de ro
 frontend/node_modules`).
 
 Le staging tourne sur Clever Cloud : https://rescue-atlas-staging.cleverapps.io (`/api` va au
-backend). Il se redéploie à chaque merge sur `main`, avec les deux Dockerfiles. Le backend ne lit
-que `DATABASE_URL` et ne sait pas où il tourne : c'est le déploiement qui la remplit. Les tech
+backend). Il se redéploie à chaque merge sur `main`, avec les deux Dockerfiles. Le code Python ne lit
+que `DATABASE_URL` et ne sait pas où il tourne : sur Clever Cloud, `backend/entrypoint.sh` y
+recopie la base liée (`POSTGRESQL_ADDON_URI`) à chaque démarrage. Les tech
 leads créent et suppriment le staging avec les scripts du dépôt privé (`deploy/`).
 
 ## Lancer le projet sans Docker
