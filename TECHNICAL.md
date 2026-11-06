@@ -198,7 +198,7 @@ def parse_port(text: str) -> Port | None:
 
 Ces deux exemples passent tous les contrôles du dépôt (tsc, oxlint, mypy, le hook). Pour une
 réponse de l'API, le type attendu vient de `src/api/schema.ts`, jamais d'un type écrit à la main.
-Bloqué malgré tout ? Écris-le dans l'issue ou sur le canal : une vraie exception se discute, puis
+Bloqué malgré tout ? Écris-le dans l'issue ou sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding) : une vraie exception se discute, puis
 se déclare dans `frontend/.oxlintrc.json` (`overrides`, avec la raison), où elle se relit.
 
 Ce que les outils ne voient pas, et que la relecture vérifie : une déclaration `declare` ou un

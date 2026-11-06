@@ -20,7 +20,7 @@ for Good : questions, entraide et rendez-vous. Présente-toi en arrivant et dema
    elle est prête, sors-la du brouillon et passe l'issue dans « In review » sur le tableau.
 6. **Réponds à la relecture.** Un tech lead approuve et merge.
 
-Bloqué ? Écris-le dans l'issue ou sur le canal, c'est normal. Sans nouvelles au bout d'une
+Bloqué ? Écris-le dans l'issue ou sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), c'est normal. Sans nouvelles au bout d'une
 semaine, l'issue redevient libre.
 
 ## Les messages de commit
@@ -54,8 +54,8 @@ commentaires sont en français.
 - **Inconnu reste vide, jamais zéro.**
 - **Les types ne se contournent jamais.** Pas de `any`, de `as`, de `!` ni de `@ts-ignore` en
   TypeScript, pas de `Any`, de `cast` ni de `# type: ignore` en Python. Si le compilateur refuse,
-  c'est le code qui change, même si ça prend du temps : demande de l'aide sur le canal. Le détail
+  c'est le code qui change, même si ça prend du temps : demande de l'aide sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding). Le détail
   est dans [TECHNICAL.md](TECHNICAL.md) (« Les types : aucun contournement »).
 
-Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le canal, ça compte
+Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), ça compte
 aussi.

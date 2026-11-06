@@ -34,7 +34,7 @@ plaidoyer et la collecte de fonds.
 3. Lance le projet avec [TECHNICAL.md](TECHNICAL.md) : `docker compose -f docker-compose.dev.yaml up` suffit.
 4. Prends une issue `good first issue`, puis suis la [progression](docs/progression.md).
 
-Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le canal, ça compte
+Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), ça compte
 aussi.
 
 ## Licence
