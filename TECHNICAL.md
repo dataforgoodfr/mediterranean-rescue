@@ -62,9 +62,11 @@ Sous Linux, Docker crée `backend/.venv` et `frontend/node_modules` au nom de ro
 `pnpm` refusent ensuite d'y écrire sur ta machine, supprime-les (`sudo rm -rf backend/.venv
 frontend/node_modules`).
 
-`docker-compose.prod.yaml` sert au déploiement sur le Coolify de Data for Good : son mode
-d'emploi est en tête du fichier. Dans Coolify, remplace l'adresse http générée dans « Domains »
-par `https://rescue-atlas.services.d4g.fr`, celle des labels Traefik.
+Le staging tourne sur Clever Cloud : https://rescue-atlas-staging.cleverapps.io (`/api` va au
+backend). Il se redéploie à chaque merge sur `main`, avec les deux Dockerfiles ; la base est un
+Postgres lié, lu dans `POSTGRESQL_ADDON_URI` (`backend/app/config.py`). Les tech leads le créent
+et le suppriment avec les scripts du dépôt privé (`deploy/`). `docker-compose.prod.yaml`, prévu
+pour Coolify, n'est plus utilisé.
 
 ## Lancer le projet sans Docker
 
