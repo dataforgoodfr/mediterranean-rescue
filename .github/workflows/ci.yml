@@ -75,12 +75,15 @@ jobs:
         env:
           SKIP: oxlint,tsc,mypy,schema-api,types-api # lancés par les jobs frontend et backend
 
-  # Le backend FastAPI, sur la plus ancienne version de Python acceptée (3.12) :
-  # en local on développe sur une version plus récente.
+  # Le backend FastAPI, sur la plus ancienne version de Python acceptée (3.12) et sur celle de
+  # l'image de production et du développement local (backend/.python-version).
   backend:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.12", "3.15"]
     defaults:
       run:
         working-directory: backend
@@ -91,7 +94,7 @@ jobs:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "0.13.7" # la même que backend/Dockerfile
-          python-version: "3.12"
+          python-version: ${{ matrix.python }}
       - run: uv sync --locked # échoue si uv.lock ne suit pas pyproject.toml
       - run: uv run mypy # les types, en mode strict, sans échappatoire (pyproject.toml)
       - run: uv run pytest
@@ -124,18 +127,18 @@ jobs:
       - run: pnpm test
       - run: pnpm build # vérifie aussi les types (tsc)
 
-  # Les images Docker se construisent : celles de la prod, et celle du frontend en dev.
+  # Les images Docker se construisent : celles que Clever Cloud déploie (les deux
+  # Dockerfiles), et celles du dev.
   docker:
     needs: changes
     if: needs.changes.outputs.docker == 'true'
     runs-on: ubuntu-latest
-    env:
-      POSTGRES_PASSWORD: ci-seulement # la prod l'exige ; rien n'est lancé ici
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - run: docker compose -f docker-compose.prod.yaml build
+      - run: docker build backend
+      - run: docker build frontend
       - run: docker compose -f docker-compose.dev.yaml build
 
   # Le seul contrôle à rendre obligatoire sur main. Un job sauté (zone non touchée) compte comme
