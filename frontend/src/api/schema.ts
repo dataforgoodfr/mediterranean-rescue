@@ -13,7 +13,7 @@ export interface paths {
         };
         /**
          * Health
-         * @description Répond tant que le serveur tourne, sans toucher à la base.
+         * @description Answers while the server runs, without touching the database.
          */
         get: operations["health_api_health_get"];
         put?: never;
@@ -28,8 +28,8 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** Sante */
-        Sante: {
+        /** Health */
+        Health: {
             /**
              * Status
              * @constant
@@ -60,7 +60,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Sante"];
+                    "application/json": components["schemas"]["Health"];
                 };
             };
         };

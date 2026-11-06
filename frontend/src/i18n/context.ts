@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import type { Langue } from './traduire.ts'
+import type { Language } from './translate.ts'
 
 // La langue choisie, partagée par toute l'app. https://react.dev/reference/react/createContext
-export const ContexteLangue = createContext<Langue>('en')
+export const LanguageContext = createContext<Language>('en')

@@ -1,6 +1,6 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banniere-sombre.svg">
-  <img alt="Rescue Atlas, la carte des opérations de sauvetage en Méditerranée centrale" src=".github/assets/banniere-claire.svg">
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.svg">
+  <img alt="Rescue Atlas, la carte des opérations de sauvetage en Méditerranée centrale" src=".github/assets/banner-light.svg">
 </picture>
 
 <p align="center">
@@ -28,12 +28,13 @@ plaidoyer et la collecte de fonds.
 
 ## Contribuer
 
-1. Présente-toi sur le canal du projet, sur le Mattermost de Data for Good.
+1. Présente-toi sur le [canal d'accueil des bénévoles](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), sur le Mattermost
+   de Data for Good.
 2. Lis [CONTRIBUTING.md](CONTRIBUTING.md) : le chemin d'une issue jusqu'au merge.
 3. Lance le projet avec [TECHNICAL.md](TECHNICAL.md) : `docker compose -f docker-compose.dev.yaml up` suffit.
 4. Prends une issue `good first issue`, puis suis la [progression](docs/progression.md).
 
-Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le canal, ça compte
+Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), ça compte
 aussi.
 
 ## Licence

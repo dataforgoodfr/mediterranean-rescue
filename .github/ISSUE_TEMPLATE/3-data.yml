@@ -4,7 +4,7 @@ description: Une source, un champ ou une donnée à vérifier.
 labels: [data]
 body:
   - type: textarea
-    id: besoin
+    id: need
     attributes:
       label: Le besoin
       placeholder: Afficher le port de débarquement de chaque opération.
@@ -17,7 +17,7 @@ body:
       description: Adresse publique et licence. Jamais une donnée personnelle ni un fichier interne de SOS MEDITERRANEE.
       placeholder: https://… (licence CC BY 4.0)
   - type: textarea
-    id: criteres
+    id: criteria
     attributes:
       label: Critères d'acceptation
       placeholder: |
@@ -27,7 +27,7 @@ body:
       required: true
 
   - type: checkboxes
-    id: prete
+    id: ready
     attributes:
       label: Prête à prendre
       description: Un tech lead coche ces cases avant de passer l'issue dans la colonne « Ready » du tableau (Definition of Ready).

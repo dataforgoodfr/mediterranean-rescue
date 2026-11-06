@@ -5,8 +5,8 @@ import 'react'
 
 declare module 'react' {
   interface CSSProperties {
-    '--ra-masque'?: string
-    '--ra-picto-taille'?: string
-    '--ra-logo-hauteur'?: string
+    '--ra-mask'?: string
+    '--ra-icon-size'?: string
+    '--ra-logo-height'?: string
   }
 }

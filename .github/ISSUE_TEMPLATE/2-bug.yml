@@ -4,7 +4,7 @@ description: Quelque chose ne marche pas comme prévu.
 labels: [bug]
 body:
   - type: textarea
-    id: etapes
+    id: steps
     attributes:
       label: Pour reproduire
       placeholder: |
@@ -13,26 +13,26 @@ body:
     validations:
       required: true
   - type: textarea
-    id: attendu
+    id: expected
     attributes:
       label: Ce qui devrait se passer
     validations:
       required: true
   - type: textarea
-    id: observe
+    id: observed
     attributes:
       label: Ce qui se passe
       description: Message d'erreur, capture d'écran. Rien de sensible, aucune donnée réelle.
     validations:
       required: true
   - type: input
-    id: environnement
+    id: environment
     attributes:
       label: Navigateur et système
       placeholder: Firefox 150, macOS
 
   - type: checkboxes
-    id: prete
+    id: ready
     attributes:
       label: Prête à prendre
       description: Un tech lead coche ces cases avant de passer l'issue dans la colonne « Ready » du tableau (Definition of Ready).

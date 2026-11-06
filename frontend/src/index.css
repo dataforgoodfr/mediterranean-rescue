@@ -22,32 +22,32 @@
 
 body {
   margin: 0;
-  font-family: var(--police);
-  font-size: var(--taille-texte);
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
   line-height: 1.5;
-  color: var(--couleur-texte);
-  background: var(--couleur-fond);
+  color: var(--color-text);
+  background: var(--color-background);
 }
 
 /* Titres : gras, majuscules, en orange (charte). Les titres longs peuvent passer en bleu. */
 h1 {
-  margin: 0 0 var(--espace-2);
-  font-size: var(--taille-titre);
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-title);
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--couleur-secondaire);
+  color: var(--color-secondary);
 }
 
 /* Intertitres : semi-gras, en gris 90 % (charte). */
 h2 {
-  margin: var(--espace-3) 0 var(--espace-1);
-  font-size: var(--taille-intertitre);
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: var(--font-size-subheading);
   font-weight: 600;
-  color: var(--couleur-texte);
+  color: var(--color-text);
 }
 
 a {
-  color: var(--couleur-principale);
+  color: var(--color-primary);
 }
 
 :focus-visible {
@@ -58,5 +58,5 @@ a {
 main {
   max-width: 40rem;
   margin: 0 auto;
-  padding: var(--espace-3) var(--espace-2);
+  padding: var(--space-3) var(--space-2);
 }

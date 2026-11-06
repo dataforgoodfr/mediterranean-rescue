@@ -1,23 +1,23 @@
 import { screen } from '@testing-library/react'
 import { expect, test, vi } from 'vitest'
 import App from '../App'
-import { renderAvecApp } from '../test-utils'
+import { renderWithProviders } from '../test-utils'
 
-test("affiche l'état de l'API quand le backend répond", async () => {
+test('shows the API status when the backend answers', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
-  renderAvecApp(<App />)
+  renderWithProviders(<App />)
   expect(screen.getByRole('heading', { name: 'Rescue Atlas' })).toBeInTheDocument()
   expect(await screen.findByText('API : ok')).toBeInTheDocument()
 })
 
-test('dit que le backend est injoignable', async () => {
-  vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('réseau')))
-  renderAvecApp(<App />)
+test('says the backend is unreachable', async () => {
+  vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network')))
+  renderWithProviders(<App />)
   expect(await screen.findByText('API : injoignable')).toBeInTheDocument()
 })
 
-test('une erreur du backend compte comme injoignable', async () => {
+test('counts a backend error as unreachable', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 500 })))
-  renderAvecApp(<App />)
+  renderWithProviders(<App />)
   expect(await screen.findByText('API : injoignable')).toBeInTheDocument()
 })

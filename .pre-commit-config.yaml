@@ -54,15 +54,15 @@ repos:
       # Le contrat entre l'API et le frontend (TECHNICAL.md) : le schéma suit l'API, et les types du
       # frontend suivent le schéma. En CI, les jobs backend et frontend le vérifient (SKIP).
       - id: schema-api
-        name: schéma OpenAPI à jour (backend)
+        name: OpenAPI schema up to date (backend)
         language: unsupported
-        entry: uv run --directory backend pytest -q tests/test_schema_openapi.py
+        entry: uv run --directory backend pytest -q tests/test_openapi_schema.py
         files: ^backend/app/.*\.py$
         pass_filenames: false
       - id: types-api
-        name: types de l'API à jour (frontend)
+        name: API types up to date (frontend)
         language: unsupported
-        entry: pnpm --dir frontend api:verifier
+        entry: pnpm --dir frontend api:check
         files: ^(backend/openapi\.json|frontend/src/api/schema\.ts)$
         pass_filenames: false
       # Aucun contournement de types, nulle part. Refusés : `# type: ignore`, `# mypy:`,
@@ -70,8 +70,8 @@ repos:
       # `@ts-expect-error`, et les commentaires `oxlint-disable` ou `eslint-disable`, qui
       # couperaient n'importe quelle règle. Une exception se déclare dans .oxlintrc.json, relue.
       # `--multiline` : un import `from typing import (\n cast,\n)` sur plusieurs lignes est vu.
-      - id: aucun-contournement-de-types
-        name: aucun contournement de types
+      - id: no-type-suppressions
+        name: no type suppressions
         language: pygrep
         args: [--multiline]
         entry: '#[ \t]*(type:[ \t]*ignore|mypy:|pyright:)|\bno_type_check\b|\btyping(_extensions)?\.cast\b|^[ \t]*from[ \t]+typing(_extensions)?[ \t]+import[ \t]+(\([^)]*|[^#\n]*)\bcast\b|@ts-(ignore|nocheck|expect-error)|\b(ox|es)lint-disable'

@@ -2,25 +2,25 @@
 
 /* Logo et pictos : le SVG sert de masque, la couleur est celle du texte (currentColor). */
 .ra-logo,
-.ra-picto {
+.ra-icon {
   display: inline-block;
   vertical-align: middle;
   background-color: currentColor;
-  mask: var(--ra-masque) center / contain no-repeat;
+  mask: var(--ra-mask) center / contain no-repeat;
 }
 
 .ra-logo {
-  --ra-masque: url('../assets/logo/sos-mediterranee.svg');
-  --ra-logo-h: max(var(--ra-logo-hauteur, var(--logo-hauteur-min)), var(--logo-hauteur-min));
+  --ra-mask: url('../assets/logo/sos-mediterranee.svg');
+  --ra-logo-h: max(var(--ra-logo-height, var(--logo-min-height)), var(--logo-min-height));
   block-size: var(--ra-logo-h);
   /* Zone de protection de la charte : la largeur du « E », environ 0,4 fois la hauteur. */
   margin-block-end: calc(var(--ra-logo-h) * 0.4);
   aspect-ratio: 491.86 / 158.44;
-  color: var(--couleur-principale);
+  color: var(--color-primary);
 }
 
-.ra-logo--blanc {
-  color: var(--couleur-fond); /* blanc, sur fond sombre uniquement, comme le veut la charte */
+.ra-logo--white {
+  color: var(--color-background); /* blanc, sur fond sombre uniquement, comme le veut la charte */
 }
 
 /* Mode contraste élevé (Windows) : le navigateur force les fonds à la couleur de la page, le
@@ -28,19 +28,19 @@
    https://www.w3.org/TR/css-color-adjust-1/ */
 @media (forced-colors: active) {
   .ra-logo,
-  .ra-picto {
+  .ra-icon {
     background-color: CanvasText;
   }
 }
 
-.ra-picto {
-  inline-size: var(--ra-picto-taille, 1.5em);
-  block-size: var(--ra-picto-taille, 1.5em);
+.ra-icon {
+  inline-size: var(--ra-icon-size, 1.5em);
+  block-size: var(--ra-icon-size, 1.5em);
 }
 
 /* Un bloc sur le fond de la charte (bleu à 10 %). */
-.ra-bloc {
-  padding: var(--espace-2);
-  border-radius: var(--rayon);
-  background: var(--couleur-fond-bloc);
+.ra-block {
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  background: var(--color-surface);
 }

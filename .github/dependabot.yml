@@ -1,7 +1,7 @@
 # Dependabot propose chaque mois la mise à jour des dépendances, une pull request par zone.
 # Doc : https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
 # Chaque zone a `commit-message.prefix` : le titre de la PR suit les commits conventionnels,
-# sinon le check « titre » (pr-title.yml) la bloque.
+# sinon le check « pr-title » (pr-title.yml) la bloque.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -39,7 +39,7 @@ updates:
 
   # Le générateur des types de l'API, à part : il a besoin de TypeScript 6 (TECHNICAL.md).
   - package-ecosystem: npm
-    directory: "/frontend/outils/types-api"
+    directory: "/frontend/tools/api-types"
     schedule:
       interval: monthly
     commit-message:
