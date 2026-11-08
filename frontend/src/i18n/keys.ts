@@ -8,6 +8,18 @@ export const keys = {
   'home.apiStatus.pending': "L'API n'a pas encore répondu",
   'home.apiStatus.unreachable': "L'API ne répond pas ou renvoie une erreur",
   'home.apiStatus.ok': "L'API répond",
+  'design.title': 'Le titre de la page du design system (/design)',
+  'design.intro': 'La phrase sous le titre : à quoi sert la page',
+  'design.colors': 'Le titre de la partie sur les couleurs de la charte',
+  'design.colors.primary': "L'usage du bleu marine de la charte",
+  'design.colors.secondary': "L'usage de l'orange de la charte",
+  'design.colors.text': "L'usage du gris du texte courant",
+  'design.colors.surface': "L'usage du bleu clair des fonds de blocs",
+  'design.logo': 'Le titre de la partie sur le logo',
+  'design.logo.color': 'La légende du logo bleu marine',
+  'design.logo.white': 'La légende du logo blanc',
+  'design.icons': 'Le titre de la partie sur les pictos ; {count} est leur nombre',
+  'design.icons.usage': "Comment utiliser un picto : sa couleur et son nom dans le code",
 }
 
 export type MessageKey = keyof typeof keys
