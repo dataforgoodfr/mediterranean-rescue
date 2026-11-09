@@ -21,6 +21,8 @@ dev = [
 # Ce dossier est une application, pas un paquet à publier.
 [tool.uv]
 package = false
+# Une version plus ancienne ne connaît pas Python 3.15 stable.
+required-version = ">=0.13"
 
 # `uv run fastapi dev` lance cette app (https://fastapi.tiangolo.com/fastapi-cli/).
 [tool.fastapi]

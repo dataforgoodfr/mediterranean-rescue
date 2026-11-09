@@ -2,15 +2,17 @@
 
 Merci de donner de ton temps à la carte de SOS MEDITERRANEE.
 
-Tout passe par le [canal d'accueil des bénévoles](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding) sur le Mattermost de Data
-for Good : questions, entraide et rendez-vous. Présente-toi en arrivant et demande l'accès en écriture à ce dépôt.
+Présente-toi en arrivant sur le [canal d'accueil des bénévoles](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding) du Mattermost de Data
+for Good, et demande l'accès en écriture à ce dépôt. Ensuite, chaque question va dans son canal :
+[Front](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front) pour la carte et l'interface, [Back](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_back) pour l'API et les données,
+[SOS Med](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_sos-med) pour les questions métier à l'équipe de SOS MEDITERRANEE.
 
 ## Le chemin d'une issue
 
 1. **Prends une issue** de la colonne « Ready » du
    [tableau](https://github.com/orgs/dataforgoodfr/projects/44) et commente « Je prends ».
    Un tech lead te l'assigne. Une à la fois.
-2. **Crée ta branche** depuis `main` : `git switch -c feat/12-carte-maplibre`.
+2. **Crée ta branche** depuis `main` : `git switch -c feat/8-maplibre-map`.
 3. **Code et teste.** Chaque critère de l'issue a au moins un test. Les vérifications à lancer
    sont dans [TECHNICAL.md](TECHNICAL.md).
 4. **Committe.** pre-commit (à installer une fois, voir [TECHNICAL.md](TECHNICAL.md)) vérifie tes
@@ -20,7 +22,7 @@ for Good : questions, entraide et rendez-vous. Présente-toi en arrivant et dema
    elle est prête, sors-la du brouillon et passe l'issue dans « In review » sur le tableau.
 6. **Réponds à la relecture.** Un tech lead approuve et merge.
 
-Bloqué ? Écris-le dans l'issue ou sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), c'est normal. Sans nouvelles au bout d'une
+Bloqué ? Écris-le dans l'issue ou dans le canal de ta zone ([Front](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front) ou [Back](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_back)), c'est normal. Sans nouvelles au bout d'une
 semaine, l'issue redevient libre.
 
 ## Les messages de commit
@@ -52,9 +54,9 @@ commentaires sont en français.
 - **Aucune donnée réelle, aucun secret** dans Git, une issue ou une pull request. Les exemples
   sont fictifs et marqués `FICTIF`.
 - **Inconnu reste vide, jamais zéro.**
-- **Les types ne se contournent jamais.** Pas de `any`, de `as`, de `!` ni de `@ts-ignore` en
+- **Les types ne se contournent jamais.** Pas de `any`, de `as` (sauf `as const`), de `!` ni de `@ts-ignore` en
   TypeScript, pas de `Any`, de `cast` ni de `# type: ignore` en Python. Si le compilateur refuse,
-  c'est le code qui change, même si ça prend du temps : demande de l'aide sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding). Le détail
+  c'est le code qui change, même si ça prend du temps : demande de l'aide sur [Front](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front) ou [Back](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_back). Le détail
   est dans [TECHNICAL.md](TECHNICAL.md) (« Les types : aucun contournement »).
 
 Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), ça compte

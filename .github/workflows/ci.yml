@@ -1,8 +1,9 @@
 # Intégration continue : GitHub relance ici les vérifications de TECHNICAL.md sur chaque
-# pull request vers main. Une PR ne se merge que si le job « CI done » est vert.
+# pull request vers main. Une PR ne se merge que si « CI done » est vert, avec « pr-title »
+# (workflow pr-title.yml) qui vérifie son titre.
 # Doc : https://docs.github.com/fr/actions
 # Les actions sont figées sur un commit (le commentaire donne la version), comme le conseille
-# https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions
+# https://docs.github.com/en/actions/reference/security/secure-use
 # Dependabot les met à jour (.github/dependabot.yml).
 name: CI
 

@@ -8,7 +8,7 @@
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    /* Résolution des modules par Vite */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
+    /* Contrôles */
     // Le mode strict, plus la case vide d'un tableau ou d'un objet : `liste[0]` peut être
     // undefined. https://www.typescriptlang.org/tsconfig/#strict
     "strict": true,

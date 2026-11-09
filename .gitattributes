@@ -2,3 +2,7 @@
 # leur vérification (test du schéma, `pnpm api:check`) les compare octet pour octet.
 backend/openapi.json text eol=lf
 frontend/src/api/schema.ts text eol=lf
+
+# Les scripts shell aussi : en CRLF, `/bin/sh` refuse de les lancer (`bad interpreter`), et la
+# compose monte backend/ tel qu'il est sur la machine.
+*.sh text eol=lf

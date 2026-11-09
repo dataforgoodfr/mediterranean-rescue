@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     def use_psycopg(cls, url: str) -> str:
         # Les hébergeurs donnent souvent l'adresse en postgresql:// : SQLAlchemy prendrait alors
         # le pilote psycopg2, qu'on n'installe pas. On passe au pilote psycopg 3.
-        # https://docs.sqlalchemy.org/en/21/dialects/postgresql.html#dialect-postgresql-psycopg
+        # https://docs.sqlalchemy.org/en/21/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg
         for prefix in ("postgresql://", "postgres://"):
             if url.startswith(prefix):
                 return "postgresql+psycopg://" + url.removeprefix(prefix)
