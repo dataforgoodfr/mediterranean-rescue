@@ -59,3 +59,9 @@ commentaires sont en français.
 
 Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), ça compte
 aussi.
+
+## Essayer avant de coder : les POC
+
+Une idée à tester, une source à explorer, envie de t'exercer sans attendre une issue ? Le dossier
+[pocs/](pocs/README.md) est fait pour ça. Les règles y sont plus légères (pas de test obligatoire),
+sauf une : sources publiques ou données fictives seulement.
