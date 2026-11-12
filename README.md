@@ -33,6 +33,7 @@ plaidoyer et la collecte de fonds.
 2. Lis [CONTRIBUTING.md](CONTRIBUTING.md) : le chemin d'une issue jusqu'au merge.
 3. Lance le projet avec [TECHNICAL.md](TECHNICAL.md) : `docker compose -f docker-compose.dev.yaml up` suffit.
 4. Prends une issue `good first issue`, puis suis la [progression](docs/progression.md).
+5. Envie d'essayer une idée avant qu'elle soit une issue ? C'est dans [pocs/](pocs/README.md).
 
 Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), ça compte
 aussi.
