@@ -1,0 +1,4 @@
+# Les fichiers générés gardent des fins de ligne Unix sur toutes les machines, Windows compris :
+# leur vérification (test du schéma, `pnpm api:check`) les compare octet pour octet.
+backend/openapi.json text eol=lf
+frontend/src/api/schema.ts text eol=lf

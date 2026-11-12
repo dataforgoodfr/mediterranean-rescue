@@ -1,0 +1,7 @@
+# Pas d'issue libre : chaque issue part d'un modèle, pour que la spec soit complète.
+# Une question ou une idée à discuter se pose d'abord sur le Mattermost de Data for Good.
+blank_issues_enabled: false
+contact_links:
+  - name: Une question, une idée, je ne connais pas GitHub
+    url: https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding
+    about: Pose-la sur le canal du projet, quelqu'un te répond.

@@ -1,0 +1,19 @@
+# Le titre de la pull request suit les commits conventionnels (`feat: …`, `fix: …`) : au merge en
+# squash, il devient le message du commit sur main.
+# Action : https://github.com/amannn/action-semantic-pull-request
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

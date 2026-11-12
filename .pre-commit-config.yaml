@@ -1,12 +1,78 @@
+# Contrôles lancés à chaque `git commit`, sur les fichiers modifiés seulement.
+# Installation, une fois : voir TECHNICAL.md. Doc : https://pre-commit.com
+# Restent tels qu'ils arrivent : la police et sa licence, qu'on ne retouche pas.
+# 4.4.0 : la première version qui connaît `language: unsupported` (le hook oxlint plus bas).
+minimum_pre_commit_version: "4.4.0"
+exclude: ^frontend/src/assets/fonts/
 repos:
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    # Ruff version.
-    rev: "v0.2.1"
-    hooks:
-      - id: ruff
-        args: [--fix]
+  # Petits contrôles de base, communs à tous les fichiers.
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v6.0.0
     hooks:
-      - id: check-merge-conflict
+      - id: check-merge-conflict # un marqueur <<<<<<< oublié
+      - id: check-added-large-files # un gros fichier, souvent une donnée réelle
+      - id: check-yaml
+        args: [--allow-multiple-documents] # le pnpm-lock.yaml de pnpm 12 en a deux
+      - id: check-json
+        # Les tsconfig de Vite et les réglages de VS Code contiennent des commentaires.
+        exclude: ^(frontend/tsconfig.*\.json|\.vscode/.*\.json)$
       - id: mixed-line-ending
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  # Python : ruff vérifie le style et met en forme le code du backend.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+  # Frontend : oxlint, le même contrôle que `pnpm lint`. Il demande `pnpm install` dans frontend/.
+  # En CI, c'est le job frontend qui le lance (SKIP=oxlint dans le job pre-commit).
+  - repo: local
+    hooks:
+      - id: oxlint
+        name: oxlint (frontend)
+        language: unsupported
+        entry: pnpm --dir frontend lint
+        files: ^frontend/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false
+      # Frontend : tsc, les types (mode strict). En CI, `pnpm build` le lance (SKIP=tsc).
+      - id: tsc
+        name: tsc (frontend)
+        language: unsupported
+        entry: pnpm --dir frontend exec tsc -b
+        files: ^frontend/.*\.(ts|tsx)$
+        pass_filenames: false
+      # Python : mypy en mode strict (backend/pyproject.toml). En CI, c'est le job backend qui le
+      # lance (SKIP=mypy dans le job pre-commit).
+      - id: mypy
+        name: mypy (backend)
+        language: unsupported
+        entry: uv run --directory backend mypy
+        files: ^backend/.*\.py$
+        pass_filenames: false
+      # Le contrat entre l'API et le frontend (TECHNICAL.md) : le schéma suit l'API, et les types du
+      # frontend suivent le schéma. En CI, les jobs backend et frontend le vérifient (SKIP).
+      - id: schema-api
+        name: OpenAPI schema up to date (backend)
+        language: unsupported
+        entry: uv run --directory backend pytest -q tests/test_openapi_schema.py
+        files: ^backend/app/.*\.py$
+        pass_filenames: false
+      - id: types-api
+        name: API types up to date (frontend)
+        language: unsupported
+        entry: pnpm --dir frontend api:check
+        files: ^(backend/openapi\.json|frontend/src/api/schema\.ts)$
+        pass_filenames: false
+      # Aucun contournement de types, nulle part. Refusés : `# type: ignore`, `# mypy:`,
+      # `# pyright:`, `@no_type_check`, `cast` de typing ; `@ts-ignore`, `@ts-nocheck`,
+      # `@ts-expect-error`, et les commentaires `oxlint-disable` ou `eslint-disable`, qui
+      # couperaient n'importe quelle règle. Une exception se déclare dans .oxlintrc.json, relue.
+      # `--multiline` : un import `from typing import (\n cast,\n)` sur plusieurs lignes est vu.
+      - id: no-type-suppressions
+        name: no type suppressions
+        language: pygrep
+        args: [--multiline]
+        entry: '#[ \t]*(type:[ \t]*ignore|mypy:|pyright:)|\bno_type_check\b|\btyping(_extensions)?\.cast\b|^[ \t]*from[ \t]+typing(_extensions)?[ \t]+import[ \t]+(\([^)]*|[^#\n]*)\bcast\b|@ts-(ignore|nocheck|expect-error)|\b(ox|es)lint-disable'
+        files: \.(py|ts|tsx|mts|cts|js|jsx|mjs|cjs)$

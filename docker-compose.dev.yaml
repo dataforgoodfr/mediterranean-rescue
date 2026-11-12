@@ -1,0 +1,58 @@
+# Tout le projet pour développer : `docker compose -f docker-compose.dev.yaml up`.
+# Le code de backend/ et frontend/ est monté dans les conteneurs : une modification relance
+# l'API ou recharge la page. Les identifiants ne servent qu'en local, et les ports ne sont
+# ouverts que sur ta machine (127.0.0.1).
+name: rescue-atlas-dev
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: rescue
+      POSTGRES_PASSWORD: rescue
+      POSTGRES_DB: rescue_atlas
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql # le chemin des images Postgres 18 et plus
+    # L'API attend que la base accepte les connexions :
+    # https://docs.docker.com/compose/how-tos/startup-order/
+    healthcheck:
+      # -h 127.0.0.1 : par le réseau, pas le socket, sinon le serveur provisoire de
+      # l'initialisation passe pour prêt (docker-library/postgres#440).
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    command: fastapi dev --host 0.0.0.0 --port 8000
+    environment:
+      DATABASE_URL: postgresql+psycopg://rescue:rescue@db:5432/rescue_atlas
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+      - /app/.venv # garde les paquets de l'image, pas ceux de la machine
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    environment:
+      API_URL: http://backend:8000
+    ports:
+      - "127.0.0.1:${WEB_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # les paquets pour Linux, pas ceux de la machine
+    depends_on:
+      - backend
+
+volumes:
+  db-data:

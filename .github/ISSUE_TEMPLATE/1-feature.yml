@@ -1,0 +1,57 @@
+# Modèle d'issue « fonctionnalité » : l'issue est la spec, courte.
+# Syntaxe : https://docs.github.com/fr/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms
+name: Fonctionnalité
+description: Une chose que la carte ou l'API doit savoir faire.
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Le besoin
+      description: Une phrase d'utilisateur.
+      placeholder: En tant que journaliste, je veux filtrer les opérations par type, pour retrouver les évacuations médicales.
+    validations:
+      required: true
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Critères d'acceptation
+      description: Vérifiables, un par ligne. Chacun aura au moins un test.
+      placeholder: |
+        - Étant donné des opérations de plusieurs types, quand je coche « Évacuation médicale », alors seules celles-ci restent sur la carte.
+        - Le filtre se règle au clavier.
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Hors du périmètre
+      placeholder: Ce qui est traité dans une autre issue, avec son numéro.
+  - type: input
+    id: zone
+    attributes:
+      label: Zone de fichiers
+      placeholder: frontend/src/, backend/app/main.py
+  - type: dropdown
+    id: level
+    attributes:
+      label: Niveau
+      options: ["à définir", "good first issue (débutant)", "niveau-2 (intermédiaire)", "niveau-3 (confirmé)"]
+  - type: textarea
+    id: notes
+    attributes:
+      label: Pour aider
+      description: Fichiers à lire, maquette, exemple, données fictives à utiliser.
+
+  - type: checkboxes
+    id: ready
+    attributes:
+      label: Prête à prendre
+      description: Un tech lead coche ces cases avant de passer l'issue dans la colonne « Ready » du tableau (Definition of Ready).
+      options:
+        - label: "On sait pour qui et pourquoi."
+        - label: "Elle a 1 à 3 critères d'acceptation vérifiables."
+        - label: "Elle tient en une journée au plus."
+        - label: "Rien ne la bloque."
+        - label: "On sait où travailler (zone et fichiers)."
+        - label: "Son niveau est choisi."
+        - label: "Les données d'exemple sont fictives."

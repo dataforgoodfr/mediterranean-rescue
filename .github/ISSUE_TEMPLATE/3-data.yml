@@ -1,0 +1,39 @@
+# Modèle d'issue « données » : une source à brancher, un champ à ajouter, une donnée fausse.
+name: Données
+description: Une source, un champ ou une donnée à vérifier.
+labels: [data]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Le besoin
+      placeholder: Afficher le port de débarquement de chaque opération.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Adresse publique et licence. Jamais une donnée personnelle ni un fichier interne de SOS MEDITERRANEE.
+      placeholder: https://… (licence CC BY 4.0)
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Critères d'acceptation
+      placeholder: |
+        - Une valeur inconnue reste vide, jamais zéro.
+        - La source et sa date sont visibles.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: ready
+    attributes:
+      label: Prête à prendre
+      description: Un tech lead coche ces cases avant de passer l'issue dans la colonne « Ready » du tableau (Definition of Ready).
+      options:
+        - label: "La source est publique et sa licence est connue."
+        - label: "Elle a 1 à 3 critères d'acceptation vérifiables."
+        - label: "Elle tient en une journée au plus."
+        - label: "Rien ne la bloque."
+        - label: "Les données d'exemple sont fictives."
