@@ -40,14 +40,18 @@ cohérent. Une idée qui change l'allure du site ? Montre-la dans la pull reques
 
 ```tsx
 import { Icon, Logo } from './design'
+import { useTranslation } from './i18n/useTranslation.ts'
+
+const t = useTranslation()
 
 <Logo />
-<Icon name="lifebuoy" />                                {/* décoratif */}
-<Icon name="anchor" label="Port de débarquement" />     {/* lu par les lecteurs d'écran */}
+<Icon name="lifebuoy" />                                 {/* décoratif */}
+<Icon name="anchor" label={t('map.disembarkationPort')} /> {/* lu par les lecteurs d'écran */}
+{/* la clé s'ajoute d'abord dans les fichiers de langue (frontend/src/i18n/) */}
 ```
 
 ```css
-.ma-carte-legende {
+.map-legend {
   color: var(--color-primary);
   padding: var(--space-2);
 }

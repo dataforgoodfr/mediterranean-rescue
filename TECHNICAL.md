@@ -44,7 +44,7 @@ docker compose -f docker-compose.dev.yaml up
 
 Le premier lancement télécharge les images et prend quelques minutes. Ensuite :
 
-- le site sur http://localhost:5173 : la page doit afficher « API : ok » ;
+- le site sur http://localhost:5173 : la page doit afficher « API : ok » (« API: ok » si ton navigateur est en anglais) ;
 - l'API sur http://localhost:8000, et sa doc sur http://localhost:8000/api/docs (pas sur `/docs`,
   que la console de `fastapi dev` affiche) ;
 - Postgres sur `localhost:5432`.
@@ -71,7 +71,7 @@ leads créent et suppriment le staging avec les scripts du dépôt privé (`depl
 ## Lancer le projet sans Docker
 
 Pour les tests et l'éditeur, il faut de toute façon les outils sur ta machine :
-[uv](https://docs.astral.sh/uv/getting-started/installation/) (il installe Python 3.15, celui
+[uv](https://docs.astral.sh/uv/getting-started/installation/) 0.13 ou plus (il installe Python 3.15, celui
 du projet), Node.js 26, la version LTS (22.22.2+ et 24.15+ marchent aussi, pas 23 ni 25, que les
 outils de test refusent), et [pnpm](https://pnpm.io/installation) 12.
 
@@ -88,8 +88,9 @@ cd frontend && pnpm install && pnpm dev              # http://localhost:5173
 ```
 
 Installe aussi les contrôles avant commit, une seule fois : `cd backend && uv run pre-commit install`.
-Ils vérifient aussi le frontend : lance d'abord `pnpm install` dans `frontend/`, ou ajoute
-`SKIP=oxlint` devant `git commit` si tu ne touches qu'au backend.
+Ils vérifient aussi le frontend : lance d'abord `pnpm install` dans `frontend/`. Même si tu ne
+touches qu'au backend, pnpm sert dès que l'API change : le hook `types-api` vérifie alors que
+`frontend/src/api/schema.ts` suit `backend/openapi.json` (`pnpm api:types` le régénère).
 
 ## Vérifier avant de pousser
 
@@ -107,7 +108,8 @@ pnpm build
 
 La CI relance sur chaque pull request ce qu'elle touche (backend, frontend, images Docker), et
 pre-commit partout. On merge quand « CI done » et « pr-title » sont verts : le second vérifie que le
-titre de la pull request suit les commits conventionnels. Chaque mois, Dependabot propose la
+titre de la pull request suit les commits conventionnels. CodeQL, activé dans les réglages du
+dépôt, analyse aussi le code de chaque pull request. Chaque mois, Dependabot propose la
 mise à jour des dépendances.
 
 ## Le contrat entre l'API et le frontend
@@ -200,7 +202,7 @@ def parse_port(text: str) -> Port | None:
 
 Ces deux exemples passent tous les contrôles du dépôt (tsc, oxlint, mypy, le hook). Pour une
 réponse de l'API, le type attendu vient de `src/api/schema.ts`, jamais d'un type écrit à la main.
-Bloqué malgré tout ? Écris-le dans l'issue ou sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding) : une vraie exception se discute, puis
+Bloqué malgré tout ? Écris-le dans l'issue ou sur [Front](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front) : une vraie exception se discute, puis
 se déclare dans `frontend/.oxlintrc.json` (`overrides`, avec la raison), où elle se relit.
 
 Ce que les outils ne voient pas, et que la relecture vérifie : une déclaration `declare` ou un
@@ -257,4 +259,5 @@ return <h2>{t('map.legend')}</h2>
 
 **Code en anglais** : noms de fichiers et de dossiers, composants, fonctions, variables, types,
 clés de traduction, jetons CSS, scripts et noms des tests. **Commentaires et documentation en
-français.** Les textes affichés vivent dans les fichiers de langue (`frontend/src/i18n/`).
+français**, sauf les docstrings des routes de l'API : elles s'affichent dans sa doc
+(`/api/docs`), en anglais comme le reste du contrat. Les textes affichés vivent dans les fichiers de langue (`frontend/src/i18n/`).

@@ -29,7 +29,8 @@ plaidoyer et la collecte de fonds.
 ## Contribuer
 
 1. Présente-toi sur le [canal d'accueil des bénévoles](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), sur le Mattermost
-   de Data for Good.
+   de Data for Good. Les questions vont ensuite dans [Front](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front), [Back](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_back) ou
+   [SOS Med](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_sos-med) pour le métier.
 2. Lis [CONTRIBUTING.md](CONTRIBUTING.md) : le chemin d'une issue jusqu'au merge.
 3. Lance le projet avec [TECHNICAL.md](TECHNICAL.md) : `docker compose -f docker-compose.dev.yaml up` suffit.
 4. Prends une issue `good first issue`, puis suis la [progression](docs/progression.md).

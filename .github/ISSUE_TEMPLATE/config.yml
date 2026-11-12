@@ -4,4 +4,13 @@ blank_issues_enabled: false
 contact_links:
   - name: Une question, une idée, je ne connais pas GitHub
     url: https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding
-    about: Pose-la sur le canal du projet, quelqu'un te répond.
+    about: Pose-la sur le canal d'accueil, quelqu'un te répond.
+  - name: Une question sur la carte ou l'interface
+    url: https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front
+    about: Le canal Front.
+  - name: Une question sur l'API ou les données
+    url: https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_back
+    about: Le canal Back.
+  - name: Une question métier pour SOS MEDITERRANEE
+    url: https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_sos-med
+    about: Le canal SOS Med, le pont avec l'équipe de SOS.

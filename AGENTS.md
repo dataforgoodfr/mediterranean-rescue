@@ -19,7 +19,7 @@ Consignes pour un assistant de code qui travaille dans ce dépôt. Elles complè
   appels à l'API passent par `frontend/src/api.ts` et TanStack Query, avec les types générés
   depuis le schéma de l'API (jamais écrits à la main : TECHNICAL.md, « Le contrat »). Les autres
   conventions sont dans TECHNICAL.md (« Les conventions »).
-- **Les types ne se contournent jamais** : ni `any`, ni `as`, ni `!`, ni `@ts-ignore` en
+- **Les types ne se contournent jamais** : ni `any`, ni `as` (sauf `as const`), ni `!`, ni `@ts-ignore` en
   TypeScript ; ni `Any`, ni `cast`, ni `# type: ignore` en Python. Un type faux se corrige.
   Règles et outils : TECHNICAL.md (« Les types : aucun contournement »).
 - Interface : suis [docs/design-system.md](docs/design-system.md). Les variables de
