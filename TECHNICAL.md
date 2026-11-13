@@ -29,6 +29,9 @@ Pourquoi ces choix :
 
 - **Le front et le back séparés**, pour qu'on puisse travailler sur l'un sans toucher à l'autre.
 - **MapLibre** est libre et ne demande ni compte ni clé payante.
+- **Le back-office** (l'outil où l'équipe vérifie et corrige la donnée) se construit sur le même
+  FastAPI que l'API : une seule pile pour le back, sans changer de framework en cours de route
+  ([#21](https://github.com/dataforgoodfr/mediterranean-rescue/issues/21)).
 - **Docker** lance tout le projet avec une seule commande, quelle que soit la machine.
 
 ## Lancer le projet avec Docker
