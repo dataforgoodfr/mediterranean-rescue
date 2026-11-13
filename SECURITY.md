@@ -72,7 +72,7 @@ La sécurité est collective : toute recherche de failles effectuée de bonne fo
 
 ## Incident response (résumé)
 
-En cas d'incident avéré : contenir (isoler), éradiquer, restaurer depuis une source intègre, puis communication coordonnée avec l'équipe OPS et la direction de SOS Méditerranée. Le détail des rôles et étapes est documenté séparément dans le plan de réponse aux incidents.
+En cas d'incident avéré : contenir (isoler), éradiquer, restaurer depuis une source intègre, puis communication coordonnée avec l'équipe OPS et la direction de SOS Méditerranée. Le détail des rôles et étapes est documenté séparément dans le plan de réponse aux incidents « à venir ».
 
 ---
 
