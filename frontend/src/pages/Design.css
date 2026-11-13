@@ -1,0 +1,59 @@
+/* La page du design system (/design). Seulement les jetons de design/tokens.css. */
+
+.ra-design {
+  max-width: none;
+}
+
+.ra-design__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--space-4) * 2.5), 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ra-design__color,
+.ra-design__icon {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ra-design__swatch {
+  block-size: var(--space-4);
+  border: thin solid var(--color-text); /* le fond de bloc se voit à peine sur le blanc */
+  border-radius: var(--radius);
+}
+
+/* Les pictos en orange, comme le veut la charte. */
+.ra-design__icon {
+  align-items: center;
+  padding: var(--space-2) var(--space-1);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-secondary);
+}
+
+.ra-design__icon code {
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.ra-design__logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.ra-design__logos figure {
+  margin: 0;
+}
+
+/* Le logo blanc ne va que sur un fond sombre : le bleu marine de la charte. */
+.ra-design__dark {
+  padding: var(--space-2) var(--space-2) 0;
+  border-radius: var(--radius);
+  background: var(--color-primary);
+}
