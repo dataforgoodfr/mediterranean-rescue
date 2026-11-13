@@ -59,6 +59,11 @@ commentaires sont en français.
   c'est le code qui change, même si ça prend du temps : demande de l'aide sur [Front](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front) ou [Back](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_back). Le détail
   est dans [TECHNICAL.md](TECHNICAL.md) (« Les types : aucun contournement »).
 
+Tu touches au front ? Les couleurs et les tailles passent par les variables de
+`frontend/src/design/tokens.css`, jamais par une valeur en dur. Les règles du logo, des pictos et
+des couleurs sont dans [docs/design-system.md](docs/design-system.md), et la page `/design` du
+site les montre toutes.
+
 Tu ne codes pas ? Tester la carte, relire un texte ou proposer une idée sur le [canal](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue-onboarding), ça compte
 aussi.
 
