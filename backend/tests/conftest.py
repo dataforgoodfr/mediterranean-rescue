@@ -1,27 +1,56 @@
-"""Les fixtures des tests : une base SQLite en mémoire, neuve pour chaque test, à la place de
-Postgres. Le motif officiel : https://sqlmodel.tiangolo.com/tutorial/fastapi/tests/
-Un test qui a besoin de la base demande `session` ou `client` en paramètre.
+"""Test fixtures. By default, an in-memory SQLite database, fresh for each test, stands in for
+Postgres. The official pattern: https://sqlmodel.tiangolo.com/tutorial/fastapi/tests/
+With `TEST_DATABASE_URL` set, the tests run on that Postgres database instead (as in CI).
+A test that needs the database asks for `session` or `client` as a parameter.
 """
 
+import os
 from collections.abc import Iterator
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
 from app.db import get_session
 from app.main import app
 
+# A database reserved for tests: its tables are created at the start and dropped at the end.
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
+
+
+@pytest.fixture(name="engine", scope="session")
+def engine_fixture() -> Iterator[Engine]:
+    if TEST_DATABASE_URL is None:
+        # In-memory SQLite lives only as long as the engine's single connection.
+        yield create_engine(
+            "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+        )
+        return
+    engine = create_engine(TEST_DATABASE_URL)
+    SQLModel.metadata.create_all(engine)  # the tables of the imported models
+    yield engine
+    SQLModel.metadata.drop_all(engine)
+    engine.dispose()
+
 
 @pytest.fixture(name="session")
-def session_fixture() -> Iterator[Session]:
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
-    SQLModel.metadata.create_all(engine)  # les tables des modèles importés
-    with Session(engine) as session:
-        yield session
+def session_fixture(engine: Engine) -> Iterator[Session]:
+    if TEST_DATABASE_URL is None:
+        SQLModel.metadata.create_all(engine)
+        with Session(engine) as session:
+            yield session
+        SQLModel.metadata.drop_all(engine)
+        return
+    # Postgres keeps its data between tests: each test runs inside a transaction rolled back at
+    # the end. A `commit()` from the code under test only releases a savepoint.
+    # https://docs.sqlalchemy.org/en/21/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
+    with engine.connect() as connection:
+        transaction = connection.begin()
+        with Session(bind=connection, join_transaction_mode="create_savepoint") as session:
+            yield session
+        transaction.rollback()
 
 
 @pytest.fixture(name="client")
