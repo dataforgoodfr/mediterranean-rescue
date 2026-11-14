@@ -85,6 +85,24 @@ jobs:
     strategy:
       matrix:
         python: ["3.12", "3.15"]
+    # The tests run on Postgres, the same image as docker-compose.dev.yaml, to catch what
+    # SQLite lets through. https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: rescue
+          POSTGRES_PASSWORD: rescue
+          POSTGRES_DB: rescue_atlas_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -h 127.0.0.1 -U rescue -d rescue_atlas_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      TEST_DATABASE_URL: postgresql+psycopg://rescue:rescue@localhost:5432/rescue_atlas_test
     defaults:
       run:
         working-directory: backend

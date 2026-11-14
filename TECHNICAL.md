@@ -23,7 +23,16 @@ Les conventions, pour que le code se ressemble :
 - **Les tests du frontend** affichent un composant avec `renderWithProviders` (`frontend/src/test-utils.tsx`),
   qui fournit le cache de l'API et le routeur.
 - **Les tests du backend** demandent `client` ou `session` (`backend/tests/conftest.py`) : une
-  base SQLite en mémoire, neuve pour chaque test, remplace Postgres.
+  base SQLite en mémoire, neuve pour chaque test, remplace Postgres. Dans la CI, ils tournent sur
+  Postgres 18, plus strict que SQLite (types, longueurs). Pour faire de même en local, donne une
+  base réservée aux tests : ses tables sont créées puis supprimées, et chaque test tourne dans une
+  transaction annulée à la fin.
+
+  ```sh
+  docker compose -f docker-compose.dev.yaml up -d db
+  docker compose -f docker-compose.dev.yaml exec db createdb -U rescue rescue_atlas_test  # une fois
+  TEST_DATABASE_URL=postgresql+psycopg://rescue:rescue@localhost:5432/rescue_atlas_test uv run pytest
+  ```
 
 Pourquoi ces choix :
 
