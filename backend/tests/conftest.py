@@ -13,6 +13,7 @@ from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
+from app.db import engine as app_engine
 from app.db import get_session
 from app.main import app
 
@@ -29,6 +30,16 @@ def engine_fixture() -> Iterator[Engine]:
         )
         return
     engine = create_engine(TEST_DATABASE_URL)
+    # The tables get dropped: never on the app's own database.
+    if (engine.url.host, engine.url.port, engine.url.database) == (
+        app_engine.url.host,
+        app_engine.url.port,
+        app_engine.url.database,
+    ):
+        raise RuntimeError("TEST_DATABASE_URL must not point to the app's DATABASE_URL")
+    # Dropped first too: a run killed before its teardown leaves tables that create_all
+    # would keep as they are, even if a model changed since.
+    SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)  # the tables of the imported models
     yield engine
     SQLModel.metadata.drop_all(engine)
