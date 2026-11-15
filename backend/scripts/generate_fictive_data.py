@@ -1,6 +1,7 @@
 """Generate fictive data and push it to backend/fixtures/"""
 
 import argparse
+import csv
 import random
 import string
 from datetime import date, timedelta
@@ -11,7 +12,8 @@ from pydantic import BaseModel, Field
 
 
 class OperationModel(BaseModel):
-    date: date
+    # Date stored in the format "dd/mm/yyyy"
+    date: str
     type_ops: Literal["Rescue", "Transfer"]
     nb_ops: int = Field(ge=1)
     nb_survivor: int | None = None
@@ -34,21 +36,10 @@ class OperationModel(BaseModel):
     video_srv: str | None = None
     testimony_name: str | None = None
     testimony_src: str | None = None
-
-    def _format_field_value(self, field_name: str) -> str:
-        value = getattr(self, field_name)
-        if isinstance(value, date):
-            return value.strftime("%d/%m/%Y")
-        return str(value) if value is not None else ""
-
-    def to_csv_line(self) -> str:
-        """Convert the model to a CSV line."""
-        return ",".join(
-            self._format_field_value(field_name) for field_name in type(self).model_fields
-        )
+    fictif: Literal["FICTIF", "REEL"] = "FICTIF"
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate fictive data and write it to backend/fixtures/"
     )
@@ -64,13 +55,17 @@ def get_args():
     return parser.parse_args()
 
 
-def generate_random_date(start_date=date(2016, 1, 1), end_date=date(2026, 10, 30)) -> date:
+def generate_random_date(
+    start_date: date = date(2016, 1, 1), end_date: date = date(2026, 10, 30)
+) -> date:
     delta_days = (end_date - start_date).days
     random_days = random.randint(0, delta_days)
     return start_date + timedelta(days=random_days)
 
 
-def generate_survivor_counts() -> tuple[int, int, int, int, int]:
+def generate_survivor_counts() -> tuple[
+    int, int | None, int | None, int | None, int | None, int | None, int | None
+]:
     nb_survivor = random.randint(0, 100)
     empty_detail_threshold = 0.3
     if random.random() < empty_detail_threshold:
@@ -104,11 +99,11 @@ def generate_fictive_coordinates() -> tuple[str, str]:
 
 
 def generate_nationalities(nb_nationalities: int) -> str:
-    res = ""
+    nationalities = []
     for _ in range(nb_nationalities):
         length = random.randint(1, 2)
-        res += "".join(random.choices(string.ascii_lowercase, k=length))
-    return ";".join(res)
+        nationalities.append("".join(random.choices(string.ascii_lowercase, k=length)))
+    return ";".join(nationalities)
 
 
 def generate_fictive_data(seed: str, nb_lines: int) -> list[OperationModel]:
@@ -119,11 +114,11 @@ def generate_fictive_data(seed: str, nb_lines: int) -> list[OperationModel]:
             generate_survivor_counts()
         )
         latitude, longitude = generate_fictive_coordinates()
-        nb_nationalities = random.randint(1, 100)
+        nb_nationalities = random.randint(1, 27)
         op = OperationModel(
-            date=generate_random_date(),
+            date=generate_random_date().strftime("%d/%m/%Y"),
             type_ops=random.choice(["Rescue", "Transfer"]),
-            nb_ops=random.randint(1, 10),
+            nb_ops=random.randint(1, 7),
             nb_survivor=nb_survivor,
             male=male,
             female=female,
@@ -133,8 +128,8 @@ def generate_fictive_data(seed: str, nb_lines: int) -> list[OperationModel]:
             pregnant_women=pregnant_women,
             latitude=latitude,
             longitude=longitude,
-            wind_force=random.choice([random.randint(0, 12), None]),
-            wave_height=random.choice([round(random.uniform(0, 10), 2), None]),
+            wind_force=random.choice([random.randint(0, 10), None]),
+            wave_height=random.choice([round(random.uniform(0, 5), 2), None]),
             boat_type=random.choice(["Rubber Boat", "Wooden Boat", None]),
             nb_nationalities=nb_nationalities,
             type_nationalities=generate_nationalities(nb_nationalities),
@@ -144,23 +139,30 @@ def generate_fictive_data(seed: str, nb_lines: int) -> list[OperationModel]:
             video_srv=random.choice([f"video_{random.randint(1, 100)}.mp4", None]),
             testimony_name=random.choice([f"Testimony {random.randint(1, 100)}", None]),
             testimony_src=random.choice([f"testimony_{random.randint(1, 100)}.txt", None]),
+            fictif="FICTIF",
         )
         data.append(op)
     return data
 
 
-def export_to_csv(data: list[OperationModel], fixture_directory):
+def export_to_csv(data: list[OperationModel], fixture_directory: Path) -> Path:
     filename = f"{len(data)}_fictive_data.csv"
     with open(fixture_directory / filename, "w") as f:
-        f.write(",".join(OperationModel.model_fields.keys()) + "\n")
+        writer = csv.DictWriter(f, fieldnames=OperationModel.model_fields.keys())
+        writer.writeheader()
         for op in data:
-            f.write(op.to_csv_line() + "\n")
+            writer.writerow(op.model_dump())
+    return fixture_directory / filename
+
+
+def generate_fictive_data_file(fixture_directory: Path, seed: str, nb_lines: int) -> Path:
+    fictive_data = generate_fictive_data(seed, nb_lines)
+    return export_to_csv(fictive_data, fixture_directory)
 
 
 if __name__ == "__main__":
     args = get_args()
-    fictive_data = generate_fictive_data(args.seed, args.nb_lines)
     script_directory = Path(__file__).parent
     fixture_directory = script_directory.parent / "fixtures"
     fixture_directory.mkdir(parents=True, exist_ok=True)
-    export_to_csv(fictive_data, fixture_directory)
+    generate_fictive_data_file(fixture_directory, args.seed, args.nb_lines)

@@ -69,3 +69,22 @@ Le Sheet : `1opF61Qq2DgrJIP-kQD5-KHzC4xZkp2u_zqigTGk3V0I`, onglets `Data_operati
   une majuscule, et `Incident` ou `incident` dans `type`. Le code de la carte actuelle lit même
   `transfertType` au lieu de `transfer_type`. Dans notre modèle, des noms en anglais, en
   `snake_case`, tous en minuscules.
+
+## Données fictives
+
+Des données fictives peuvent être générées avec [un script](../backend/scripts/generate_fictive_data.py).
+
+Le fichier [backend/fixtures/3_fictive_data.csv](../backend/fixtures/3_fictive_data.csv) a été généré avec les commandes suivantes.
+
+```bash
+cd backend
+uv run scripts/generate_fictive_data.py
+```
+
+On peut générer un fichier de `N` lignes et avec une graine `graine` avec la commandes
+
+```bash
+uv run scripts/generate_fictive_data.py -seed graine -nb_lines N
+```
+
+Cela va créer un fichier `backend/fixtures/N_fictive_data.csv`.
