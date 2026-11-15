@@ -16,9 +16,9 @@ Le Sheet : `1opF61Qq2DgrJIP-kQD5-KHzC4xZkp2u_zqigTGk3V0I`, onglets `Data_operati
 | `type_ops` | `Rescue` ou `Transfer` | 370 | Sauvetage ou transfert (voir le glossaire) |
 | `nb_ops` | entier, 1 à 7 | 370 | Le nombre d'opérations regroupées sur la ligne |
 | `nb_survivor` | entier | 368 | Les personnes secourues |
-| `male`, `female` | entier | 330 | Hommes, femmes |
-| `under_18` | entier | 324 | Mineurs |
-| `under_18_unacc` | entier | 315 | Mineurs non accompagnés |
+| `male`, `female` | entier | 330 | Hommes, femmes (majeurs et mineurs) |
+| `under_18` | entier | 324 | Mineurs (-18ans) |
+| `under_18_unacc` | entier | 315 | Mineurs (-18ans) non accompagnés |
 | `under_5` | entier | 311 | Enfants de moins de 5 ans |
 | `pregnant_women` | entier | 273 | Femmes enceintes |
 | `latitude`, `longitude` | texte, degrés et minutes (`33° 12.4`) | 358 | La position |

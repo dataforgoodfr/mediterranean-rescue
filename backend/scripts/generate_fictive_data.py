@@ -1,4 +1,4 @@
-"""Generate fictive data and push it to backend/fixtures/"""
+"""Génère un fichier de données fictives et le push dans backend/fixtures/"""
 
 import argparse
 import csv
@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 
 
 class OperationModel(BaseModel):
-    # Date stored in the format "dd/mm/yyyy"
+    # Date stockée au format "dd/mm/yyyy"
     date: str
     type_ops: Literal["Rescue", "Transfer"]
     nb_ops: int = Field(ge=1)
@@ -36,21 +36,21 @@ class OperationModel(BaseModel):
     video_srv: str | None = None
     testimony_name: str | None = None
     testimony_src: str | None = None
-    fictif: Literal["FICTIF", "REEL"] = "FICTIF"
+    fictif: Literal["FICTIF"] = "FICTIF"
 
 
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate fictive data and write it to backend/fixtures/"
+        description="Génère des données fictives et les écrit dans backend/fixtures/"
     )
     parser.add_argument(
         "-seed",
         type=str,
-        help="Seed to generate the same data (default: Data4Good)",
+        help="Graine pour générer les mêmes données (défaut: Data4Good)",
         default="Data4Good",
     )
     parser.add_argument(
-        "-nb_lines", type=int, help="Number of lines to generate (default 3)", default=3
+        "-nb_lines", type=int, help="Nombre de lignes à générer (défaut 3)", default=3
     )
     return parser.parse_args()
 
@@ -86,7 +86,7 @@ def generate_survivor_counts() -> tuple[
 
 
 def generate_fictive_coordinates() -> tuple[str, str]:
-    """Generate fictive coordinates in degree/minute decimal format."""
+    """Génère des coordonnées fictives au format degrés/minutes décimales."""
 
     def to_dms(value: float) -> str:
         degrees = int(value)
@@ -114,7 +114,7 @@ def generate_fictive_data(seed: str, nb_lines: int) -> list[OperationModel]:
             generate_survivor_counts()
         )
         latitude, longitude = generate_fictive_coordinates()
-        nb_nationalities = random.randint(1, 27)
+        nb_nationalities = random.randint(0, 27)
         op = OperationModel(
             date=generate_random_date().strftime("%d/%m/%Y"),
             type_ops=random.choice(["Rescue", "Transfer"]),
