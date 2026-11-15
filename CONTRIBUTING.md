@@ -10,8 +10,9 @@ for Good, et demande l'accès en écriture à ce dépôt. Ensuite, chaque questi
 ## Le chemin d'une issue
 
 1. **Prends une issue** de la colonne « Ready » du
-   [tableau](https://github.com/orgs/dataforgoodfr/projects/44) et commente « Je prends ».
-   Un tech lead te l'assigne. Une à la fois.
+   [tableau](https://github.com/orgs/dataforgoodfr/projects/44), commente « Je prends » sur
+   l'issue, puis assigne-la-toi (« assign yourself », dans la colonne de droite de l'issue). Un
+   tech lead peut aussi le faire pour toi. Une à la fois.
 2. **Crée ta branche** depuis `main` : `git switch -c feat/8-maplibre-map`.
 3. **Code et teste.** Chaque critère de l'issue a au moins un test. Les vérifications à lancer
    sont dans [TECHNICAL.md](TECHNICAL.md).
@@ -19,7 +20,8 @@ for Good, et demande l'accès en écriture à ce dépôt. Ensuite, chaque questi
    fichiers. S'il en corrige un, refais `git add` puis
    `git commit` : c'est normal.
 5. **Ouvre la pull request** vers `main`, même tôt, en brouillon, et remplis son modèle. Quand
-   elle est prête, sors-la du brouillon et passe l'issue dans « In review » sur le tableau.
+   elle est prête, sors-la du brouillon : le tech lead qui la relit passe l'issue dans
+   « In review » sur le tableau.
 6. **Réponds à la relecture.** Un tech lead approuve et merge.
 
 Bloqué ? Écris-le dans l'issue ou dans le canal de ta zone ([Front](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front) ou [Back](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_back)), c'est normal. Sans nouvelles au bout d'une
