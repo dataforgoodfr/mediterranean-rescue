@@ -30,7 +30,7 @@ def test_test_session_is_a_database(session: Session) -> None:
 
 
 def test_ci_tests_on_postgres(session: Session) -> None:
-    # In CI, a missing or misspelled TEST_DATABASE_URL would silently fall back to SQLite.
+    # Dans la CI, un TEST_DATABASE_URL absent ou mal écrit retomberait sans bruit sur SQLite.
     if os.environ.get("CI") is None:
         pytest.skip("only in CI, where the tests must run on Postgres")
     assert session.get_bind().dialect.name == "postgresql"

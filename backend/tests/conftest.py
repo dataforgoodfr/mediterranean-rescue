@@ -1,7 +1,7 @@
-"""Test fixtures. By default, an in-memory SQLite database, fresh for each test, stands in for
-Postgres. The official pattern: https://sqlmodel.tiangolo.com/tutorial/fastapi/tests/
-With `TEST_DATABASE_URL` set, the tests run on that Postgres database instead (as in CI).
-A test that needs the database asks for `session` or `client` as a parameter.
+"""Les fixtures des tests : une base SQLite en mémoire, neuve pour chaque test, à la place de
+Postgres. Le motif officiel : https://sqlmodel.tiangolo.com/tutorial/fastapi/tests/
+Avec `TEST_DATABASE_URL`, les tests tournent sur cette base Postgres (c'est le cas dans la CI).
+Un test qui a besoin de la base demande `session` ou `client` en paramètre.
 """
 
 import os
@@ -17,30 +17,30 @@ from app.db import engine as app_engine
 from app.db import get_session
 from app.main import app
 
-# A database reserved for tests: its tables are created at the start and dropped at the end.
+# Une base réservée aux tests : ses tables sont créées au début et supprimées à la fin.
 TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
 
 
 @pytest.fixture(name="engine", scope="session")
 def engine_fixture() -> Iterator[Engine]:
     if TEST_DATABASE_URL is None:
-        # In-memory SQLite lives only as long as the engine's single connection.
+        # Le SQLite en mémoire ne vit que le temps de l'unique connexion du moteur.
         yield create_engine(
             "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
         )
         return
     engine = create_engine(TEST_DATABASE_URL)
-    # The tables get dropped: never on the app's own database.
+    # Les tables y sont supprimées : jamais sur la base de l'app.
     if (engine.url.host, engine.url.port, engine.url.database) == (
         app_engine.url.host,
         app_engine.url.port,
         app_engine.url.database,
     ):
         raise RuntimeError("TEST_DATABASE_URL must not point to the app's DATABASE_URL")
-    # Dropped first too: a run killed before its teardown leaves tables that create_all
-    # would keep as they are, even if a model changed since.
+    # Supprimées d'abord aussi : un lancement coupé avant la fin laisse des tables que
+    # create_all garderait telles quelles, même si un modèle a changé depuis.
     SQLModel.metadata.drop_all(engine)
-    SQLModel.metadata.create_all(engine)  # the tables of the imported models
+    SQLModel.metadata.create_all(engine)  # les tables des modèles importés
     yield engine
     SQLModel.metadata.drop_all(engine)
     engine.dispose()
@@ -54,8 +54,8 @@ def session_fixture(engine: Engine) -> Iterator[Session]:
             yield session
         SQLModel.metadata.drop_all(engine)
         return
-    # Postgres keeps its data between tests: each test runs inside a transaction rolled back at
-    # the end. A `commit()` from the code under test only releases a savepoint.
+    # Postgres garde ses données d'un test à l'autre : chaque test tourne dans une transaction
+    # annulée à la fin. Un `commit()` du code testé ne valide qu'un point de sauvegarde.
     # https://docs.sqlalchemy.org/en/21/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
     with engine.connect() as connection:
         transaction = connection.begin()

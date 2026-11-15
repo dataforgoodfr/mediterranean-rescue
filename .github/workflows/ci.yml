@@ -85,8 +85,8 @@ jobs:
     strategy:
       matrix:
         python: ["3.12", "3.15"]
-    # The tests run on Postgres, the same image as docker-compose.dev.yaml, to catch what
-    # SQLite lets through. https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers
+    # Les tests tournent sur Postgres, la même image que docker-compose.dev.yaml, pour voir ce
+    # que SQLite laisse passer. https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers
     services:
       postgres:
         image: postgres:18
