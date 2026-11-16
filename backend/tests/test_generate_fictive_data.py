@@ -32,7 +32,7 @@ def test_generate_fictive_data_file_with_missing_data(tmp_path: Path) -> None:
 
     generate_fictive_data_file(input_fixture_directory, input_seed, input_line_nb)
     actual_generated_file_content = expected_generated_file.read_text()
-    assert ",," in actual_generated_file_content  # missing data is represented by empty fields
+    assert ",," in actual_generated_file_content  # une donnée manquante donne un champ vide
 
 
 def test_generate_fictive_data_file_with_FICTIF_value(tmp_path: Path) -> None:
