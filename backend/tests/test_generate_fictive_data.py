@@ -47,5 +47,5 @@ def test_generate_fictive_data_file_with_FICTIF_value(tmp_path: Path) -> None:
         actual_generated_file_content = f.readlines()
     for line in actual_generated_file_content[1:]:  # Skip header line
         assert line.strip().endswith("FICTIF"), (
-            "The following line does not end with 'FICTIF':\n" + line
+            "Cette ligne ne se termine pas par 'FICTIF' :\n" + line
         )
