@@ -81,7 +81,7 @@ cd backend
 uv run scripts/generate_fictive_data.py
 ```
 
-On peut générer un fichier de `N` lignes et avec une graine `graine` avec la commandes
+On peut générer un fichier de `N` lignes avec une graine `graine` avec la commande
 
 ```bash
 uv run scripts/generate_fictive_data.py -seed graine -nb_lines N
