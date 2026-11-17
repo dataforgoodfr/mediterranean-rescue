@@ -3,7 +3,7 @@ import { getHealth, getOperations } from '@/api'
 import { Icon, Logo } from '@/design'
 import { MediterraneanMap } from '@/map/MediterraneanMap'
 import { useTranslation, useLanguage } from '@/i18n'
-import {formatLongDate} from '../utils/formatLongDate'
+import { formatLongDate } from '@/utils/formatLongDate'
 // Une page provisoire : elle montre seulement que le frontend parle au backend.
 // La carte arrive par une issue.
 export function Home() {
