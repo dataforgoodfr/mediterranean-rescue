@@ -16,9 +16,9 @@ Le Sheet : `1opF61Qq2DgrJIP-kQD5-KHzC4xZkp2u_zqigTGk3V0I`, onglets `Data_operati
 | `type_ops` | `Rescue` ou `Transfer` | 370 | Sauvetage ou transfert (voir le glossaire) |
 | `nb_ops` | entier, 1 à 7 | 370 | Le nombre d'opérations regroupées sur la ligne |
 | `nb_survivor` | entier | 368 | Les personnes secourues |
-| `male`, `female` | entier | 330 | Hommes, femmes |
-| `under_18` | entier | 324 | Mineurs |
-| `under_18_unacc` | entier | 315 | Mineurs non accompagnés |
+| `male`, `female` | entier | 330 | Hommes, femmes (majeurs et mineurs) |
+| `under_18` | entier | 324 | Mineurs (-18ans) |
+| `under_18_unacc` | entier | 315 | Mineurs (-18ans) non accompagnés |
 | `under_5` | entier | 311 | Enfants de moins de 5 ans |
 | `pregnant_women` | entier | 273 | Femmes enceintes |
 | `latitude`, `longitude` | texte, degrés et minutes (`33° 12.4`) | 358 | La position |
@@ -69,3 +69,22 @@ Le Sheet : `1opF61Qq2DgrJIP-kQD5-KHzC4xZkp2u_zqigTGk3V0I`, onglets `Data_operati
   une majuscule, et `Incident` ou `incident` dans `type`. Le code de la carte actuelle lit même
   `transfertType` au lieu de `transfer_type`. Dans notre modèle, des noms en anglais, en
   `snake_case`, tous en minuscules.
+
+## Données fictives
+
+Des données fictives peuvent être générées avec [un script](../backend/scripts/generate_fictive_data.py).
+
+Le fichier [backend/fixtures/3_fictive_data.csv](../backend/fixtures/3_fictive_data.csv) a été généré avec les commandes suivantes.
+
+```bash
+cd backend
+uv run scripts/generate_fictive_data.py
+```
+
+On peut générer un fichier de `N` lignes avec une graine `graine` avec la commande
+
+```bash
+uv run scripts/generate_fictive_data.py -seed graine -nb_lines N
+```
+
+Cela va créer un fichier `backend/fixtures/N_fictive_data.csv`.
