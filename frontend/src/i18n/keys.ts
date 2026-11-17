@@ -8,6 +8,7 @@ export const keys = {
   'home.apiStatus.pending': 'L\'API n\'a pas encore répondu',
   'home.apiStatus.unreachable': 'L\'API ne répond pas ou renvoie une erreur',
   'home.apiStatus.ok': 'L\'API répond',
+  'home.lastOperationDate': "Dernière opération : {date}",
   'map.label': 'Le nom de la carte, lu par les lecteurs d\'écran',
   'map.zoomIn': 'Le bouton zoom (+) de la carte',
   'map.zoomOut': 'Le bouton dézoom (-) de la carte',

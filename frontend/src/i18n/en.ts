@@ -10,6 +10,7 @@ export const en: Translations = {
   'home.apiStatus.pending': 'waiting',
   'home.apiStatus.unreachable': 'unreachable',
   'home.apiStatus.ok': 'ok',
+  'home.lastOperationDate': 'Last operation : {date}',
   'map.label': 'Map of the central Mediterranean',
   'map.zoomIn': 'Zoom in',
   'map.zoomOut': 'Zoom out',
@@ -17,8 +18,7 @@ export const en: Translations = {
   'map.unavailable':
     'This browser cannot display the map. Try an up-to-date browser, or turn on hardware acceleration.',
   'design.title': 'Design system',
-  'design.intro':
-    'The colours, logo and icons of the SOS MEDITERRANEE brand guidelines, ready to reuse.',
+  'design.intro': 'The colours, logo and icons of the SOS MEDITERRANEE brand guidelines, ready to reuse.',
   'design.colors': 'Colours',
   'design.colors.primary': 'Navy blue: strong text, long titles, dark backgrounds, logo',
   'design.colors.secondary': 'Orange: titles, accents, icons. Not for body text',

@@ -8,6 +8,7 @@ export const fr: Translations = {
   'home.apiStatus.pending': 'en attente',
   'home.apiStatus.unreachable': 'injoignable',
   'home.apiStatus.ok': 'ok',
+  'home.lastOperationDate': 'Dernière opération : {date}',
   'map.label': 'Carte de la Méditerranée centrale',
   'map.zoomIn': 'Zoomer',
   'map.zoomOut': 'Dézoomer',
@@ -15,8 +16,7 @@ export const fr: Translations = {
   'map.unavailable':
     'Ce navigateur ne peut pas afficher la carte. Essayez avec un navigateur à jour, ou activez l\'accélération graphique.',
   'design.title': 'Design system',
-  'design.intro':
-    'Les couleurs, le logo et les pictos de la charte de SOS MEDITERRANEE, prêts à reprendre.',
+  'design.intro': 'Les couleurs, le logo et les pictos de la charte de SOS MEDITERRANEE, prêts à reprendre.',
   'design.colors': 'Couleurs',
   'design.colors.primary': 'Bleu marine : texte fort, titres longs, fonds sombres, logo',
   'design.colors.secondary': 'Orange : titres, accents, pictos. Pas pour le texte courant',
@@ -26,5 +26,9 @@ export const fr: Translations = {
   'design.logo.color': 'Bleu marine, sur fond clair',
   'design.logo.white': 'Blanc, sur fond sombre uniquement',
   'design.icons': 'Pictos ({count})',
+<<<<<<< HEAD
   'design.icons.usage': 'Un picto prend la couleur du texte autour de lui. Dans le code, utilise son nom.',
+=======
+  'design.icons.usage': "Un picto prend la couleur du texte autour de lui. Dans le code, utilise son nom."
+>>>>>>> c6e6c61 (feat: Adding last operation date on home page)
 }
