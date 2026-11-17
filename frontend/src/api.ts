@@ -6,7 +6,7 @@
 // types changent, et tsc montre chaque endroit du front à reprendre. Ce qui arrive du réseau est
 // de type `unknown` et se vérifie avant d'être utilisé (parse.ts) : jamais de `as`.
 import type { components } from './api/schema'
-import { isRecord } from './parse'
+import { isRecord, isDateString } from './parse'
 
 export type Health = components['schemas']['Health']
 
@@ -16,4 +16,14 @@ export async function getHealth(): Promise<Health> {
   const body: unknown = await response.json()
   if (!isRecord(body) || body.status !== 'ok') throw new Error('API: unexpected response')
   return { status: body.status }
+}
+
+// TODO: forme de retour provisoire, a changer quand le back exposera la route
+export type Operations = { date: string }
+export async function getOperations(): Promise<Operations> {
+  const response = await fetch('/api/operations')
+  if (!response.ok) throw new Error(`API: ${response.status}`)
+  const body: unknown = await response.json()
+  if (!isRecord(body) || !isDateString(body.date)) throw new Error('API: unexpected response')
+  return { date: body.date }
 }
