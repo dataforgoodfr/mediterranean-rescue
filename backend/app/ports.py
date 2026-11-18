@@ -10,39 +10,24 @@ fréquentes sont les premières à ajouter dans ALIASES.
 
 import argparse
 import csv
+import io
 from collections import Counter
 from pathlib import Path
+from urllib.request import urlopen
 
-PORTS: frozenset[str] = frozenset(
-    {
-        "Ancona",
-        "Augusta",
-        "Bari",
-        "Brindisi",
-        "Cagliari",
-        "Carrara",
-        "Catania",
-        "Civitavecchia",
-        "Corigliano Calabro",
-        "Crotone",
-        "Lampedusa",
-        "Livorno",
-        "Messina",
-        "Naples",
-        "Ortona",
-        "Palermo",
-        "Porto Empedocle",
-        "Pozzallo",
-        "Ravenna",
-        "Salerno",
-        "Taranto",
-        "Toulon",
-        "Trapani",
-        "Valencia",
-        "Valletta",
-        "Vibo Valentia",
-    }
+PORTS_SHEET_URL = (
+    "https://docs.google.com/spreadsheets/d/1opF61Qq2DgrJIP-kQD5-KHzC4xZkp2u_zqigTGk3V0I"
+    "/gviz/tq?tqx=out:csv&sheet=Data_ports"
 )
+
+
+def load_ports(url: str = PORTS_SHEET_URL) -> frozenset[str]:
+    with urlopen(url, timeout=10) as response:
+        text = response.read().decode("utf-8")
+    return frozenset(
+        row["nom"].strip() for row in csv.DictReader(io.StringIO(text)) if row["nom"].strip()
+    )
+
 
 # Une variante écrite dans l'export, et le port qu'elle désigne.
 ALIASES: dict[str, str] = {
@@ -54,7 +39,7 @@ PORT_COLUMN = "Port_disembarkation"
 
 
 def match_port(
-    written: str, ports: frozenset[str] = PORTS, aliases: dict[str, str] = ALIASES
+    written: str, ports: frozenset[str], aliases: dict[str, str] = ALIASES
 ) -> tuple[list[str], list[str]]:
     """Vérifie le contenu de l'entrée 'written' afin d'en extraire le(s) port(s).
 
@@ -76,19 +61,25 @@ def match_port(
     return matched, unmatched
 
 
-def check_ports_in_dump(path: Path) -> tuple[Counter[str], Counter[str]]:
+def check_ports_in_dump(path: Path, ports: frozenset[str]) -> tuple[Counter[str], Counter[str]]:
     """Compte, ligne par ligne, les ports reconnus et les variantes inconnues du fichier."""
     matched: Counter[str] = Counter()
     unmatched: Counter[str] = Counter()
     with open(path, encoding="utf-8", newline="") as file:
         for row in csv.DictReader(file):
-            found, unknown = match_port(row[PORT_COLUMN])
+            found, unknown = match_port(row[PORT_COLUMN], ports)
             matched.update(found)
             unmatched.update(unknown)
     return matched, unmatched
 
 
 def main() -> None:
+
+    # We start listing known ports, by looking at the content of the google sheet,
+    # in the "Data_ports" sheet
+    ports = load_ports()
+
+    # We get the file we want to test
     parser = argparse.ArgumentParser(
         description=f"Check the {PORT_COLUMN} column of a CSV export against the known ports."
     )
@@ -96,7 +87,7 @@ def main() -> None:
     args = parser.parse_args()
     path: Path = args.path
 
-    matched, unmatched = check_ports_in_dump(path)
+    matched, unmatched = check_ports_in_dump(path, ports)
     print(f"Matched ports ({len(matched)}):")
     for port, count in matched.most_common():
         print(f"  {count:4}  {port}")
