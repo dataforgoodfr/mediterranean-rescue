@@ -1,0 +1,109 @@
+"""Confronter les ports de débarquement écrits à la main dans l'export de l'ancienne
+carte (colonne `Port_disembarkation`, texte libre, docs/donnees.md) à la liste des
+ports connus.
+
+    uv run python -m app.ports "../data/Data dashboard - Data_operations.csv"
+
+Le rapport liste les variantes non reconnues avec leur nombre de lignes : les plus
+fréquentes sont les premières à ajouter dans ALIASES.
+"""
+
+import argparse
+import csv
+from collections import Counter
+from pathlib import Path
+
+PORTS: frozenset[str] = frozenset(
+    {
+        "Ancona",
+        "Augusta",
+        "Bari",
+        "Brindisi",
+        "Cagliari",
+        "Carrara",
+        "Catania",
+        "Civitavecchia",
+        "Corigliano Calabro",
+        "Crotone",
+        "Lampedusa",
+        "Livorno",
+        "Messina",
+        "Naples",
+        "Ortona",
+        "Palermo",
+        "Porto Empedocle",
+        "Pozzallo",
+        "Ravenna",
+        "Salerno",
+        "Taranto",
+        "Toulon",
+        "Trapani",
+        "Valencia",
+        "Valletta",
+        "Vibo Valentia",
+    }
+)
+
+# Une variante écrite dans l'export, et le port qu'elle désigne.
+ALIASES: dict[str, str] = {
+    "Anconna": "Ancona",
+    "Ravena": "Ravenna",
+}
+
+PORT_COLUMN = "Port_disembarkation"
+
+
+def match_port(
+    written: str, ports: frozenset[str] = PORTS, aliases: dict[str, str] = ALIASES
+) -> tuple[list[str], list[str]]:
+    """Vérifie le contenu de l'entrée 'written' afin d'en extraire le(s) port(s).
+
+    Une entrée peut nommer plusieurs ports, s'ils sont séparés par `&` comme par
+    exemple : « Porto Empedocle & Civitavecchia ».
+    """
+    matched: list[str] = []
+    unmatched: list[str] = []
+    for part in written.split("&"):
+        candidate = part.strip()
+        if not candidate:
+            continue
+        if candidate in ports:
+            matched.append(candidate)
+        elif candidate in aliases:
+            matched.append(aliases[candidate])
+        else:
+            unmatched.append(candidate)
+    return matched, unmatched
+
+
+def check_ports_in_dump(path: Path) -> tuple[Counter[str], Counter[str]]:
+    """Compte, ligne par ligne, les ports reconnus et les variantes inconnues du fichier."""
+    matched: Counter[str] = Counter()
+    unmatched: Counter[str] = Counter()
+    with open(path, encoding="utf-8", newline="") as file:
+        for row in csv.DictReader(file):
+            found, unknown = match_port(row[PORT_COLUMN])
+            matched.update(found)
+            unmatched.update(unknown)
+    return matched, unmatched
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description=f"Check the {PORT_COLUMN} column of a CSV export against the known ports."
+    )
+    parser.add_argument("path", type=Path, help="CSV export of the old map's operations")
+    args = parser.parse_args()
+    path: Path = args.path
+
+    matched, unmatched = check_ports_in_dump(path)
+    print(f"Matched ports ({len(matched)}):")
+    for port, count in matched.most_common():
+        print(f"  {count:4}  {port}")
+    print(f"\nUnmatched variants ({len(unmatched)}):")
+    for variant, count in unmatched.most_common():
+        print(f"  {count:4}  {variant}")
+
+
+if __name__ == "__main__":
+    main()
