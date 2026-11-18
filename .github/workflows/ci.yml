@@ -75,7 +75,7 @@ jobs:
         with:
           persist-credentials: false
       # Les outils et leurs versions viennent de mise.toml, comme en local.
-      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195 # v5.2.5
+      - uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
           install_args: "uv task"
       - run: task check:pre-commit
@@ -115,7 +115,7 @@ jobs:
         with:
           persist-credentials: false
       # Les outils et leurs versions viennent de mise.toml, comme en local.
-      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195 # v5.2.5
+      - uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
           install_args: "uv task"
       # uv.lock à jour (uv sync --locked), types en mode strict (mypy), tests
@@ -131,7 +131,7 @@ jobs:
         with:
           persist-credentials: false
       # Les outils et leurs versions viennent de mise.toml, comme en local.
-      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195 # v5.2.5
+      - uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
           install_args: "node pnpm task"
       # lint (aucun any, aucun as), schema.ts à jour, tests, construction (avec tsc)
