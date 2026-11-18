@@ -101,13 +101,13 @@ Pour lancer l'API et le site sans Docker :
 ```sh
 docker compose -f docker-compose.dev.yaml up -d db   # la base seule, ou ton propre Postgres
 
-cd backend && uv sync && uv run fastapi dev          # http://127.0.0.1:8000/api/docs
+cd backend && uv run fastapi dev                     # http://127.0.0.1:8000/api/docs
 ```
 
 Puis, depuis la racine, dans un autre terminal :
 
 ```sh
-cd frontend && pnpm install && pnpm dev              # http://localhost:5173
+cd frontend && pnpm dev                              # http://localhost:5173
 ```
 
 `task setup` installe aussi les contrôles avant commit. Ils vérifient aussi le frontend : même si
