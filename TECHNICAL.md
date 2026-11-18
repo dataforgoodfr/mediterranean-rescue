@@ -88,8 +88,10 @@ leads créent et suppriment le staging avec les scripts du dépôt privé (`depl
 ## Lancer le projet sans Docker
 
 Pour les tests et l'éditeur, il faut de toute façon les outils sur ta machine. Installe
-[mise](https://mise.jdx.dev/getting-started.html) une fois : il installe ensuite Python, Node.js,
-pnpm, uv et Task aux versions du projet, celles de `mise.toml`. Puis, à la racine :
+[mise](https://mise.jdx.dev/getting-started.html) une fois, puis active-le dans ton terminal
+(l'étape « Activate mise » de la même page) et ouvre un nouveau terminal : sans cela, `task` et
+les outils du projet restent introuvables. mise installe ensuite Python, Node.js, pnpm, uv et
+Task aux versions du projet, celles de `mise.toml`. Puis, à la racine :
 
 ```sh
 mise install   # les outils, aux versions de mise.toml
