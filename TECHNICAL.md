@@ -120,7 +120,8 @@ pnpm build
 
 La CI relance sur chaque pull request ce qu'elle touche (backend, frontend, images Docker), et
 pre-commit partout. On merge quand « CI done » et « pr-title » sont verts : le second vérifie que le
-titre de la pull request suit les commits conventionnels. CodeQL, activé dans les réglages du
+titre de la pull request suit les commits conventionnels. Il faut aussi l'approbation d'un tech lead
+(les noms sont dans `.github/CODEOWNERS`), et un nouveau commit l'annule. CodeQL, activé dans les réglages du
 dépôt, analyse aussi le code de chaque pull request. Chaque mois, Dependabot propose la
 mise à jour des dépendances.
 
