@@ -52,3 +52,40 @@ def test_a_new_operation_type_needs_no_database_migration() -> None:
     column_type = inspect(Operation).columns["operation_type"].type
     assert isinstance(column_type, String)
     assert not isinstance(column_type, Enum)
+
+
+VALID = {"date": "2023-02-17", "operation_type": "rescue", "nb_ops": 1}
+
+
+def test_a_valid_operation_passes_validation() -> None:
+    operation = Operation.model_validate({**VALID, "latitude": 34.5, "longitude": 15.2})
+    assert operation.latitude == 34.5
+
+
+@pytest.mark.parametrize("wind_force", [-1, 13])
+def test_a_wind_force_outside_the_beaufort_scale_is_refused(wind_force: int) -> None:
+    with pytest.raises(ValueError):
+        Operation.model_validate({**VALID, "wind_force": wind_force})
+
+
+def test_a_position_in_the_southern_hemisphere_is_refused() -> None:
+    # Première validation, volontairement simple : la Méditerranée est au nord de l'équateur.
+    with pytest.raises(ValueError):
+        Operation.model_validate({**VALID, "latitude": -34.5, "longitude": 15.2})
+
+
+def test_a_position_with_only_one_coordinate_is_refused() -> None:
+    with pytest.raises(ValueError):
+        Operation.model_validate({**VALID, "latitude": 34.5})
+
+
+def test_the_loader_applies_the_model_rules(session: Session, tmp_path: Path) -> None:
+    lines = FIXTURE.read_text().splitlines()
+    header, first = lines[0], lines[1].split(",")
+    first[header.split(",").index("wind_force")] = "13"
+    bad = tmp_path / "bad.csv"
+    bad.write_text("\n".join([header, ",".join(first)]) + "\n")
+
+    with pytest.raises(ValueError):
+        load_fictive_data(session, bad)
+    assert session.exec(select(Operation)).all() == []

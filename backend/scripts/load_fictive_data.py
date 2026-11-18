@@ -27,29 +27,32 @@ def fixture_position(text: str | None) -> float | None:
 
 
 def to_operation(row: OperationModel) -> Operation:
-    return Operation(
-        date=datetime.strptime(row.date, "%d/%m/%Y").date(),
-        operation_type=OperationType(row.type_ops.lower()),
-        nb_ops=row.nb_ops,
-        nb_survivor=row.nb_survivor,
-        male=row.male,
-        female=row.female,
-        under_18=row.under_18,
-        under_18_unacc=row.under_18_unacc,
-        under_5=row.under_5,
-        pregnant_women=row.pregnant_women,
-        latitude=fixture_position(row.latitude),
-        longitude=fixture_position(row.longitude),
-        wind_force=row.wind_force,
-        wave_height=row.wave_height,
-        boat_type=row.boat_type,
-        nb_nationalities=row.nb_nationalities,
-        transfer_type=row.transfer_type,
-        port_disembarkation=row.port_disembarkation,
-        image_src=row.image_src,
-        video_src=row.video_srv,
-        testimony_name=row.testimony_name,
-        testimony_src=row.testimony_src,
+    # model_validate, et non Operation(...) : c'est lui qui applique les règles du modèle.
+    return Operation.model_validate(
+        dict(
+            date=datetime.strptime(row.date, "%d/%m/%Y").date(),
+            operation_type=OperationType(row.type_ops.lower()),
+            nb_ops=row.nb_ops,
+            nb_survivor=row.nb_survivor,
+            male=row.male,
+            female=row.female,
+            under_18=row.under_18,
+            under_18_unacc=row.under_18_unacc,
+            under_5=row.under_5,
+            pregnant_women=row.pregnant_women,
+            latitude=fixture_position(row.latitude),
+            longitude=fixture_position(row.longitude),
+            wind_force=row.wind_force,
+            wave_height=row.wave_height,
+            boat_type=row.boat_type,
+            nb_nationalities=row.nb_nationalities,
+            transfer_type=row.transfer_type,
+            port_disembarkation=row.port_disembarkation,
+            image_src=row.image_src,
+            video_src=row.video_srv,
+            testimony_name=row.testimony_name,
+            testimony_src=row.testimony_src,
+        )
     )
 
 

@@ -2,7 +2,9 @@
 
 import datetime
 from enum import StrEnum
+from typing import Self
 
+from pydantic import model_validator
 from sqlalchemy import Engine, String
 from sqlmodel import Field, SQLModel
 
@@ -33,7 +35,7 @@ class Operation(SQLModel, table=True):
     # En degrés décimaux (WGS 84), nord et est positifs.
     latitude: float | None = None
     longitude: float | None = None
-    wind_force: int | None = None  # échelle de Beaufort
+    wind_force: int | None = Field(default=None, ge=0, le=12)  # échelle de Beaufort
     wave_height: float | None = None  # en mètres
     boat_type: str | None = None
     nb_nationalities: int | None = None
@@ -43,6 +45,19 @@ class Operation(SQLModel, table=True):
     video_src: str | None = None
     testimony_name: str | None = None
     testimony_src: str | None = None
+
+    # Un modèle de table ne se valide pas à la construction (Operation(...)) : passer par
+    # Operation.model_validate(...) pour que ces règles s'appliquent (tests/test_operations.py).
+    @model_validator(mode="after")
+    def position_in_the_mediterranean(self) -> Self:
+        """Une première règle, volontairement simple : une position a ses deux coordonnées, et elle
+        est au nord de l'équateur. Elle se resserrera avec la carte de la Méditerranée et des eaux
+        territoriales (#82)."""
+        if (self.latitude is None) != (self.longitude is None):
+            raise ValueError("a position needs both latitude and longitude")
+        if self.latitude is not None and not 0 < self.latitude <= 90:
+            raise ValueError("the position must be in the northern hemisphere")
+        return self
 
 
 def create_tables(engine: Engine) -> None:

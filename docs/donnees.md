@@ -59,11 +59,9 @@ Le Sheet : `1opF61Qq2DgrJIP-kQD5-KHzC4xZkp2u_zqigTGk3V0I`, onglets `Data_operati
   dans un quart des lignes) : une case vide n'est pas un zéro.
 - **Les positions** sont en degrés et minutes décimales, sans N, S, E ni O : la carte actuelle les
   lit comme nord et est. À convertir en degrés décimaux pour la base.
-- **`type_nationalities` ne contient pas de pays**, mais des lettres de colonnes (`m;n;ag`…),
-  sans doute celles du tableau de suivi de SOS MEDITERRANEE, une par nationalité. Et
-  `nb_nationalities` ne correspond au nombre de ces lettres que dans 42 lignes sur 259. Réglé :
-  SOS MEDITERRANEE ne publie que le nombre de nationalités, jamais leur détail. La base garde
-  `nb_nationalities` et ne reprend pas `type_nationalities`.
+- **Les nationalités** : SOS MEDITERRANEE ne publie que leur nombre, jamais leur détail. La base
+  garde `nb_nationalities` et ne reprend pas `type_nationalities`, qui ne contient d'ailleurs pas
+  de pays mais des lettres de colonnes (`m;n;ag`…).
 - **Les ports** sont écrits librement dans les opérations (49 variantes) alors que `Data_ports`
   en liste 24 : il faudra les faire correspondre.
 - **Les noms ne suivent pas une règle** : `video_srv` (pour vidéo), `Port_disembarkation` avec
