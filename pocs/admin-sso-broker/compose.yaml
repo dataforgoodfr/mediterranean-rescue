@@ -1,0 +1,16 @@
+# Un seul Keycloak, deux realms : `sos-fictif` joue le fournisseur de comptes de SOS (son
+# Microsoft 365 par exemple), `rescue-atlas-poc` est le nôtre et lui délègue la connexion.
+# Le port est le même dedans et dehors (8082), pour que les adresses des deux realms soient
+# identiques vues du navigateur et vues de Keycloak.
+# Doc : https://www.keycloak.org/server/containers
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    command: ["start-dev", "--import-realm", "--http-port=8082"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin-fictif
+    ports:
+      - "127.0.0.1:8082:8082"
+    volumes:
+      - ./realm:/opt/keycloak/data/import:ro

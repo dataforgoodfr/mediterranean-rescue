@@ -1,0 +1,62 @@
+{
+  "realm": "rescue-atlas-poc",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "data-provider",
+        "description": "FICTIF : peut vérifier et corriger les opérations dans le back-office"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "rescue-atlas-admin",
+      "name": "Back-office Rescue Atlas (POC)",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["http://localhost:5173"],
+      "attributes": { "pkce.code.challenge.method": "S256" }
+    }
+  ],
+  "identityProviders": [
+    {
+      "alias": "sos-fictif",
+      "displayName": "Compte SOS (FICTIF)",
+      "providerId": "oidc",
+      "enabled": true,
+      "trustEmail": true,
+      "firstBrokerLoginFlowAlias": "first broker login",
+      "config": {
+        "authorizationUrl": "http://localhost:8082/realms/sos-fictif/protocol/openid-connect/auth",
+        "tokenUrl": "http://localhost:8082/realms/sos-fictif/protocol/openid-connect/token",
+        "issuer": "http://localhost:8082/realms/sos-fictif",
+        "jwksUrl": "http://localhost:8082/realms/sos-fictif/protocol/openid-connect/certs",
+        "useJwksUrl": "true",
+        "validateSignature": "true",
+        "pkceEnabled": "true",
+        "pkceMethod": "S256",
+        "clientId": "rescue-atlas-broker",
+        "clientSecret": "secret-fictif",
+        "clientAuthMethod": "client_secret_post",
+        "defaultScope": "openid email profile",
+        "syncMode": "FORCE"
+      }
+    }
+  ],
+  "identityProviderMappers": [
+    {
+      "name": "groupe SOS vers rôle data-provider",
+      "identityProviderAlias": "sos-fictif",
+      "identityProviderMapper": "oidc-advanced-role-idp-mapper",
+      "config": {
+        "syncMode": "FORCE",
+        "claims": "[{\"key\":\"groups\",\"value\":\"rescue-atlas-data-providers\"}]",
+        "are.claim.values.regex": "false",
+        "role": "data-provider"
+      }
+    }
+  ]
+}

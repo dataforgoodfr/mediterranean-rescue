@@ -1,0 +1,13 @@
+# Un Postgres 18 jetable (aucun volume), préparé par init.sql au premier démarrage.
+# Doc de l'image : https://hub.docker.com/_/postgres (« Initialization scripts »).
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: owner
+      POSTGRES_PASSWORD: owner-fictif
+      POSTGRES_DB: rescue_atlas_poc
+    ports:
+      - "127.0.0.1:${DB_PORT:-55433}:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
