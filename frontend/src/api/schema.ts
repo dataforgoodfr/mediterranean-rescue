@@ -24,6 +24,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/operations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Operations
+         * @description Every operation, oldest first. Positions are in decimal degrees (WGS 84), north and east
+         *     positive.
+         */
+        get: operations["list_operations_api_operations_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -36,6 +57,67 @@ export interface components {
              */
             status: "ok";
         };
+        /**
+         * OperationPublic
+         * @description Une opération telle que l'API la renvoie : rangée dans la base, elle a toujours un id.
+         */
+        OperationPublic: {
+            /** Boat Type */
+            boat_type?: string | null;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Female */
+            female?: number | null;
+            /** Id */
+            id: number;
+            /** Image Src */
+            image_src?: string | null;
+            /** Latitude */
+            latitude?: number | null;
+            /** Longitude */
+            longitude?: number | null;
+            /** Male */
+            male?: number | null;
+            /** Nb Nationalities */
+            nb_nationalities?: number | null;
+            /** Nb Ops */
+            nb_ops: number;
+            /** Nb Survivor */
+            nb_survivor?: number | null;
+            operation_type: components["schemas"]["OperationType"];
+            /** Port Disembarkation */
+            port_disembarkation?: string | null;
+            /** Pregnant Women */
+            pregnant_women?: number | null;
+            /** Testimony Name */
+            testimony_name?: string | null;
+            /** Testimony Src */
+            testimony_src?: string | null;
+            /** Transfer Type */
+            transfer_type?: string | null;
+            /** Under 18 */
+            under_18?: number | null;
+            /** Under 18 Unacc */
+            under_18_unacc?: number | null;
+            /** Under 5 */
+            under_5?: number | null;
+            /** Video Src */
+            video_src?: string | null;
+            /** Wave Height */
+            wave_height?: number | null;
+            /** Wind Force */
+            wind_force?: number | null;
+        };
+        /**
+         * OperationType
+         * @description Les types d'opération. Ils sont rangés comme du texte dans la base : un nouveau type
+         *     (l'évacuation médicale, par exemple) n'est qu'une ligne de plus ici, sans migration.
+         * @enum {string}
+         */
+        OperationType: "rescue" | "transfer";
     };
     responses: never;
     parameters: never;
@@ -61,6 +143,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Health"];
+                };
+            };
+        };
+    };
+    list_operations_api_operations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperationPublic"][];
                 };
             };
         };

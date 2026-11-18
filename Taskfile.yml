@@ -69,3 +69,9 @@ tasks:
     cmds:
       - cd backend && uv run python -m app.openapi_schema
       - cd frontend && pnpm api:types
+
+  data:fictive:
+    desc: "Charge le jeu fictif dans la base, une seule fois : relancée, la tâche l'ajoute une deuxième fois"
+    dir: backend
+    cmds:
+      - uv run python -m scripts.load_fictive_data fixtures/3_fictive_data.csv
