@@ -1,0 +1,14 @@
+# Keycloak en mode dev, avec le realm fictif importé au démarrage.
+# Doc : https://www.keycloak.org/server/containers (mode dev, import au démarrage).
+# Le mode dev n'est pas fait pour la production : ici, il sert seulement au POC.
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin-fictif
+    ports:
+      - "127.0.0.1:${KEYCLOAK_PORT:-8081}:8080"
+    volumes:
+      - ./realm:/opt/keycloak/data/import:ro
