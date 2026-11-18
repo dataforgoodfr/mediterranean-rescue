@@ -15,6 +15,9 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    // `@/` désigne src/ : `import { getHealth } from '@/api'`, d'où qu'on soit. Le même alias
+    // est dans vite.config.ts. https://www.typescriptlang.org/tsconfig/#paths
+    "paths": { "@/*": ["./src/*"] },
 
     /* Contrôles */
     // Le mode strict, plus la case vide d'un tableau ou d'un objet : `liste[0]` peut être

@@ -1,0 +1,11 @@
+# Les versions des outils du projet, au même endroit. `mise install` les installe toutes ;
+# `mise ls --current` montre celles qui sont actives. Doc : https://mise.jdx.dev/configuration.html
+# Trois fichiers gardent leur propre copie, lue par d'autres outils : backend/.python-version
+# (uv), packageManager dans frontend/package.json (pnpm) et les Dockerfiles (les images).
+# Changer une version ici, c'est aussi la changer là.
+[tools]
+python = "3.15"
+node = "26" # la LTS active : https://nodejs.org/en/about/previous-releases
+pnpm = "12.10.1"
+uv = "0.13.7"
+task = "3.54.0"

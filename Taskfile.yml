@@ -1,0 +1,71 @@
+# Les commandes du projet, à lancer depuis la racine. `task --list` les décrit.
+# La CI lance les mêmes tâches (.github/workflows/ci.yml). Doc : https://taskfile.dev
+version: '3'
+
+tasks:
+  setup:
+    desc: Installe les outils (mise), les dépendances et les contrôles avant commit
+    cmds:
+      - mise install
+      - cd backend && uv sync
+      - cd frontend && pnpm install
+      - cd backend && uv run pre-commit install
+
+  dev:
+    desc: Lance tout le projet avec Docker (site, API, base)
+    cmds:
+      - docker compose -f docker-compose.dev.yaml up
+
+  check:
+    desc: Toutes les vérifications avant de pousser (pre-commit, backend, frontend)
+    cmds:
+      - task: check:pre-commit
+      - task: check:backend
+      - task: check:frontend
+
+  check:pre-commit:
+    desc: Les contrôles de pre-commit sur tout le dépôt
+    cmds:
+      - uv run --project backend pre-commit run --all-files --show-diff-on-failure
+
+  check:backend:
+    desc: "Le backend : dépendances à jour, types (mypy) et tests"
+    dir: backend
+    cmds:
+      - uv sync --locked
+      - uv run mypy
+      - uv run pytest
+
+  check:frontend:
+    desc: "Le frontend : lint, types de l'API à jour, tests et construction"
+    dir: frontend
+    cmds:
+      - pnpm install --frozen-lockfile
+      - pnpm lint
+      - pnpm api:check
+      - pnpm test
+      - pnpm build
+
+  test:
+    desc: Les tests du backend et du frontend
+    cmds:
+      - task: test:backend
+      - task: test:frontend
+
+  test:backend:
+    desc: Les tests du backend
+    dir: backend
+    cmds:
+      - uv run pytest
+
+  test:frontend:
+    desc: Les tests du frontend
+    dir: frontend
+    cmds:
+      - pnpm test
+
+  api:
+    desc: Régénère le schéma de l'API (backend/openapi.json) puis ses types (frontend/src/api/schema.ts)
+    cmds:
+      - cd backend && uv run python -m app.openapi_schema
+      - cd frontend && pnpm api:types

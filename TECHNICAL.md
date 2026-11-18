@@ -7,6 +7,8 @@
   l'API et **React Router** pour les pages. La carte viendra avec **MapLibre**.
 - **pre-commit**, **ruff**, **mypy**, **pytest**, **Oxlint**, **Vitest** et **Testing Library** pour
   les vérifications.
+- **mise** pour installer les outils à la bonne version (`mise.toml`), **Task** pour les commandes
+  (`Taskfile.yml`, `task --list` les décrit).
 
 Le backend est une app FastAPI avec une seule route, `/api/health`, et la connexion à Postgres
 prête à servir (`app/db.py`). Le frontend est l'app créée par `pnpm create vite --template
@@ -18,6 +20,7 @@ Les conventions, pour que le code se ressemble :
 - **Un appel à l'API** : une fonction dans `frontend/src/api.ts`, utilisée par `useQuery` (ou
   `useMutation`), jamais `fetch` dans un `useEffect`.
 - **Une page** : un fichier dans `frontend/src/pages/` et une ligne dans `frontend/src/App.tsx`.
+- **Les imports du frontend** peuvent partir de `src/` avec `@/` : `import { getHealth } from '@/api'`.
 - **Pas de `any`** en TypeScript : le build refuse le `any` implicite, le lint le `any` écrit.
   `unknown` à la place, puis on vérifie le type.
 - **Les tests du frontend** affichent un composant avec `renderWithProviders` (`frontend/src/test-utils.tsx`),
@@ -54,6 +57,8 @@ cd mediterranean-rescue
 docker compose -f docker-compose.dev.yaml up
 ```
 
+(Avec Task installé, `task dev` lance la même commande.)
+
 Le premier lancement télécharge les images et prend quelques minutes. Ensuite :
 
 - le site sur http://localhost:5173 : la page doit afficher « API : ok » (« API: ok » si ton navigateur est en anglais) ;
@@ -82,10 +87,16 @@ leads créent et suppriment le staging avec les scripts du dépôt privé (`depl
 
 ## Lancer le projet sans Docker
 
-Pour les tests et l'éditeur, il faut de toute façon les outils sur ta machine :
-[uv](https://docs.astral.sh/uv/getting-started/installation/) 0.13 ou plus (il installe Python 3.15, celui
-du projet), Node.js 26, la version LTS (22.22.2+ et 24.15+ marchent aussi, pas 23 ni 25, que les
-outils de test refusent), et [pnpm](https://pnpm.io/installation) 12.
+Pour les tests et l'éditeur, il faut de toute façon les outils sur ta machine. Installe
+[mise](https://mise.jdx.dev/getting-started.html) une fois : il installe ensuite Python, Node.js,
+pnpm, uv et Task aux versions du projet, celles de `mise.toml`. Puis, à la racine :
+
+```sh
+mise install   # les outils, aux versions de mise.toml
+task setup     # les dépendances du backend et du frontend, et les contrôles avant commit
+```
+
+Pour lancer l'API et le site sans Docker :
 
 ```sh
 docker compose -f docker-compose.dev.yaml up -d db   # la base seule, ou ton propre Postgres
@@ -99,24 +110,18 @@ Puis, depuis la racine, dans un autre terminal :
 cd frontend && pnpm install && pnpm dev              # http://localhost:5173
 ```
 
-Installe aussi les contrôles avant commit, une seule fois : `cd backend && uv run pre-commit install`.
-Ils vérifient aussi le frontend : lance d'abord `pnpm install` dans `frontend/`. Même si tu ne
-touches qu'au backend, pnpm sert dès que l'API change : le hook `types-api` vérifie alors que
-`frontend/src/api/schema.ts` suit `backend/openapi.json` (`pnpm api:types` le régénère).
+`task setup` installe aussi les contrôles avant commit. Ils vérifient aussi le frontend : même si
+tu ne touches qu'au backend, pnpm sert dès que l'API change, car le hook `types-api` vérifie alors
+que `frontend/src/api/schema.ts` suit `backend/openapi.json` (`task api` le régénère).
 
 ## Vérifier avant de pousser
 
 ```sh
-# Dans backend/
-uv run pre-commit run --all-files
-uv run mypy
-uv run pytest
-
-# Dans frontend/
-pnpm lint
-pnpm test
-pnpm build
+task check   # pre-commit sur tout le dépôt, puis le backend, puis le frontend
 ```
+
+Une partie seulement : `task check:backend` (mypy, pytest), `task check:frontend` (lint, tests,
+construction) ou `task test`. La CI lance ces mêmes tâches.
 
 La CI relance sur chaque pull request ce qu'elle touche (backend, frontend, images Docker), et
 pre-commit partout. On merge quand « CI done » et « pr-title » sont verts : le second vérifie que le
@@ -131,6 +136,8 @@ Les types de l'API ne s'écrivent qu'une fois, dans le backend (les modèles pyd
 (https://fastapi.tiangolo.com/advanced/generate-clients/) :
 
 ```sh
+task api   # fait les deux étapes ci-dessous, depuis la racine
+
 # 1. Dans backend/ : écrire le schéma de l'API dans backend/openapi.json
 uv run python -m app.openapi_schema
 # 2. Dans frontend/ : en tirer les types TypeScript, dans src/api/schema.ts
