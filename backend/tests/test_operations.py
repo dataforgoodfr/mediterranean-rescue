@@ -2,6 +2,7 @@ import datetime
 from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import Enum, String, inspect
 from sqlmodel import Session, col, select
 
@@ -89,3 +90,35 @@ def test_the_loader_applies_the_model_rules(session: Session, tmp_path: Path) ->
     with pytest.raises(ValueError):
         load_fictive_data(session, bad)
     assert session.exec(select(Operation)).all() == []
+
+
+def test_the_api_lists_no_operation_for_an_empty_database(client: TestClient) -> None:
+    response = client.get("/api/operations")
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+def test_the_api_lists_the_fictive_operations(client: TestClient, session: Session) -> None:
+    load_fictive_data(session, FIXTURE)
+
+    operations = client.get("/api/operations").json()
+
+    # De la plus ancienne à la plus récente.
+    assert [operation["date"] for operation in operations] == [
+        "2017-08-12",
+        "2021-01-26",
+        "2023-02-17",
+    ]
+    latest = operations[-1]
+    assert latest["operation_type"] == "rescue"
+    assert (latest["nb_ops"], latest["nb_survivor"]) == (2, 38)
+    # 33° 59.8 et 17° 13.8, renvoyés en degrés décimaux.
+    assert latest["latitude"] == pytest.approx(33 + 59.8 / 60)
+    assert latest["longitude"] == pytest.approx(17 + 13.8 / 60)
+    assert isinstance(latest["id"], int)
+    # Inconnu reste vide, jamais zéro, jusque dans la réponse.
+    assert operations[1]["male"] is None
+
+
+def test_the_operations_route_is_documented(client: TestClient) -> None:
+    assert "/api/operations" in client.get("/api/openapi.json").json()["paths"]

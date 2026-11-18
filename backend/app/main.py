@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 from app.db import engine
 from app.models import create_tables
+from app.routers import operations
 
 
 @asynccontextmanager
@@ -37,3 +38,7 @@ class Health(BaseModel):
 def health() -> Health:
     """Answers while the server runs, without touching the database."""
     return Health(status="ok")
+
+
+# Chaque domaine a ses routes dans app/routers/ : https://fastapi.tiangolo.com/tutorial/bigger-applications/
+app.include_router(operations.router)

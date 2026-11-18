@@ -17,11 +17,12 @@ class OperationType(StrEnum):
     transfer = "transfer"
 
 
-class Operation(SQLModel, table=True):
+class OperationBase(SQLModel):
     """Une opération : un sauvetage ou un transfert. Une valeur inconnue reste vide (None),
-    jamais 0. On ne garde que le nombre de nationalités, jamais leur détail."""
+    jamais 0. On ne garde que le nombre de nationalités, jamais leur détail. La table et la
+    réponse de l'API partagent ces champs, selon le modèle officiel :
+    https://sqlmodel.tiangolo.com/tutorial/fastapi/multiple-models/"""
 
-    id: int | None = Field(default=None, primary_key=True)
     date: datetime.date
     operation_type: OperationType = Field(sa_type=String)
     nb_ops: int = Field(ge=1)
@@ -58,6 +59,16 @@ class Operation(SQLModel, table=True):
         if self.latitude is not None and not 0 < self.latitude <= 90:
             raise ValueError("the position must be in the northern hemisphere")
         return self
+
+
+class Operation(OperationBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+
+class OperationPublic(OperationBase):
+    """Une opération telle que l'API la renvoie : rangée dans la base, elle a toujours un id."""
+
+    id: int
 
 
 def create_tables(engine: Engine) -> None:

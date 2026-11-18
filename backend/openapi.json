@@ -14,6 +14,256 @@
         ],
         "title": "Health",
         "type": "object"
+      },
+      "OperationPublic": {
+        "description": "Une opération telle que l'API la renvoie : rangée dans la base, elle a toujours un id.",
+        "properties": {
+          "boat_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Boat Type"
+          },
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "female": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Female"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "image_src": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Src"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
+          "male": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Male"
+          },
+          "nb_nationalities": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nb Nationalities"
+          },
+          "nb_ops": {
+            "minimum": 1.0,
+            "title": "Nb Ops",
+            "type": "integer"
+          },
+          "nb_survivor": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nb Survivor"
+          },
+          "operation_type": {
+            "$ref": "#/components/schemas/OperationType"
+          },
+          "port_disembarkation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Port Disembarkation"
+          },
+          "pregnant_women": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pregnant Women"
+          },
+          "testimony_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testimony Name"
+          },
+          "testimony_src": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testimony Src"
+          },
+          "transfer_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transfer Type"
+          },
+          "under_18": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Under 18"
+          },
+          "under_18_unacc": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Under 18 Unacc"
+          },
+          "under_5": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Under 5"
+          },
+          "video_src": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Video Src"
+          },
+          "wave_height": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wave Height"
+          },
+          "wind_force": {
+            "anyOf": [
+              {
+                "maximum": 12.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wind Force"
+          }
+        },
+        "required": [
+          "date",
+          "operation_type",
+          "nb_ops",
+          "id"
+        ],
+        "title": "OperationPublic",
+        "type": "object"
+      },
+      "OperationType": {
+        "description": "Les types d'opération. Ils sont rangés comme du texte dans la base : un nouveau type\n(l'évacuation médicale, par exemple) n'est qu'une ligne de plus ici, sans migration.",
+        "enum": [
+          "rescue",
+          "transfer"
+        ],
+        "title": "OperationType",
+        "type": "string"
       }
     }
   },
@@ -40,6 +290,29 @@
           }
         },
         "summary": "Health"
+      }
+    },
+    "/api/operations": {
+      "get": {
+        "description": "Every operation, oldest first. Positions are in decimal degrees (WGS 84), north and east\npositive.",
+        "operationId": "list_operations_api_operations_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OperationPublic"
+                  },
+                  "title": "Response List Operations Api Operations Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Operations"
       }
     }
   }
