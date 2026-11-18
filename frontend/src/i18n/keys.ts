@@ -25,6 +25,7 @@ export const keys = {
   'design.logo.white': 'La légende du logo blanc',
   'design.icons': 'Le titre de la partie sur les pictos ; {count} est leur nombre',
   'design.icons.usage': 'Comment utiliser un picto : sa couleur et son nom dans le code',
+  'notFound.title': 'La phrase de la page introuvable',
 }
 
 export type MessageKey = keyof typeof keys
