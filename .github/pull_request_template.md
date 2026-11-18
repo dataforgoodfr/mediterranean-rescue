@@ -16,6 +16,8 @@ Closes #
 - [ ] La doc ou le README est à jour si le comportement change.
 - [ ] Les textes affichés passent par `t()`. S'il manque une langue, l'étiquette `traduction`
       est posée et les langues manquantes sont écrites ici.
+- [ ] Une page ou un composant du site reste utilisable sur un écran de 360 px de large, sans
+      défilement horizontal (le mode responsive des outils de développement du navigateur suffit).
 
 ## Relecture (pour le tech lead qui relit)
 

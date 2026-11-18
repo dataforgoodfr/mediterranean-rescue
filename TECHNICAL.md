@@ -20,6 +20,7 @@ Les conventions, pour que le code se ressemble :
 - **Un appel à l'API** : une fonction dans `frontend/src/api.ts`, utilisée par `useQuery` (ou
   `useMutation`), jamais `fetch` dans un `useEffect`.
 - **Une page** : un fichier dans `frontend/src/pages/` et une ligne dans `frontend/src/App.tsx`.
+  Elle reste utilisable sur un écran de 360 px de large ([design system](docs/design-system.md)).
 - **Les imports du frontend** peuvent partir de `src/` avec `@/` : `import { getHealth } from '@/api'`.
 - **Pas de `any`** en TypeScript : le build refuse le `any` implicite, le lint le `any` écrit.
   `unknown` à la place, puis on vérifie le type.
