@@ -30,6 +30,11 @@ du logo, comme le demande la charte).
 
 **L'accessibilité** : contraste AA, focus visible, un texte pour chaque picto qui porte un sens.
 
+**Le mobile d'abord** : chaque page reste utilisable sur un écran de 360 px de large, sans
+défilement horizontal. On la construit pour le téléphone, puis on l'élargit. Le mode responsive
+des outils de développement du navigateur suffit pour le vérifier, et le modèle de pull request
+le demande.
+
 ## Ce qui est libre
 
 La mise en page, le style de la carte (fonds MapLibre, points, zones), les composants, les
