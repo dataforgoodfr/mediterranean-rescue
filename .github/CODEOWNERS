@@ -1,0 +1,4 @@
+# Les tech leads relisent chaque pull request : la règle « main protégée » exige l'approbation
+# de l'un d'eux, donnée sur la dernière version de la PR.
+# https://docs.github.com/fr/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+* @guillaume-flambard @jrobert2 @naderhaj
