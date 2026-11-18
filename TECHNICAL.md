@@ -93,6 +93,13 @@ docker compose -f docker-compose.dev.yaml up -d db   # la base seule, ou ton pro
 cd backend && uv sync && uv run fastapi dev          # http://127.0.0.1:8000/api/docs
 ```
 
+Les tables se créent au démarrage de l'API. Pour remplir la base avec le jeu fictif (à faire une
+seule fois : relancée, la commande ajoute les mêmes opérations une deuxième fois) :
+
+```sh
+cd backend && uv run python -m scripts.load_fictive_data fixtures/3_fictive_data.csv
+```
+
 Puis, depuis la racine, dans un autre terminal :
 
 ```sh
