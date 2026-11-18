@@ -1,8 +1,12 @@
 {
   "realm": "sos-fictif",
-  "displayName": "SOS FICTIF (joue le Microsoft 365 de SOS)",
+  "displayName": "SOS FICTIF (joue le Microsoft Entra ID de SOS)",
   "enabled": true,
-  "groups": [{ "name": "rescue-atlas-data-providers" }],
+  "groups": [
+    {
+      "name": "data-provider"
+    }
+  ],
   "clients": [
     {
       "clientId": "rescue-atlas-broker",
@@ -11,14 +15,16 @@
       "secret": "secret-fictif",
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
-      "redirectUris": ["http://localhost:8082/realms/rescue-atlas-poc/broker/sos-fictif/endpoint"],
+      "redirectUris": [
+        "http://localhost:8082/realms/rescue-atlas-poc/broker/sos-fictif/endpoint"
+      ],
       "protocolMappers": [
         {
-          "name": "groups",
+          "name": "app role, comme Entra ID",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-group-membership-mapper",
           "config": {
-            "claim.name": "groups",
+            "claim.name": "roles",
             "full.path": "false",
             "id.token.claim": "true",
             "access.token.claim": "true",
@@ -36,8 +42,16 @@
       "emailVerified": true,
       "firstName": "Magda",
       "lastName": "FICTIF",
-      "credentials": [{ "type": "password", "value": "fictif", "temporary": false }],
-      "groups": ["/rescue-atlas-data-providers"]
+      "credentials": [
+        {
+          "type": "password",
+          "value": "fictif",
+          "temporary": false
+        }
+      ],
+      "groups": [
+        "/data-provider"
+      ]
     },
     {
       "username": "marin",
@@ -46,7 +60,13 @@
       "emailVerified": true,
       "firstName": "Marin",
       "lastName": "FICTIF",
-      "credentials": [{ "type": "password", "value": "fictif", "temporary": false }],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "fictif",
+          "temporary": false
+        }
+      ],
       "groups": []
     }
   ]

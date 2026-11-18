@@ -16,9 +16,15 @@
       "publicClient": true,
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
-      "redirectUris": ["http://localhost:5173/*"],
-      "webOrigins": ["http://localhost:5173"],
-      "attributes": { "pkce.code.challenge.method": "S256" }
+      "redirectUris": [
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
     }
   ],
   "identityProviders": [
@@ -48,12 +54,12 @@
   ],
   "identityProviderMappers": [
     {
-      "name": "groupe SOS vers rôle data-provider",
+      "name": "app role SOS vers rôle data-provider",
       "identityProviderAlias": "sos-fictif",
       "identityProviderMapper": "oidc-advanced-role-idp-mapper",
       "config": {
         "syncMode": "FORCE",
-        "claims": "[{\"key\":\"groups\",\"value\":\"rescue-atlas-data-providers\"}]",
+        "claims": "[{\"key\":\"roles\",\"value\":\"data-provider\"}]",
         "are.claim.values.regex": "false",
         "role": "data-provider"
       }

@@ -53,8 +53,13 @@ Ce que ça laisse de côté, volontairement :
 
 Sur Clever Cloud, Keycloak existe en service géré
 ([doc](https://www.clever.cloud/developers/doc/deploy/services/keycloak/), lue le 18/11/2026) :
-une instance Java, une base Postgres et un bucket, avec un filtrage par IP par realm depuis la
-26.6. La page ne dit rien des sauvegardes.
+une instance Java (taille S par défaut), une base Postgres (« XS Tiny Space » par défaut) et un
+bucket, avec un filtrage par IP par realm depuis la 26.6. Il se crée en une commande
+(`clever addon create keycloak <nom> --org <organisation>`). Ni cette page ni la page des
+[tarifs](https://www.clever.cloud/pricing/) ne donnent son prix (il faut passer par leur
+calculateur). La page des tarifs dit que les bases PostgreSQL sont sauvegardées chaque jour,
+sans dire pour quels plans : la base DEV, elle, n'a pas de sauvegarde. À confirmer pour la base
+du Keycloak avant de le créer.
 
 ## La suite
 

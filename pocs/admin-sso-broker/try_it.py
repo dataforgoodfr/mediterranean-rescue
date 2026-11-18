@@ -155,7 +155,7 @@ def roles(claims: dict[str, object]) -> list[str]:
 
 
 def set_magda_in_group(member: bool) -> None:
-    """Ce que ferait l'admin de SOS chez lui : ajouter ou retirer magda du groupe."""
+    """Ce que ferait l admin de SOS chez lui : attribuer ou retirer le rôle à magda."""
     admin = httpx.post(
         f"{KEYCLOAK}/realms/master/protocol/openid-connect/token",
         data={
@@ -172,9 +172,7 @@ def set_magda_in_group(member: bool) -> None:
     user_id = api.get("/users", params={"username": "magda", "exact": "true"}).json()[
         0
     ]["id"]
-    group_id = api.get(
-        "/groups", params={"search": "rescue-atlas-data-providers"}
-    ).json()[0]["id"]
+    group_id = api.get("/groups", params={"search": "data-provider"}).json()[0]["id"]
     method = "PUT" if member else "DELETE"
     api.request(method, f"/users/{user_id}/groups/{group_id}").raise_for_status()
 
@@ -192,13 +190,11 @@ def check(label: str, username: str, expected: bool) -> bool:
 
 wait_for_keycloak()
 results = [
-    check("magda, dans le groupe chez SOS", "magda", True),
-    check("marin, hors du groupe chez SOS", "marin", False),
+    check("magda, rôle data-provider attribué chez SOS", "magda", True),
+    check("marin, sans rôle chez SOS", "marin", False),
 ]
 set_magda_in_group(False)
-results.append(
-    check("magda, retirée du groupe chez SOS, se reconnecte", "magda", False)
-)
+results.append(check("magda, rôle retiré chez SOS, se reconnecte", "magda", False))
 set_magda_in_group(True)
-results.append(check("magda, remise dans le groupe, se reconnecte", "magda", True))
+results.append(check("magda, rôle rendu chez SOS, se reconnecte", "magda", True))
 sys.exit(0 if all(results) else 1)
