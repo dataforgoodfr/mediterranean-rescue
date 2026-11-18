@@ -5,7 +5,8 @@ Consignes pour un assistant de code qui travaille dans ce dépôt. Elles complè
 
 - La pile : FastAPI dans `backend/`, React dans `frontend/`, Postgres. Détail dans
   [TECHNICAL.md](TECHNICAL.md).
-- Avant de proposer un changement, lance les vérifications de TECHNICAL.md : elles doivent passer.
+- Avant de proposer un changement, lance les vérifications (`task check`, TECHNICAL.md) : elles
+  doivent passer.
 - Une issue à la fois. Ne touche que la zone de l'issue.
 - Aucune donnée réelle, aucun secret, ni dans le code, ni dans les tests, ni dans les exemples.
 - Le code en anglais ; les commentaires et la documentation en français.

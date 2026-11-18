@@ -4,7 +4,8 @@
 # Doc : https://docs.github.com/fr/actions
 # Les actions sont figées sur un commit (le commentaire donne la version), comme le conseille
 # https://docs.github.com/en/actions/reference/security/secure-use
-# Dependabot les met à jour (.github/dependabot.yml).
+# Dependabot les met à jour (.github/dependabot.yml). Les outils (versions) viennent de mise.toml
+# et les commandes de Taskfile.yml, comme en local : la CI lance les mêmes tâches.
 name: CI
 
 on:
@@ -49,10 +50,14 @@ jobs:
             backend:
               - 'backend/**'
               - '.github/workflows/**'
+              - 'mise.toml'
+              - 'Taskfile.yml'
             frontend:
               - 'frontend/**'
               - 'backend/openapi.json' # les types du frontend en viennent
               - '.github/workflows/**'
+              - 'mise.toml'
+              - 'Taskfile.yml'
             docker:
               - '**/Dockerfile'
               - '**/.dockerignore'
@@ -69,10 +74,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      # Les outils et leurs versions viennent de mise.toml, comme en local.
+      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195 # v5.2.5
         with:
-          version: "0.13.7" # la même que backend/Dockerfile
-      - run: uv run --project backend pre-commit run --all-files --show-diff-on-failure
+          install_args: "uv task"
+      - run: task check:pre-commit
         env:
           SKIP: oxlint,tsc,mypy,schema-api,types-api # lancés par les jobs frontend et backend
 
@@ -103,48 +109,33 @@ jobs:
           --health-retries 5
     env:
       TEST_DATABASE_URL: postgresql+psycopg://rescue:rescue@localhost:5432/rescue_atlas_test
-    defaults:
-      run:
-        working-directory: backend
+      UV_PYTHON: ${{ matrix.python }} # uv prend cette version de Python
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      # Les outils et leurs versions viennent de mise.toml, comme en local.
+      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195 # v5.2.5
         with:
-          version: "0.13.7" # la même que backend/Dockerfile
-          python-version: ${{ matrix.python }}
-      - run: uv sync --locked # échoue si uv.lock ne suit pas pyproject.toml
-      - run: uv run mypy # les types, en mode strict, sans échappatoire (pyproject.toml)
-      - run: uv run pytest
+          install_args: "uv task"
+      # uv.lock à jour (uv sync --locked), types en mode strict (mypy), tests
+      - run: task check:backend
 
   # Le frontend React : style, tests, types et construction.
   frontend:
     needs: changes
     if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      # Les outils et leurs versions viennent de mise.toml, comme en local.
+      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195 # v5.2.5
         with:
-          package_json_file: frontend/package.json # la version de pnpm vient de packageManager
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 26 # la LTS active (https://nodejs.org/en/about/previous-releases)
-          cache: pnpm
-          cache-dependency-path: |
-            frontend/pnpm-lock.yaml
-            frontend/tools/api-types/pnpm-lock.yaml
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint # avec les règles qui lisent les types (aucun any, aucun as)
-      - run: pnpm api:check # src/api/schema.ts suit backend/openapi.json
-      - run: pnpm test
-      - run: pnpm build # vérifie aussi les types (tsc)
+          install_args: "node pnpm task"
+      # lint (aucun any, aucun as), schema.ts à jour, tests, construction (avec tsc)
+      - run: task check:frontend
 
   # Les images Docker se construisent : celles que Clever Cloud déploie (les deux
   # Dockerfiles), et celles du dev.

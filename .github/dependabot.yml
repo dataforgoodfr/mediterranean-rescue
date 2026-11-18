@@ -8,6 +8,11 @@ updates:
     directory: "/"
     schedule:
       interval: monthly
+    # Une nouvelle version d'action n'est proposée que 14 jours après sa sortie : le temps qu'une
+    # version piégée (compte du mainteneur volé) soit repérée et retirée. Les mises à jour de
+    # sécurité, elles, ne sont pas retardées.
+    cooldown:
+      default-days: 14
     commit-message:
       prefix: "chore(deps)"
     groups:
