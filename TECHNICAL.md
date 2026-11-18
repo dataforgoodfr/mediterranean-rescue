@@ -108,10 +108,10 @@ cd backend && uv run fastapi dev                     # http://127.0.0.1:8000/api
 ```
 
 Les tables se créent au démarrage de l'API. Pour remplir la base avec le jeu fictif (à faire une
-seule fois : relancée, la commande ajoute les mêmes opérations une deuxième fois) :
+seule fois : relancée, la tâche ajoute les mêmes opérations une deuxième fois) :
 
 ```sh
-cd backend && uv run python -m scripts.load_fictive_data fixtures/3_fictive_data.csv
+task data:fictive   # backend/fixtures/3_fictive_data.csv, avec scripts/load_fictive_data.py
 ```
 
 Puis, depuis la racine, dans un autre terminal :
