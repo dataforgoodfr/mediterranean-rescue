@@ -5,7 +5,7 @@ import type { Translations } from './keys.ts'
 export const en: Translations = {
   'home.title': 'Rescue Atlas',
   'home.intro':
-    "SOS MEDITERRANEE's rescues in the central Mediterranean. The operations will soon appear on the map.",
+    'SOS MEDITERRANEE\'s rescues in the central Mediterranean. The operations will soon appear on the map.',
   'home.apiStatus': 'API: {status}',
   'home.apiStatus.pending': 'waiting',
   'home.apiStatus.unreachable': 'unreachable',
