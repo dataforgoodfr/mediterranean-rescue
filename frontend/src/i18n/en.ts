@@ -10,7 +10,7 @@ export const en: Translations = {
   'home.apiStatus.pending': 'waiting',
   'home.apiStatus.unreachable': 'unreachable',
   'home.apiStatus.ok': 'ok',
-  'home.lastOperationDate': 'Last operation : {date}',
+  'home.lastOperationDate': 'Last operation: {date}',
   'map.label': 'Map of the central Mediterranean',
   'map.zoomIn': 'Zoom in',
   'map.zoomOut': 'Zoom out',
