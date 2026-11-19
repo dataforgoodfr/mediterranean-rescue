@@ -11,6 +11,12 @@ dependencies = [
 ]
 
 [dependency-groups]
+# Les scripts de données seulement (scripts/build_maritime_zones.py : découper les polygones) :
+# l'API n'en a pas besoin, donc ni l'image Docker ni le serveur ne les installent.
+# Lancer avec `uv run --group data python -m scripts.build_maritime_zones`.
+data = [
+    "shapely>=2.2.0",
+]
 dev = [
     "mypy>=2.4.1",
     "pre-commit>=4.7.0",
