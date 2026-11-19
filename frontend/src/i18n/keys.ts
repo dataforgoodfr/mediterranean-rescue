@@ -11,7 +11,7 @@ export const keys = {
   'map.label': 'Le nom de la carte, lu par les lecteurs d\'écran',
   'map.zoomIn': 'Le bouton zoom (+) de la carte',
   'map.zoomOut': 'Le bouton dézoom (-) de la carte',
-  'map.attribution': 'Le bouton qui montre ou cache les sources de la carte : le fond, puis les données posées dessus',
+  'map.attribution': 'Le bouton qui affiche ou cache les mentions légales des données affichées',
   'map.unavailable': 'Le message affiché à la place de la carte quand le navigateur ne peut pas la dessiner',
   'design.title': 'Le titre de la page du design system (/design)',
   'design.intro': 'La phrase sous le titre : à quoi sert la page',
