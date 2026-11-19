@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { getHealth } from '../api'
 import { Icon, Logo } from '../design'
 import { useTranslation } from '../i18n'
+import { MediterraneanMap } from '../map/MediterraneanMap'
 
-// Une page provisoire : elle montre seulement que le frontend parle au backend.
-// La carte arrive par une issue.
+// La page d'accueil : la carte, et l'état de l'API en dessous tant que la carte ne lit rien.
 export function Home() {
   const t = useTranslation()
   const health = useQuery({ queryKey: ['health'], queryFn: getHealth })
@@ -19,6 +19,7 @@ export function Home() {
       <Logo />
       <h1>{t('home.title')}</h1>
       <p>{t('home.intro')}</p>
+      <MediterraneanMap />
       <p className="ra-block">
         <Icon name="lifebuoy" /> {t('home.apiStatus', { status })}
       </p>

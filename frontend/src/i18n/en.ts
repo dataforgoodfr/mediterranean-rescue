@@ -4,11 +4,18 @@ import type { Translations } from './keys.ts'
 // traduction manque.
 export const en: Translations = {
   'home.title': 'Rescue Atlas',
-  'home.intro': 'The map of SOS MEDITERRANEE rescue operations is coming soon.',
+  'home.intro':
+    'SOS MEDITERRANEE\'s rescues in the central Mediterranean. The operations will soon appear on the map.',
   'home.apiStatus': 'API: {status}',
   'home.apiStatus.pending': 'waiting',
   'home.apiStatus.unreachable': 'unreachable',
   'home.apiStatus.ok': 'ok',
+  'map.label': 'Map of the central Mediterranean',
+  'map.zoomIn': 'Zoom in',
+  'map.zoomOut': 'Zoom out',
+  'map.attribution': 'Show the sources of the data displayed',
+  'map.unavailable':
+    'This browser cannot display the map. Try an up-to-date browser, or turn on hardware acceleration.',
   'design.title': 'Design system',
   'design.intro':
     'The colours, logo and icons of the SOS MEDITERRANEE brand guidelines, ready to reuse.',

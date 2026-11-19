@@ -2,11 +2,18 @@ import type { Translations } from './keys.ts'
 
 export const fr: Translations = {
   'home.title': 'Rescue Atlas',
-  'home.intro': 'La carte des opérations de sauvetage de SOS MEDITERRANEE arrive bientôt.',
+  'home.intro':
+    'Les sauvetages de SOS MEDITERRANEE en Méditerranée centrale. Les opérations arrivent bientôt sur la carte.',
   'home.apiStatus': 'API : {status}',
   'home.apiStatus.pending': 'en attente',
   'home.apiStatus.unreachable': 'injoignable',
   'home.apiStatus.ok': 'ok',
+  'map.label': 'Carte de la Méditerranée centrale',
+  'map.zoomIn': 'Zoomer',
+  'map.zoomOut': 'Dézoomer',
+  'map.attribution': 'Montrer les sources des données affichées',
+  'map.unavailable':
+    'Ce navigateur ne peut pas afficher la carte. Essayez avec un navigateur à jour, ou activez l\'accélération graphique.',
   'design.title': 'Design system',
   'design.intro':
     'Les couleurs, le logo et les pictos de la charte de SOS MEDITERRANEE, prêts à reprendre.',
@@ -19,5 +26,5 @@ export const fr: Translations = {
   'design.logo.color': 'Bleu marine, sur fond clair',
   'design.logo.white': 'Blanc, sur fond sombre uniquement',
   'design.icons': 'Pictos ({count})',
-  'design.icons.usage': "Un picto prend la couleur du texte autour de lui. Dans le code, utilise son nom.",
+  'design.icons.usage': 'Un picto prend la couleur du texte autour de lui. Dans le code, utilise son nom.',
 }
