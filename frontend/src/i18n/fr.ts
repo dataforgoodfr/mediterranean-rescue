@@ -13,7 +13,7 @@ export const fr: Translations = {
   'map.zoomOut': 'Dézoomer',
   'map.attribution': 'Afficher les sources de la carte',
   'map.unavailable':
-    'Ce navigateur ne peut pas afficher la carte. Essaie avec un navigateur à jour, ou active l\'accélération graphique.',
+    'Ce navigateur ne peut pas afficher la carte. Essayez avec un navigateur à jour, ou activez l\'accélération graphique.',
   'design.title': 'Design system',
   'design.intro':
     'Les couleurs, le logo et les pictos de la charte de SOS MEDITERRANEE, prêts à reprendre.',

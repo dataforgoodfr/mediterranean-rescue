@@ -4,6 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { useState } from 'react'
 import { useTranslation } from '../i18n'
+import { CENTRAL_MEDITERRANEAN, MEDITERRANEAN } from './bounds'
 
 // MapLibre 6 derrière un bundler : on lui dit une fois où est son worker, avec l'URL que Vite
 // construit. https://maplibre.org/maplibre-gl-js/docs/ (Installation, Vite)
@@ -12,13 +13,6 @@ setWorkerUrl(workerUrl)
 // Le fond de carte d'OpenFreeMap : libre, sans compte ni clé. Positron reste discret, pour que
 // les opérations et les zones posées dessus se lisent. https://openfreemap.org/quick_start/
 const BASE_MAP_STYLE = 'https://tiles.openfreemap.org/styles/positron'
-
-// La Méditerranée centrale, de la Libye à la Sicile : [ouest, sud] puis [est, nord], en degrés.
-// La carte s'ajuste pour la montrer en entier, quelle que soit la largeur de l'écran.
-const CENTRAL_MEDITERRANEAN: [[number, number], [number, number]] = [
-  [10, 30.5],
-  [20, 38.5],
-]
 
 // Le fond de carte MapLibre. Les couches (opérations, ports, zones) viendront comme enfants
 // de <Map>. https://visgl.github.io/react-maplibre/docs/api-reference/map
@@ -39,6 +33,8 @@ export default function BaseMap() {
   return (
     <Map
       initialViewState={{ bounds: CENTRAL_MEDITERRANEAN }}
+      // On ne sort pas de la Méditerranée, comme sur la carte actuelle.
+      maxBounds={MEDITERRANEAN}
       mapStyle={BASE_MAP_STYLE}
       onError={handleError}
       // Les textes des boutons de MapLibre, dans la langue de l'app.
