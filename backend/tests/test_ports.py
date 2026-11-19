@@ -24,7 +24,14 @@ def test_several_ports_split_on_ampersand_with_spaces() -> None:
 
 
 def test_unknown_variant_is_unmatched() -> None:
-    assert match_port("Marenzo & Atlantis", PORTS, ALIASES) == (["Marenzo"], ["Atlantis"])
+    # S'il existe au moins 1 port qui est non identifié, on veut que la liste des
+    # ports indentifié soit vide, mais si l'un des deux ports est correct.
+    assert match_port("Marenzo & Atlantis", PORTS, ALIASES) == ([], ["Atlantis"])
+    # on vérifie que l'ordre n'a aucun impact sur la détection
+    assert match_port("Atlantis & Marenzo", PORTS, ALIASES) == ([], ["Atlantis"])
+    # on vérifie le case de 2 variantes inconnues
+    known, unknown = match_port("Atlantis & Maralago", PORTS, ALIASES)
+    assert set(unknown) == {"Atlantis", "Maralago"}
 
 
 def test_empty_cell_gives_nothing() -> None:

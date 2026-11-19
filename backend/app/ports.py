@@ -58,6 +58,12 @@ def match_port(
             matched.append(aliases[candidate])
         else:
             unmatched.append(candidate)
+
+    # Dans le cas ou 'unmatched' contient des éléments, on impose que le contenu de
+    # matched soit vide, mais si l'autre part est correctement identifié.
+    if len(unmatched) > 0:
+        matched = []
+
     return matched, unmatched
 
 
