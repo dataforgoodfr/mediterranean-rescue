@@ -24,8 +24,7 @@ def test_several_ports_split_on_ampersand_with_spaces() -> None:
 
 
 def test_unknown_variant_is_unmatched() -> None:
-    # S'il existe au moins 1 port qui est non identifié, on veut que la liste des
-    # ports indentifié soit vide, mais si l'un des deux ports est correct.
+    # S'il existe au moins 1 port qui est non identifié, on ne rattache rien.
     assert match_port("Marenzo & Atlantis", PORTS, ALIASES) == ([], ["Atlantis"])
     # on vérifie que l'ordre n'a aucun impact sur la détection
     assert match_port("Atlantis & Marenzo", PORTS, ALIASES) == ([], ["Atlantis"])
@@ -56,9 +55,8 @@ def test_check_ports_in_dump_counts_rows(tmp_path: Path) -> None:
 
 
 def test_load_ports_reads_the_nom_column(tmp_path: Path) -> None:
-    # urlopen lit aussi les URL file://, ce qui évite d'appeler la feuille Google.
-    sheet = tmp_path / "Data_ports.csv"
-    sheet.write_text(
+    data = tmp_path / "Data_ports.csv"
+    data.write_text(
         '"nom","latitude","longitude"\n'
         '"Portalba","37° 3.41","15° 17.40"\n'
         '" Marenzo ","38° 0.43","12° 30.20"\n'
@@ -66,4 +64,4 @@ def test_load_ports_reads_the_nom_column(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    assert load_ports(sheet.as_uri()) == frozenset({"Portalba", "Marenzo"})
+    assert load_ports(data) == frozenset({"Portalba", "Marenzo"})
