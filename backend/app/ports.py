@@ -81,11 +81,10 @@ def check_ports_in_dump(path: Path, ports: frozenset[str]) -> tuple[Counter[str]
 
 def main() -> None:
 
-    # We start listing known ports, by looking at the content of the google sheet,
-    # in the "Data_ports" sheet
+    # On récupère la liste des ports connus
     ports = load_ports()
 
-    # We get the file we want to test
+    # On récupère le fichier que l'on veut tester
     parser = argparse.ArgumentParser(
         description=f"Check the {PORT_COLUMN} column of a CSV export against the known ports."
     )
