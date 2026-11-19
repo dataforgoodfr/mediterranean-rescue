@@ -13,7 +13,7 @@ export const en: Translations = {
   'map.label': 'Map of the central Mediterranean',
   'map.zoomIn': 'Zoom in',
   'map.zoomOut': 'Zoom out',
-  'map.attribution': 'Show map sources',
+  'map.attribution': 'Show the sources of the data displayed',
   'map.unavailable':
     'This browser cannot display the map. Try an up-to-date browser, or turn on hardware acceleration.',
   'design.title': 'Design system',

@@ -11,7 +11,7 @@ export const fr: Translations = {
   'map.label': 'Carte de la Méditerranée centrale',
   'map.zoomIn': 'Zoomer',
   'map.zoomOut': 'Dézoomer',
-  'map.attribution': 'Afficher les sources de la carte',
+  'map.attribution': 'Montrer les sources des données affichées',
   'map.unavailable':
     'Ce navigateur ne peut pas afficher la carte. Essayez avec un navigateur à jour, ou activez l\'accélération graphique.',
   'design.title': 'Design system',
