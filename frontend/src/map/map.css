@@ -1,0 +1,55 @@
+/* La carte occupe la largeur de la page et presque toute la hauteur de l'écran, avec un
+   minimum pour rester lisible sur un téléphone posé à l'horizontale. svh : la hauteur visible,
+   barres du navigateur mobile comprises. https://developer.mozilla.org/fr/docs/Web/CSS/length */
+.ra-map {
+  display: grid;
+  inline-size: 100%;
+  block-size: 70svh;
+  min-block-size: 20rem;
+  margin-block: var(--space-2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-surface); /* visible le temps que le fond de carte se charge */
+}
+
+/* Le focus clavier aux couleurs du site, à la place du halo bleu de MapLibre. Le cadre rogne ce
+   qui dépasse : le contour de la carte passe donc à l'intérieur. */
+.ra-map .maplibregl-canvas:focus-visible {
+  outline: var(--focus);
+  outline-offset: -3px;
+}
+
+/* Même spécificité que la règle de MapLibre, plus .ra-map : la nôtre l'emporte, quel que soit
+   l'ordre de chargement des deux feuilles. */
+.ra-map .maplibregl-ctrl-group button:focus:focus-visible {
+  box-shadow: none;
+  outline: var(--focus);
+}
+
+/* Les boutons de zoom se détachent du fond de carte (3:1 au moins) : un filet bleu marine autour
+   du groupe et entre les deux boutons, à la place du gris très clair de MapLibre. */
+.ra-map .maplibregl-ctrl-group:not(:empty) {
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.ra-map .maplibregl-ctrl-group button + button {
+  border-block-start-color: var(--color-primary);
+}
+
+/* Au doigt, les boutons de MapLibre (29 px) passent à la taille d'une cible tactile. */
+@media (pointer: coarse) {
+  .ra-map .maplibregl-ctrl-group button {
+    inline-size: var(--touch-target);
+    block-size: var(--touch-target);
+  }
+}
+
+/* Quand le navigateur ne peut pas dessiner la carte : une phrase au centre du cadre. */
+.ra-map__message {
+  place-self: center;
+  max-inline-size: 30rem;
+  margin: 0;
+  padding: var(--space-2);
+  text-align: center;
+  color: var(--color-primary);
+}

@@ -34,6 +34,6 @@ test('the home page exists in English', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
   renderWithProviders(<App />, { language: 'en' })
   expect(
-    screen.getByText('The map of SOS MEDITERRANEE rescue operations is coming soon.'),
+    screen.getByText("SOS MEDITERRANEE's rescues in the central Mediterranean. The operations will soon appear on the map."),
   ).toBeInTheDocument()
 })

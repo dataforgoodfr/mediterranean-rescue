@@ -4,7 +4,7 @@
 
 - **FastAPI** et **SQLModel** pour le backend (l'API), **Postgres** pour la base.
 - **React**, **Vite** et **TypeScript** pour le frontend, avec **TanStack Query** pour les appels à
-  l'API et **React Router** pour les pages. La carte viendra avec **MapLibre**.
+  l'API et **React Router** pour les pages. La carte : **MapLibre**, sur le fond d'OpenFreeMap (`frontend/src/map/`).
 - **pre-commit**, **ruff**, **mypy**, **pytest**, **Oxlint**, **Vitest** et **Testing Library** pour
   les vérifications.
 - **mise** pour installer les outils à la bonne version (`mise.toml`), **Task** pour les commandes

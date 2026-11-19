@@ -28,6 +28,7 @@
   /* Formes et focus */
   --radius: 0.25rem;
   --focus: 3px solid var(--color-primary);
+  --touch-target: 2.75rem; /* 44 px : la taille minimale d'une cible au doigt (WCAG 2.5.5) */
 
   /* Logo : 10 mm de haut au minimum dans la charte, soit environ 38 px à l'écran */
   --logo-min-height: 2.375rem;

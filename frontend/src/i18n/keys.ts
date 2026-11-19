@@ -3,11 +3,16 @@
 // Règles et étiquette à poser quand une langue manque : CONTRIBUTING.md (« Les langues »).
 export const keys = {
   'home.title': "Le titre de la page d'accueil, le nom du projet",
-  'home.intro': "La phrase sous le titre, tant que la carte n'est pas là",
+  'home.intro': 'La phrase sous le titre : ce que montre la carte',
   'home.apiStatus': "L'état de l'API ; {status} est remplacé par l'un des trois textes suivants",
   'home.apiStatus.pending': "L'API n'a pas encore répondu",
   'home.apiStatus.unreachable': "L'API ne répond pas ou renvoie une erreur",
   'home.apiStatus.ok': "L'API répond",
+  'map.label': "Le nom de la carte, lu par les lecteurs d'écran",
+  'map.zoomIn': 'Le bouton qui rapproche la carte',
+  'map.zoomOut': 'Le bouton qui éloigne la carte',
+  'map.attribution': 'Le bouton qui montre ou cache les sources du fond de carte',
+  'map.unavailable': "Le message affiché à la place de la carte quand le navigateur ne peut pas la dessiner",
   'design.title': 'Le titre de la page du design system (/design)',
   'design.intro': 'La phrase sous le titre : à quoi sert la page',
   'design.colors': 'Le titre de la partie sur les couleurs de la charte',
