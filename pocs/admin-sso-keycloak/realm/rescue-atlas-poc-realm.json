@@ -1,0 +1,58 @@
+{
+  "realm": "rescue-atlas-poc",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "data-provider",
+        "description": "FICTIF : peut vérifier et corriger les opérations dans le back-office"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "rescue-atlas-admin",
+      "name": "Back-office Rescue Atlas (POC)",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["http://localhost:5173"],
+      "attributes": { "pkce.code.challenge.method": "S256" },
+      "protocolMappers": [
+        {
+          "name": "audience-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.custom.audience": "rescue-atlas-api",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "magda-fictif",
+      "enabled": true,
+      "email": "magda@fictif.example",
+      "emailVerified": true,
+      "firstName": "Magda",
+      "lastName": "FICTIF",
+      "credentials": [{ "type": "password", "value": "fictif", "temporary": false }],
+      "realmRoles": ["data-provider"]
+    },
+    {
+      "username": "lecteur-fictif",
+      "enabled": true,
+      "email": "lecteur@fictif.example",
+      "emailVerified": true,
+      "firstName": "Lecteur",
+      "lastName": "FICTIF",
+      "credentials": [{ "type": "password", "value": "fictif", "temporary": false }],
+      "realmRoles": []
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "realm": "sos-fictif",
+  "displayName": "SOS FICTIF (joue le Microsoft Entra ID de SOS)",
+  "enabled": true,
+  "groups": [
+    {
+      "name": "data-provider"
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "rescue-atlas-broker",
+      "name": "Rescue Atlas (Keycloak de Data for Good)",
+      "publicClient": false,
+      "secret": "secret-fictif",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "http://localhost:8082/realms/rescue-atlas-poc/broker/sos-fictif/endpoint"
+      ],
+      "protocolMappers": [
+        {
+          "name": "app role, comme Entra ID",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "claim.name": "roles",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "magda",
+      "enabled": true,
+      "email": "magda@sos-fictif.example",
+      "emailVerified": true,
+      "firstName": "Magda",
+      "lastName": "FICTIF",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "fictif",
+          "temporary": false
+        }
+      ],
+      "groups": [
+        "/data-provider"
+      ]
+    },
+    {
+      "username": "marin",
+      "enabled": true,
+      "email": "marin@sos-fictif.example",
+      "emailVerified": true,
+      "firstName": "Marin",
+      "lastName": "FICTIF",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "fictif",
+          "temporary": false
+        }
+      ],
+      "groups": []
+    }
+  ]
+}
