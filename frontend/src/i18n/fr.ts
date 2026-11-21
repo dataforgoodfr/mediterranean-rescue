@@ -28,4 +28,5 @@ export const fr: Translations = {
   'design.logo.white': 'Blanc, sur fond sombre uniquement',
   'design.icons': 'Pictos ({count})',
   'design.icons.usage': 'Un picto prend la couleur du texte autour de lui. Dans le code, utilise son nom.',
+  'notFound.title': 'Page introuvable',
 }

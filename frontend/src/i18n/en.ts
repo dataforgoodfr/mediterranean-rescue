@@ -30,4 +30,5 @@ export const en: Translations = {
   'design.logo.white': 'White, on a dark background only',
   'design.icons': 'Icons ({count})',
   'design.icons.usage': 'An icon takes the colour of the text around it. In the code, use its name.',
+  'notFound.title': 'Page not found',
 }
