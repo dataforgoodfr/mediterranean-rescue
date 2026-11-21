@@ -9,3 +9,11 @@ export function parseJson(text: string): unknown {
 export function isRecord(x: unknown): x is Record<string, unknown> {
   return typeof x === 'object' && x !== null && !Array.isArray(x)
 }
+
+export function isArray(value: unknown): value is unknown[] {
+  return Array.isArray(value)
+}
+
+export function isDateString(value: unknown): value is string {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value))
+}

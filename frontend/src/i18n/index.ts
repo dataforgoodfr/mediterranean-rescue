@@ -10,3 +10,4 @@ export {
   type Language,
 } from './translate.ts'
 export { useTranslation } from './useTranslation.ts'
+export { useLanguage } from './useLanguage.ts'

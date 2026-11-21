@@ -8,6 +8,7 @@ export const fr: Translations = {
   'home.apiStatus.pending': 'en attente',
   'home.apiStatus.unreachable': 'injoignable',
   'home.apiStatus.ok': 'ok',
+  'home.lastOperationDate': 'Dernière opération : {date}',
   'map.label': 'Carte de la Méditerranée centrale',
   'map.zoomIn': 'Zoomer',
   'map.zoomOut': 'Dézoomer',
