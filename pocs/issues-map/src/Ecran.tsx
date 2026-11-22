@@ -24,7 +24,8 @@ function IssueChips({ issues, onPick, empty }: { issues: readonly Issue[]; onPic
     <span className="ecran-issues">
       {issues.map((i) => (
         <button key={i.number} type="button" className={`ecran-issue st-${stepOf(i)}`} onClick={() => onPick(i.number)} title={i.title}>
-          #{i.number} <span className="ecran-step">{stepWord(stepOf(i))}</span>
+          <span className="ecran-num">#{i.number}</span> <span className="ecran-title">{i.title}</span>{" "}
+          <span className="ecran-step">{stepWord(stepOf(i))}</span>
         </button>
       ))}
     </span>
@@ -38,10 +39,19 @@ export function Ecran({ data, pinned, onPick }: { data: EcranData | undefined; p
   const front = merge(data?.front, code.filter((i) => hasLabel(i, "front")));
   const fictives = (data?.fictives ?? []).flatMap((n) => byNumber.get(n) ?? []);
   const validated = design.length > 0 && design.every((i) => stepOf(i) === "faite");
+  // Le résumé replié : l'essentiel en une ligne, le détail au clic.
+  const tickets = new Set([...fictives, ...design, ...api, ...front].map((i) => i.number));
+  const free = [...fictives, ...design, ...api, ...front].filter((i, k, all) => stepOf(i) === "a-prendre" && all.indexOf(i) === k).length;
+  const maquette = validated ? "validée" : design.length ? "à valider" : "inconnue";
 
   return (
-    <details className="ecran" open>
-      <summary>Ce qu'il faut pour cet écran</summary>
+    <details className="ecran">
+      <summary>
+        <span className="ecran-summary-title">Ce qu'il faut pour cet écran</span>
+        <span className="ecran-summary-line">
+          Maquette {maquette} · {tickets.size} issues{free ? ` · ${free} à prendre` : ""}
+        </span>
+      </summary>
       <dl className="ecran-list">
         <dt>Données réelles</dt>
         <dd>

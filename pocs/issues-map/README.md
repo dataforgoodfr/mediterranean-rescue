@@ -102,9 +102,12 @@ by ») est « bloquée ». Les issues abandonnées (Out) restent cachées, comme
 
 Pour guider de bout en bout :
 
-- **Une visite guidée** en 11 étapes se lance à la première ouverture (puis par le bouton « Visite
-  guidée ») : objectifs, jalons, couleurs, pastilles, fiche, prendre une issue, ce qu'il faut pour un écran,
-  issues sans écran, liste complète, aide.
+- **Une visite guidée en 4 étapes**, proposée par un bandeau à la première ouverture (jamais
+  imposée), et relançable par le bouton « Visite guidée » : objectifs, couleurs, fiche d'une issue,
+  « À relire » et aide. Les captures s'agrandissent d'un clic.
+- **Un écran sobre** : sous chaque maquette, « Ce qu'il faut pour cet écran » est replié derrière
+  une ligne de résumé, et chaque issue y montre son titre. Sur téléphone, la fiche s'ouvre en
+  panneau qui monte du bas, la maquette reste visible au-dessus.
 - **Un panneau d'aide** (bouton « Aide » ou touche « ? ») : lire la page, les quatre couleurs,
   prendre une issue, d'où viennent les données.
 - **Des captures de GitHub** (`src/guide/`, prises le 22 novembre 2026 sur le dépôt et le tableau 44,

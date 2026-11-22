@@ -1,5 +1,6 @@
 // Captures d'écran de GitHub (dépôt public et tableau 44), prises le 22 novembre 2026, pour
 // montrer dans la visite et l'aide à quoi ressemble chaque geste sur GitHub.
+import { useState } from "react";
 import epopee from "./guide/epopee.jpg";
 import issueCote from "./guide/issue-cote.jpg";
 import jePrends from "./guide/je-prends.jpg";
@@ -36,11 +37,17 @@ export const SHOTS = {
   },
 } satisfies Record<string, Shot>;
 
+/** Une capture de GitHub, qu'un clic agrandit (les vignettes sont trop petites pour être lues). */
 export function Figure({ shot }: { shot: Shot }) {
+  const [zoom, setZoom] = useState(false);
   return (
-    <figure className="shot">
-      <img src={shot.src} alt={shot.alt} loading="lazy" />
-      <figcaption>{shot.caption}</figcaption>
+    <figure className={zoom ? "shot is-zoomed" : "shot"}>
+      <button type="button" className="shot-btn" onClick={() => setZoom(!zoom)} aria-expanded={zoom} aria-label={zoom ? "Réduire la capture" : "Agrandir la capture"}>
+        <img src={shot.src} alt={shot.alt} loading="lazy" />
+      </button>
+      <figcaption>
+        {shot.caption} <span className="shot-hint">{zoom ? "Clique pour réduire." : "Clique pour agrandir."}</span>
+      </figcaption>
     </figure>
   );
 }

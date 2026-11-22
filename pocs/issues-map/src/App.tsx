@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { type Step, epics, formatDate, issues, placedEpics, projectUrl, repoUrl, stepOf, takenAt } from "./data";
+import { type Step, byNumber, epics, formatDate, issues, placedEpics, projectUrl, repoUrl, stepOf, takenAt } from "./data";
 import { emptyFilters, type Filters, TreeView } from "./Tree";
 import { MaquettesView } from "./Maquettes";
 import { RelireView } from "./Relire";
@@ -28,8 +28,17 @@ function markSeen() {
 }
 
 const DEMO_EPIC = placedEpics[0]?.epic ?? epics[0]?.number ?? 0;
-// Une issue à prendre, que rien ne bloque, posée sur la carte : pour montrer la fiche pendant la visite.
-const DEMO_ISSUE = 24;
+// Pour montrer la fiche pendant la visite : la première issue à prendre posée sur les maquettes de
+// l'objectif de départ, choisie au moment de la visite (une issue prise entre-temps n'y est plus).
+function demoIssue() {
+  const pins = placedEpics.find((p) => p.epic === DEMO_EPIC)?.pins ?? [];
+  const nums = pins.map((p) => p.issue);
+  const free = nums.find((n) => {
+    const i = byNumber.get(n);
+    return i ? stepOf(i) === "a-prendre" : false;
+  });
+  return free ?? nums[0] ?? null;
+}
 
 export function App() {
   // Les maquettes sont l'accueil ; la liste complète reste à un clic. La vue suit l'adresse.
@@ -37,6 +46,8 @@ export function App() {
   const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [helpOpen, setHelpOpen] = useState(false);
   const [touring, setTouring] = useState(false);
+  // Première visite : on propose la visite par un bandeau, sans l'imposer.
+  const [offer, setOffer] = useState(false);
   // La grande entrée animée ne se joue qu'au premier chargement ; ensuite, un simple fondu.
   const [intro, setIntro] = useState(true);
   const { tab, epic: epicNo, issue: selected, focus, jalon } = view;
@@ -67,7 +78,7 @@ export function App() {
 
   useEffect(() => {
     if (seen()) return;
-    const t = window.setTimeout(() => setTouring(true), 700);
+    const t = window.setTimeout(() => setOffer(true), 700);
     return () => window.clearTimeout(t);
   }, []);
 
@@ -88,77 +99,34 @@ export function App() {
 
   const reset = () => setView({ tab: "maquettes", epic: DEMO_EPIC, issue: null, focus: null, jalon: null });
 
+  // Quatre étapes, pas plus : l'écran doit se lire seul, la visite ne fait que montrer où regarder.
   const steps: TourStep[] = [
     {
-      target: ".brand h1",
-      title: "Bienvenue dans l'atlas des issues",
-      text: "Sur GitHub, chaque tâche du projet s'appelle une issue. Ici, chaque issue est posée sur l'écran qu'elle va changer. Un mot souligné en pointillés s'explique au survol.",
-      before: reset,
-    },
-    {
       target: "[data-tour=objectives]",
-      title: "Choisis un objectif",
-      text: "Chaque bouton est une épopée (Epic sur GitHub) : une grande issue qui en regroupe d'autres. La barre verte montre ce qui est fait.",
+      title: "Bienvenue dans l'atlas",
+      text: "Sur GitHub, chaque tâche du projet s'appelle une issue. Ici, chaque issue est posée sur l'écran qu'elle change. Commence par un objectif : chaque bouton est une épopée (Epic), un groupe d'issues.",
       shot: SHOTS.epopee,
       before: reset,
     },
     {
-      target: "[data-tour=jalons]",
-      title: "Ce qu'on fait en premier",
-      text: "Un jalon (Milestone) est un lot d'issues à livrer ensemble, avec une date. P0 · MVP, la première version utile, passe d'abord.",
-      before: reset,
-    },
-    {
       target: "[data-tour=legend]",
-      title: "Quatre couleurs, quatre états",
-      text: "Chaque couleur traduit un statut du tableau GitHub. Rouge : à prendre (Ready). Bleu : en cours. Ocre : bloquée. Gris : à préciser (Refinement). Vert : faite.",
+      title: "Où en est chaque issue",
+      text: "Chaque couleur traduit un statut du tableau GitHub : rouge, à prendre (Ready) ; bleu, en cours ; ocre, bloquée ; gris, à préciser (Refinement) ; vert, faite. Les jalons, au-dessus, disent ce qu'on livre en premier.",
       shot: SHOTS.tableau,
       before: () => setSelected(null),
     },
     {
-      target: ".pin.st-a-prendre",
-      title: "Les pastilles",
-      text: "Chaque numéro est une issue, posé à l'endroit de l'écran qu'elle change. Survole une pastille pour lire son titre, clique pour ouvrir sa fiche.",
-      before: () => {
-        setFocus(null);
-        setSelected(null);
-      },
-    },
-    {
       target: "[data-tour=fiche]",
-      title: "La fiche de l'issue",
-      text: "Elle dit qui est dessus, sur quels écrans elle apparaît, et ce que tu peux faire maintenant. Le bouton t'emmène sur GitHub.",
-      shot: SHOTS.issueCote,
-      before: () => setSelected(DEMO_ISSUE),
-    },
-    {
-      target: ".ecran",
-      title: "Ce qu'il faut pour un écran",
-      text: "Sous chaque maquette : la source des données réelles, les données fictives, la maquette validée ou non, puis les tickets d'API et de front. Un numéro ouvre sa fiche.",
-      before: () => setSelected(null),
-    },
-    {
-      target: "[data-tour=no-screen]",
-      title: "Les issues sans écran",
-      text: "Données, back-end, enquêtes : certaines issues ne changent aucun écran. Elles sont rangées ici, celles à prendre en premier.",
-      before: () => setSelected(null),
-    },
-    {
-      target: "[data-tour=fiche]",
-      title: "Prendre une issue",
-      text: "Sur GitHub, commente « Je prends » sous l'issue, puis assigne-la-toi. Elle passe alors en cours, et tout le monde voit qui est dessus.",
+      title: "Une issue, en détail",
+      text: "Un clic sur un numéro ouvre sa fiche : qui est dessus, sur quels écrans, et ce que tu peux faire. Pour en prendre une : commente « Je prends » sur GitHub, puis assigne-la-toi.",
       shot: SHOTS.jePrends,
-      before: () => setSelected(DEMO_ISSUE),
+      before: () => setSelected(demoIssue()),
     },
     {
       target: ".tabs",
-      title: "Deux autres vues",
-      text: "« À relire » rassemble ce qui attend un avis : maquettes à valider, questions à trancher, sans coder. « Liste complète » montre tout l'arbre des issues.",
-    },
-    {
-      target: ".help-btn",
-      title: "L'aide, à tout moment",
-      text: "Le bouton Aide (ou la touche « ? ») explique les couleurs et comment prendre une issue. Tu peux y relancer cette visite.",
+      title: "Selon ce que tu fais",
+      text: "Tu ne codes pas ? L'onglet « À relire » rassemble les maquettes à valider et les questions à trancher. Un mot souligné s'explique au survol, et le bouton Aide reprend tout.",
+      before: () => setSelected(null),
     },
   ];
 
@@ -230,6 +198,35 @@ export function App() {
       </footer>
 
       <Help open={helpOpen} onClose={() => setHelpOpen(false)} onTour={() => setTouring(true)} />
+      {offer && !touring && (
+        <aside className="offer" aria-label="Visite guidée">
+          <p>
+            <strong>Première visite ?</strong> L'atlas en 4 étapes, une minute.
+          </p>
+          <div className="offer-actions">
+            <button
+              type="button"
+              className="btn btn-quiet"
+              onClick={() => {
+                setOffer(false);
+                markSeen();
+              }}
+            >
+              Plus tard
+            </button>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                setOffer(false);
+                setTouring(true);
+              }}
+            >
+              Commencer
+            </button>
+          </div>
+        </aside>
+      )}
       {touring && <Tour steps={steps} onClose={endTour} />}
     </div>
   );

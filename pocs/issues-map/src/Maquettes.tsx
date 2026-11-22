@@ -98,11 +98,14 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
   // Les compteurs suivent le jalon choisi, comme les pastilles.
   const count = (s: Step) => all.filter((i) => stepOf(i) === s && inJalon(i)).length;
 
-  const pick = (n: number) => {
+  const pick = (n: number, from?: HTMLElement) => {
+    // Sur téléphone, la fiche s'ouvre en panneau qui monte du bas : on remonte la pastille touchée
+    // dans le haut de l'écran pour qu'elle reste visible au-dessus du panneau.
     setSelected(n);
-    // Sur téléphone, la fiche est sous les planches : on l'amène à l'écran.
-    if (matchMedia("(max-width: 979px)").matches) {
-      requestAnimationFrame(() => document.getElementById("fiche")?.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+    if (from && matchMedia("(max-width: 979px)").matches) {
+      const top = from.getBoundingClientRect().top - innerHeight * 0.2;
+      const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      requestAnimationFrame(() => window.scrollBy({ top, behavior: smooth ? "smooth" : "auto" }));
     }
   };
 
@@ -230,7 +233,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                               className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${(focus && focus !== step) || !inJalon(i) ? " is-dim" : ""}${i.blockedBy.length && step !== "faite" ? " is-blocked" : ""}${tipPos}`}
                               style={{ left: `${fx * 100}%`, top: `${fy * 100}%`, "--i": pinIndex }}
                               aria-label={`#${i.number} ${i.title}, ${stepWord(step)}`}
-                              onClick={() => pick(p.issue)}
+                              onClick={(e) => pick(p.issue, e.currentTarget)}
                             >
                               <span className="pin-mark">{i.number}</span>
                               <span className="tip" aria-hidden="true">
@@ -288,7 +291,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
           </details>
         </div>
 
-        <aside id="fiche" className="fiche" aria-live="polite" data-tour="fiche">
+        <aside id="fiche" className={chosen ? "fiche has-card" : "fiche"} aria-live="polite" data-tour="fiche">
           {chosen ? (
             <Fiche key={chosen.number} i={chosen} epicNo={epicNo} onClose={() => setSelected(null)} onPick={pick} />
           ) : (
@@ -319,9 +322,9 @@ function Summary(props: { count: (s: Step) => number; placed: boolean; focus: St
   return (
     <div className="fiche-empty">
       <p className="fiche-hint">
-        {placed ? "Clique sur un numéro pour voir l'" : "Clique sur une "}
+        {placed ? "Clique sur un numéro pour ouvrir son " : "Clique sur une "}
         <Term t="issue">issue</Term>
-        {placed ? "." : " pour la voir."}
+        {placed ? "." : " pour l'ouvrir."}
       </p>
       <ul className="counts">
         {STEPS.map((s) => (
