@@ -34,6 +34,28 @@ pnpm dev       # la page en local
 `pnpm build` produit un seul fichier HTML, `dist/index.html`, qui embarque l'instantané et les
 vignettes : on le publie tel quel, sans API derrière.
 
+### Mise à jour automatique, chaque heure
+
+Le workflow `.github/workflows/issues-map.yml` relance `pnpm refresh` chaque heure et publie la page
+sur GitHub Pages. Il ne fait rien tant que ces réglages manquent ; un admin de `dataforgoodfr` les
+pose une fois :
+
+1. **Créer une GitHub App** dans l'organisation (Settings > Developer settings > GitHub Apps), sans
+   webhook, avec en lecture seule : *Organization permissions > Projects* et *Repository
+   permissions > Issues* (*Metadata* suit). La doc GitHub recommande une App pour lire un projet
+   d'organisation depuis un workflow, le `GITHUB_TOKEN` n'y ayant pas accès.
+2. **L'installer** sur le seul dépôt `mediterranean-rescue`.
+3. Dans le dépôt, *Settings > Secrets and variables > Actions* : la variable
+   `ISSUES_MAP_APP_CLIENT_ID` (le Client ID de l'App) et le secret `ISSUES_MAP_APP_PRIVATE_KEY` (sa
+   clé privée).
+4. *Settings > Pages > Source* : « GitHub Actions ».
+
+Ce qui reste à la main : poser une nouvelle issue sur une maquette ou un schéma (`maquettes.json`),
+compléter les fiches d'écran, et mettre à jour les identifiants des vignettes Penpot quand une
+planche change (`scripts/penpot-assets.js`). Une issue pas encore posée apparaît quand même dans
+« Sans écran ». Si une vignette Penpot n'est plus servie, le run échoue et la page publiée reste
+celle de l'heure d'avant.
+
 ## La réponse
 
 Oui, et sans service à faire tourner :
