@@ -76,11 +76,14 @@ export type MaquettesState = {
   setFocus: (s: Step | null) => void;
   jalon: string | null;
   setJalon: (j: string | null) => void;
+  /** Montrer aussi les issues faites (cachées par défaut : on regarde ce qui reste à faire). */
+  done: boolean;
+  setDone: (d: boolean) => void;
   /** Premier chargement : la grande entrée animée. */
   intro: boolean;
 };
 
-export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus, setFocus, jalon, setJalon, intro }: MaquettesState) {
+export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus, setFocus, jalon, setJalon, done, setDone, intro }: MaquettesState) {
   const inJalon = (i: Issue) => !jalon || i.milestone?.title === jalon;
   const epic = byNumber.get(epicNo);
   if (!epic) return null;
@@ -193,6 +196,10 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
           Ready mais elle attend une autre issue. <strong>à préciser</strong> : Refinement. <strong>faite</strong> : Done ou
           fermée. Clique sur une couleur pour ne garder qu'elle.
         </HelpTip>
+        <label className="switch done-switch" htmlFor="show-done">
+          <input id="show-done" type="checkbox" checked={done} onChange={(e) => setDone(e.target.checked)} />
+          <span>Montrer les faites</span>
+        </label>
         {focus && (
           <button type="button" className="legend-reset" onClick={() => setFocus(null)}>
             Tout montrer
@@ -222,6 +229,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                           const i = byNumber.get(p.issue);
                           if (!i) return null;
                           const step = stepOf(i);
+                          if (step === "faite" && !done && focus !== "faite") return null;
                           const fx = p.x / board.width;
                           const fy = p.y / board.height;
                           const tipPos = `${fy < 0.2 ? " tip-below" : ""}${fx > 0.7 ? " tip-left" : fx < 0.3 ? " tip-right" : ""}`;

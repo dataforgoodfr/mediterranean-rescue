@@ -50,11 +50,12 @@ export function App() {
   const [offer, setOffer] = useState(false);
   // La grande entrée animée ne se joue qu'au premier chargement ; ensuite, un simple fondu.
   const [intro, setIntro] = useState(true);
-  const { tab, epic: epicNo, issue: selected, focus, jalon } = view;
+  const { tab, epic: epicNo, issue: selected, focus, jalon, done } = view;
   const setEpicNo = (epic: number) => setView((v) => ({ ...v, epic, issue: null }));
   const setSelected = (issue: number | null) => setView((v) => ({ ...v, issue }));
   const setFocus = (f: Step | null) => setView((v) => ({ ...v, focus: f }));
   const setJalon = (j: string | null) => setView((v) => ({ ...v, jalon: j }));
+  const setDone = (d: boolean) => setView((v) => ({ ...v, done: d }));
 
   const last = useRef(view);
   useEffect(() => {
@@ -97,7 +98,7 @@ export function App() {
   const free = open.filter((i) => stepOf(i) === "a-prendre").length;
   const doing = open.filter((i) => stepOf(i) === "en-cours").length;
 
-  const reset = () => setView({ tab: "maquettes", epic: DEMO_EPIC, issue: null, focus: null, jalon: null });
+  const reset = () => setView({ tab: "maquettes", epic: DEMO_EPIC, issue: null, focus: null, jalon: null, done: false });
 
   // Quatre étapes, pas plus : l'écran doit se lire seul, la visite ne fait que montrer où regarder.
   const steps: TourStep[] = [
@@ -178,7 +179,7 @@ export function App() {
         ) : tab === "relire" ? (
           <RelireView />
         ) : (
-          <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} focus={focus} setFocus={setFocus} jalon={jalon} setJalon={setJalon} intro={intro} />
+          <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} focus={focus} setFocus={setFocus} jalon={jalon} setJalon={setJalon} done={done} setDone={setDone} intro={intro} />
         )}
       </main>
 

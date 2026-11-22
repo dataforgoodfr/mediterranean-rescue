@@ -992,3 +992,6 @@ button { font: inherit; color: inherit; }
 }
 @keyframes sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .fiche.has-card { animation-name: fade-in; } .offer { animation: none; } }
+
+/* Interrupteur des issues faites, dans la rangée de la légende. */
+.done-switch { min-height: 40px; font-size: var(--fs-s); font-weight: 700; color: var(--ink-soft); }

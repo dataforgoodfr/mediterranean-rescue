@@ -4,7 +4,7 @@
 import { type Step, byNumber, epics, MILESTONES, STEPS } from "./data";
 
 export type Tab = "maquettes" | "relire" | "liste";
-export type View = { tab: Tab; epic: number; issue: number | null; focus: Step | null; jalon: string | null };
+export type View = { tab: Tab; epic: number; issue: number | null; focus: Step | null; jalon: string | null; done: boolean };
 
 export function readView(fallbackEpic: number): View {
   const [path, query = ""] = location.hash.replace(/^#\/?/, "").split("?");
@@ -18,6 +18,7 @@ export function readView(fallbackEpic: number): View {
     issue: byNumber.has(i) ? i : null,
     focus: STEPS.find((s) => s.key === q.get("e"))?.key ?? null,
     jalon: MILESTONES.some((m) => m.title === j) ? j : null,
+    done: q.get("f") === "1",
   };
 }
 
@@ -28,6 +29,7 @@ export function viewHash(v: View) {
   if (v.issue) q.set("i", String(v.issue));
   if (v.focus) q.set("e", v.focus);
   if (v.jalon) q.set("j", v.jalon);
+  if (v.done) q.set("f", "1");
   return `#maquettes?${q}`;
 }
 
