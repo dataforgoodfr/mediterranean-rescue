@@ -392,7 +392,7 @@ button { font: inherit; color: inherit; }
 .st-a-preciser { --step: var(--step-a-preciser); --pin: #5f6a80; }
 .st-faite { --step: var(--step-faite); --pin: #17634a; }
 
-.mq { display: grid; gap: 16px; }
+.mq { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 .objectives { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1 * var(--gutter-r)); padding-left: var(--gutter); padding-right: var(--gutter-r); }
 .objective {
   flex: none;
@@ -414,11 +414,8 @@ button { font: inherit; color: inherit; }
 .objective-meta { font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
 .objective[aria-pressed="true"] .objective-meta { color: color-mix(in oklab, var(--paper) 75%, transparent); }
 .objective-bar { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; }
-.objective-bar span { display: block; height: 100%; background: var(--step-faite); }
+.objective-bar span { display: block; height: 100%; background: var(--step-faite); transform-origin: left; transition: transform 600ms var(--ease); }
 
-.legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: var(--fs-s); font-weight: 600; color: var(--ink-soft); }
-.legend li { display: inline-flex; align-items: center; gap: 7px; }
-.legend li::before { content: ""; width: 14px; height: 14px; border-radius: 7px; background: var(--pin); }
 
 .mq-layout { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); align-items: start; }
 @media (min-width: 980px) {
@@ -535,9 +532,7 @@ button { font: inherit; color: inherit; }
 .fiche-open { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .source { font-size: var(--fs-s); color: var(--muted); }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition-duration: 1ms !important; }
-}
+
 
 /* Les planches pour ordinateur, plus détaillées, ont plus de place. */
 .board-desktop { width: min(380px, calc(100vw - 72px)); }
@@ -554,3 +549,252 @@ button { font: inherit; color: inherit; }
 .flow-note { fill: var(--muted); font-family: var(--font); font-size: 13px; font-weight: 600; }
 .flow-line { stroke: var(--ink-soft); stroke-width: 2; }
 .flow-arrow-head { fill: var(--ink-soft); }
+
+/* ---------- En-tête : onglets et actions ---------- */
+.mast-bar { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.mast-actions { display: flex; gap: 8px; padding-bottom: 8px; }
+.mast-btn {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  border: 1px solid rgb(255 255 255 / 0.45);
+  background: transparent;
+  color: var(--mast-text);
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 160ms var(--ease), transform 120ms var(--ease);
+}
+.mast-btn::after { content: ""; position: absolute; inset: -2px 0; }
+.mast-btn:active { transform: scale(0.97); }
+@media (hover: hover) { .mast-btn:hover { background: rgb(255 255 255 / 0.12); } }
+
+/* ---------- Légende cliquable ---------- */
+.legend-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.legend-btn {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 0 10px;
+  border-radius: 20px;
+  border: 1px solid var(--muted);
+  background: var(--paper);
+  font-size: var(--fs-s);
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  position: relative;
+  transition: background-color 160ms var(--ease), border-color 160ms var(--ease), transform 120ms var(--ease);
+}
+.legend-btn::after { content: ""; position: absolute; inset: -2px 0; }
+.legend-btn::before { content: ""; width: 14px; height: 14px; border-radius: 7px; background: var(--pin); transition: transform 200ms var(--ease); }
+.legend-btn:active { transform: scale(0.97); }
+@media (hover: hover) { .legend-btn:hover { border-color: var(--ink); } .legend-btn:hover::before { transform: scale(1.2); } }
+.legend-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.legend-count { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 600; }
+.legend-btn[aria-pressed="true"] .legend-count { color: inherit; opacity: 0.8; }
+.legend-reset { min-height: 40px; background: none; border: 0; padding: 0 6px; font-weight: 700; color: var(--accent-text); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
+
+/* ---------- Aide « ? » ---------- */
+.helptip { position: relative; display: inline-flex; vertical-align: middle; margin-left: 6px; }
+.helptip-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  border: 1px solid var(--muted);
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 0.875rem;
+  cursor: help;
+  position: relative;
+}
+.helptip-btn::after { content: ""; position: absolute; inset: -8px; }
+.helptip-bubble {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  z-index: 20;
+  width: min(280px, 80vw);
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--fs-s);
+  font-weight: 500;
+  line-height: 1.45;
+  text-transform: none;
+  letter-spacing: 0;
+  box-shadow: 0 2px 4px rgb(10 16 32 / 0.2), 0 12px 28px -8px rgb(10 16 32 / 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -4px) scale(0.96);
+  transform-origin: top center;
+  transition: opacity 160ms var(--ease), transform 200ms var(--ease);
+}
+.helptip-bubble[data-open="true"] { opacity: 1; transform: translate(-50%, 0) scale(1); pointer-events: auto; }
+@media (max-width: 599px) { .helptip-bubble { left: auto; right: -8px; transform: translate(0, -4px) scale(0.96); transform-origin: top right; } .helptip-bubble[data-open="true"] { transform: none; } }
+
+/* ---------- Infobulle des pastilles ---------- */
+.tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 2px);
+  z-index: 3;
+  width: max-content;
+  max-width: 220px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #1a2747;
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  box-shadow: 0 2px 4px rgb(10 16 32 / 0.2), 0 10px 24px -8px rgb(10 16 32 / 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px) scale(0.96);
+  transform-origin: bottom center;
+  transition: opacity 140ms var(--ease), transform 180ms var(--ease);
+}
+.tip-step { display: block; font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tip-step, #ffb4a3); }
+.st-en-cours .tip-step { color: #a9cdf5; }
+.st-a-preciser .tip-step { color: #c9cfdc; }
+.st-faite .tip-step { color: #8fd9b8; }
+.pin.tip-below .tip { bottom: auto; top: calc(100% - 2px); transform: translate(-50%, -4px) scale(0.96); transform-origin: top center; }
+.pin.tip-left .tip { left: auto; right: 6px; transform: translate(0, 4px) scale(0.96); }
+.pin.tip-right .tip { left: 6px; transform: translate(0, 4px) scale(0.96); }
+@media (hover: hover) {
+  .pin:hover .tip { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  .pin.tip-left:hover .tip, .pin.tip-right:hover .tip { transform: none; }
+}
+.pin:focus-visible .tip { opacity: 1; transform: translate(-50%, 0) scale(1); }
+.pin.tip-left:focus-visible .tip, .pin.tip-right:focus-visible .tip { transform: none; }
+.pin:hover, .pin:focus-visible { z-index: 4; }
+.pin.is-dim .pin-mark { opacity: 0.25; transform: scale(0.85); }
+.pin.is-dim .tip { display: none; }
+.pin-mark { transition: transform 200ms var(--ease), opacity 200ms var(--ease); }
+
+/* ---------- Le moment d'entrée : planches puis pastilles ---------- */
+@keyframes board-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes pin-in { from { opacity: 0; transform: scale(0.93); } to { opacity: 1; transform: scale(1); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes slide-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+@keyframes ring { from { opacity: 0.7; transform: scale(1); } to { opacity: 0; transform: scale(1.9); } }
+.board { animation: board-in 420ms var(--ease) backwards; animation-delay: calc(var(--b, 0) * 70ms); }
+.pin .pin-mark { animation: pin-in 300ms var(--ease) backwards; animation-delay: calc(220ms + var(--i, 0) * 18ms); }
+.pin.is-on .pin-mark::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--pin); animation: ring 700ms var(--ease) 2; z-index: -1; }
+.pin-mark { position: relative; }
+.fiche-card, .fiche-empty { animation: slide-in 240ms var(--ease) backwards; }
+.no-screen li { animation: rise-in 240ms var(--ease) backwards; animation-delay: calc(var(--i, 0) * 20ms); }
+.content { animation: rise-in 260ms var(--ease) backwards; }
+
+/* ---------- Fiche : ce qu'on peut faire ---------- */
+.fiche-next { padding: 10px 12px; border-radius: 8px; background: var(--ground); font-size: var(--fs-s); line-height: 1.45; border-left: 4px solid var(--step); }
+.count-btn {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 10px;
+  border: 0;
+  border-left: 4px solid var(--step);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 160ms var(--ease);
+}
+@media (hover: hover) { .count-btn:hover { background: var(--ground); } }
+.count-btn[aria-pressed="true"] { background: var(--ground); font-weight: 800; }
+.counts li { padding-left: 0; border-left: 0; }
+.counts strong { font-size: var(--fs-l); font-weight: 800; font-variant-numeric: tabular-nums; min-width: 2ch; }
+.issue-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; transition: background-color 160ms var(--ease), transform 120ms var(--ease); }
+.issue-line:active { transform: scale(0.99); }
+.issue-step { margin-left: auto; font-size: var(--fs-xs); font-weight: 800; color: var(--step); text-transform: uppercase; letter-spacing: 0.05em; }
+.no-screen summary { gap: 4px; }
+
+/* ---------- Visite guidée ---------- */
+.tour { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+.tour-spot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  border-radius: 12px;
+  box-shadow: 0 0 0 3px var(--accent), 0 0 0 200vmax rgb(10 16 32 / 0.55);
+  transition: transform 320ms var(--ease);
+}
+.tour-veil { position: fixed; inset: 0; background: rgb(10 16 32 / 0.55); }
+.tour-card.is-top { bottom: auto; top: calc(16px + env(safe-area-inset-top, 0px)); }
+[data-tour], .pin, .tabs, .help-btn, .brand h1 { scroll-margin-top: 16px; }
+.tour-card {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  width: min(460px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  display: grid;
+  gap: 10px;
+  padding: 20px 20px 16px;
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 2px 6px rgb(10 16 32 / 0.2), 0 24px 48px -12px rgb(10 16 32 / 0.55);
+  pointer-events: auto;
+  animation: card-in 260ms var(--ease) backwards;
+  outline: none;
+}
+@keyframes card-in { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+.tour-count { font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-text); }
+.tour-title { font-size: var(--fs-l); font-weight: 800; line-height: 1.2; }
+.tour-text { color: var(--ink-soft); line-height: 1.5; }
+.tour-dots { display: flex; gap: 6px; }
+.tour-dots span { width: 8px; height: 8px; border-radius: 4px; background: var(--border); transition: transform 200ms var(--ease), background-color 200ms var(--ease); }
+.tour-dots .is-done { background: var(--muted); }
+.tour-dots .is-on { background: var(--accent); transform: scale(1.3); }
+.tour-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.tour-actions > .btn-quiet { border-color: transparent; padding: 0 8px; text-decoration: underline; text-underline-offset: 0.2em; }
+.touring body { padding-bottom: 60vh; }
+@media (max-width: 599px) { .tour-card { padding: 16px 16px 12px; gap: 8px; } .tour-text { font-size: var(--fs-s); } }
+.tour-nav { display: flex; gap: 8px; }
+
+/* ---------- Panneau d'aide ---------- */
+.help {
+  width: min(560px, calc(100vw - 32px));
+  max-height: min(86vh, 820px);
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 2px 6px rgb(10 16 32 / 0.2), 0 24px 48px -12px rgb(10 16 32 / 0.55);
+}
+.help[open] { animation: rise-in 260ms var(--ease) backwards; }
+.help::backdrop { background: rgb(10 16 32 / 0.55); }
+.help-inner { display: grid; gap: 22px; padding: 22px 22px 24px; }
+.help-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.help-head h2 { font-size: var(--fs-l); font-weight: 800; }
+.help section { display: grid; gap: 10px; }
+.help h3 { font-size: var(--fs-m); font-weight: 800; }
+.help p { line-height: 1.55; color: var(--ink-soft); }
+.help-steps { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; line-height: 1.5; }
+.help-states { margin: 0; display: grid; gap: 8px; }
+.help-states div { display: grid; gap: 2px; padding-left: 12px; border-left: 4px solid var(--step); }
+.help-states dt { font-weight: 800; }
+.help-states dd { margin: 0; color: var(--ink-soft); font-size: var(--fs-s); line-height: 1.45; }
+.help-foot { display: flex; justify-content: flex-start; }
+
+/* Mouvement réduit : on garde les fondus, on retire les déplacements et les agrandissements. */
+@media (prefers-reduced-motion: reduce) {
+  .board, .no-screen li, .content, .fiche-card, .fiche-empty, .help[open] { animation-name: fade-in; }
+  .pin .pin-mark { animation-name: fade-in; animation-delay: 0ms; }
+  .tour-card { animation: none; }
+  .pin.is-on .pin-mark::after { animation: none; }
+  .tour-spot, .objective-bar span { transition: none; }
+  .pin-mark, .tip, .helptip-bubble, .legend-btn::before { transition-property: opacity; }
+  .pin.is-on .pin-mark, .pin:hover .pin-mark, .pin.is-dim .pin-mark { transform: none; }
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   type Issue,
   type Step,
@@ -18,6 +17,7 @@ import {
   stepWord,
 } from "./data";
 import { DataFlow, slot, ZONES } from "./DataFlow";
+import { HelpTip } from "./HelpTip";
 
 type Placed = (typeof placedEpics)[number];
 type Board = (typeof boards)[number];
@@ -42,10 +42,24 @@ function placesOf(issue: number) {
   return [...new Set(names)];
 }
 
-export function MaquettesView() {
-  // Par défaut, le premier objectif posé sur les maquettes.
-  const [epicNo, setEpicNo] = useState(placedEpics[0]?.epic ?? epics[0]?.number ?? 0);
-  const [selected, setSelected] = useState<number | null>(null);
+// Ce qu'on peut faire d'une issue, selon son état : le dernier pas du parcours.
+const NEXT: Record<Step, string> = {
+  "a-prendre": "Personne n'est dessus. Pour la prendre : commente « Je prends » sur l'issue, puis assigne-la-toi.",
+  "en-cours": "Quelqu'un est dessus. Pour aider, écris-lui un commentaire sur l'issue.",
+  "a-preciser": "Pas encore prête : l'équipe produit doit la préciser avant qu'on la prenne. Tu peux poser une question sur l'issue.",
+  faite: "Terminée. Le détail du travail est sur GitHub.",
+};
+
+export type MaquettesState = {
+  epicNo: number;
+  setEpicNo: (n: number) => void;
+  selected: number | null;
+  setSelected: (n: number | null) => void;
+  focus: Step | null;
+  setFocus: (s: Step | null) => void;
+};
+
+export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus, setFocus }: MaquettesState) {
   const epic = byNumber.get(epicNo);
   if (!epic) return null;
 
@@ -54,8 +68,12 @@ export function MaquettesView() {
   const pinned = new Set(placed ? boards.flatMap((b) => pinsOn(placed, b)).map((p) => p.issue) : []);
   // À prendre d'abord, puis en cours, puis à préciser : ce qu'un bénévole cherche en premier.
   const rank = (i: Issue) => STEPS.findIndex((s) => s.key === stepOf(i));
-  const withoutScreen = all.filter((i) => i.state === "OPEN" && !pinned.has(i.number)).sort((a, b) => rank(a) - rank(b));
+  const withoutScreen = all
+    .filter((i) => i.state === "OPEN" && !pinned.has(i.number))
+    .filter((i) => !focus || stepOf(i) === focus)
+    .sort((a, b) => rank(a) - rank(b));
   const chosen = selected === null ? undefined : byNumber.get(selected);
+  const count = (s: Step) => all.filter((i) => stepOf(i) === s).length;
 
   const pick = (n: number) => {
     setSelected(n);
@@ -65,76 +83,107 @@ export function MaquettesView() {
     }
   };
 
+  let pinIndex = 0;
+
   return (
     <div className="mq">
-      <nav className="objectives" aria-label="Objectifs">
-        {epics.map((e) => {
-          const d = descendants(e.number);
-          const done = d.filter((i) => stepOf(i) === "faite").length;
-          const free = d.filter((i) => stepOf(i) === "a-prendre").length;
-          return (
-            <button
-              key={e.number}
-              type="button"
-              className="objective"
-              aria-pressed={e.number === epicNo}
-              onClick={() => {
-                setEpicNo(e.number);
-                setSelected(null);
-              }}
-            >
-              <span className="objective-name">{shortTitle(e.title)}</span>
-              <span className="objective-meta">
-                {done}/{d.length} faites{free > 0 ? ` · ${free} à prendre` : ""}
-              </span>
-              <span className="objective-bar" aria-hidden="true">
-                <span style={{ width: `${d.length ? (done / d.length) * 100 : 0}%` }} />
-              </span>
-            </button>
-          );
-        })}
-      </nav>
+      <div className="mq-row">
+        <nav className="objectives" aria-label="Objectifs" data-tour="objectives">
+          {epics.map((e) => {
+            const d = descendants(e.number);
+            const done = d.filter((i) => stepOf(i) === "faite").length;
+            const free = d.filter((i) => stepOf(i) === "a-prendre").length;
+            return (
+              <button
+                key={e.number}
+                type="button"
+                className="objective"
+                aria-pressed={e.number === epicNo}
+                onClick={() => {
+                  setEpicNo(e.number);
+                  setSelected(null);
+                }}
+              >
+                <span className="objective-name">{shortTitle(e.title)}</span>
+                <span className="objective-meta">
+                  {done}/{d.length} faites{free > 0 ? ` · ${free} à prendre` : ""}
+                </span>
+                <span className="objective-bar" aria-hidden="true">
+                  <span style={{ transform: `scaleX(${d.length ? done / d.length : 0})` }} />
+                </span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
 
-      <ul className="legend" aria-label="Légende des couleurs">
-        {STEPS.map((s) => (
-          <li key={s.key} className={`st-${s.key}`}>
-            {s.word}
-          </li>
-        ))}
-      </ul>
+      <div className="legend-row" data-tour="legend">
+        <ul className="legend" aria-label="Filtrer par état">
+          {STEPS.map((s) => (
+            <li key={s.key}>
+              <button
+                type="button"
+                className={`legend-btn st-${s.key}`}
+                aria-pressed={focus === s.key}
+                onClick={() => setFocus(focus === s.key ? null : s.key)}
+              >
+                {s.word} <span className="legend-count">{count(s.key)}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <HelpTip label="Que veulent dire les couleurs ?">
+          <strong>à prendre</strong> : prête et personne dessus. <strong>en cours</strong> : quelqu'un y travaille.{" "}
+          <strong>à préciser</strong> : il manque encore des infos. <strong>faite</strong> : terminée. Clique sur une couleur
+          pour ne garder qu'elle.
+        </HelpTip>
+        {focus && (
+          <button type="button" className="legend-reset" onClick={() => setFocus(null)}>
+            Tout montrer
+          </button>
+        )}
+      </div>
 
       <div className="mq-layout">
         <div className="mq-main">
           {placed ? (
             <div className="boards-scroll" role="region" aria-label="Planches de maquette" tabIndex={0}>
-              <div className="boards">
-                {placed.boards.map((bid) => {
-                  const board = boards.find((b) => b.id === bid);
+              <div className="boards" key={epicNo}>
+                {placed.boards.map((bid, b) => {
+                  const board = boards.find((x) => x.id === bid);
                   if (!board) return null;
                   const pins = pinsOn(placed, board);
                   const schema = board.kind === "schema";
                   return (
-                    <figure className={schema ? "board board-schema" : board.width > 600 ? "board board-desktop" : "board"} key={bid}>
+                    <figure
+                      className={schema ? "board board-schema" : board.width > 600 ? "board board-desktop" : "board"}
+                      key={bid}
+                      style={{ "--b": b }}
+                    >
                       <div className="board-frame" style={{ aspectRatio: `${board.width} / ${board.height}` }}>
-                        {schema ? (
-                          <DataFlow />
-                        ) : (
-                          <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />
-                        )}
+                        {schema ? <DataFlow /> : <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />}
                         {pins.map((p) => {
                           const i = byNumber.get(p.issue);
                           if (!i) return null;
+                          const step = stepOf(i);
+                          const fx = p.x / board.width;
+                          const fy = p.y / board.height;
+                          const tipPos = `${fy < 0.2 ? " tip-below" : ""}${fx > 0.7 ? " tip-left" : fx < 0.3 ? " tip-right" : ""}`;
+                          pinIndex += 1;
                           return (
                             <button
                               type="button"
                               key={`${p.issue}-${p.x}-${p.y}`}
-                              className={`pin st-${stepOf(i)}${selected === p.issue ? " is-on" : ""}`}
-                              style={{ left: `${(p.x / board.width) * 100}%`, top: `${(p.y / board.height) * 100}%` }}
-                              aria-label={`#${i.number} ${i.title}, ${stepWord(stepOf(i))}`}
-                              title={`#${i.number} ${i.title}`}
+                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${focus && focus !== step ? " is-dim" : ""}${tipPos}`}
+                              style={{ left: `${fx * 100}%`, top: `${fy * 100}%`, "--i": pinIndex }}
+                              aria-label={`#${i.number} ${i.title}, ${stepWord(step)}`}
                               onClick={() => pick(p.issue)}
                             >
                               <span className="pin-mark">{i.number}</span>
+                              <span className="tip" aria-hidden="true">
+                                <span className="tip-step">{stepWord(step)}</span>
+                                {i.title}
+                              </span>
                             </button>
                           );
                         })}
@@ -148,30 +197,40 @@ export function MaquettesView() {
           ) : (
             <div className="no-board">
               <p className="no-board-title">Pas encore de maquette pour cet objectif.</p>
-              <p className="muted">Ses issues sont listées ci-dessous.</p>
+              <p className="muted">Ses issues sont listées ci-dessous, celles à prendre en premier.</p>
             </div>
           )}
 
-          {withoutScreen.length > 0 && (
-            <details className="no-screen" open={!placed}>
-              <summary>
-                {placed ? "Sans écran sur ces maquettes" : "Les issues de cet objectif"} ({withoutScreen.length})
-              </summary>
+          <details className="no-screen" open={!placed} data-tour="no-screen">
+            <summary>
+              {placed ? "Sans écran sur ces maquettes" : "Les issues de cet objectif"} ({withoutScreen.length})
+              <HelpTip label="Pourquoi sans écran ?">
+                Ces issues ne changent aucun écran visible : données, back-end, enquêtes, ou maquette pas encore dessinée.
+              </HelpTip>
+            </summary>
+            {withoutScreen.length ? (
               <ul>
-                {withoutScreen.map((i) => (
-                  <li key={i.number}>
+                {withoutScreen.map((i, n) => (
+                  <li key={i.number} style={{ "--i": n }}>
                     <button type="button" className={`issue-line st-${stepOf(i)}${selected === i.number ? " is-on" : ""}`} onClick={() => pick(i.number)}>
                       <span className="num">#{i.number}</span> {i.title}
+                      <span className="issue-step">{stepWord(stepOf(i))}</span>
                     </button>
                   </li>
                 ))}
               </ul>
-            </details>
-          )}
+            ) : (
+              <p className="muted small">Aucune issue sans écran dans cet état.</p>
+            )}
+          </details>
         </div>
 
-        <aside id="fiche" className="fiche" aria-live="polite">
-          {chosen ? <Fiche i={chosen} epicNo={epicNo} onClose={() => setSelected(null)} /> : <Summary issues={all} placed={Boolean(placed)} />}
+        <aside id="fiche" className="fiche" aria-live="polite" data-tour="fiche">
+          {chosen ? (
+            <Fiche key={chosen.number} i={chosen} epicNo={epicNo} onClose={() => setSelected(null)} />
+          ) : (
+            <Summary key={`summary-${epicNo}`} count={count} placed={Boolean(placed)} setFocus={setFocus} focus={focus} />
+          )}
         </aside>
       </div>
 
@@ -192,18 +251,21 @@ export function MaquettesView() {
   );
 }
 
-function Summary({ issues, placed }: { issues: Issue[]; placed: boolean }) {
-  const count = (s: Step) => issues.filter((i) => stepOf(i) === s).length;
+function Summary(props: { count: (s: Step) => number; placed: boolean; focus: Step | null; setFocus: (s: Step | null) => void }) {
+  const { count, placed, focus, setFocus } = props;
   return (
     <div className="fiche-empty">
       <p className="fiche-hint">{placed ? "Clique sur un numéro pour voir l'issue." : "Clique sur une issue pour la voir."}</p>
       <ul className="counts">
         {STEPS.map((s) => (
-          <li key={s.key} className={`st-${s.key}`}>
-            <strong>{count(s.key)}</strong> {s.word}
+          <li key={s.key}>
+            <button type="button" className={`count-btn st-${s.key}`} aria-pressed={focus === s.key} onClick={() => setFocus(focus === s.key ? null : s.key)}>
+              <strong>{count(s.key)}</strong> {s.word}
+            </button>
           </li>
         ))}
       </ul>
+      <p className="muted small">Un clic sur un état ne garde que ses issues.</p>
     </div>
   );
 }
@@ -244,6 +306,7 @@ function Fiche({ i, epicNo, onClose }: { i: Issue; epicNo: number; onClose: () =
           {i.iteration ? `, ${i.iteration.title.replace("Iteration", "itération")}` : ""}
         </dd>
       </dl>
+      <p className="fiche-next">{NEXT[step]}</p>
       <a className="btn fiche-open" href={i.url} target="_blank" rel="noreferrer">
         Ouvrir sur GitHub
       </a>

@@ -52,6 +52,18 @@ Oui, et sans service à faire tourner :
 
 « À prendre » veut dire Ready et personne dessus ; une issue Ready déjà assignée compte « en cours ».
 
+Pour guider de bout en bout :
+
+- **Une visite guidée** en 8 étapes se lance à la première ouverture (puis par le bouton « Visite
+  guidée ») : objectifs, couleurs, pastilles, fiche, issues sans écran, liste complète, aide.
+- **Un panneau d'aide** (bouton « Aide » ou touche « ? ») : lire la page, les quatre couleurs,
+  prendre une issue, d'où viennent les données.
+- **Des aides en place** : infobulle au survol d'une pastille, « ? » à côté de la légende et des
+  issues sans écran, et dans chaque fiche la prochaine action possible selon l'état.
+- **La légende filtre** : un clic sur une couleur estompe les autres pastilles.
+- **Des animations courtes** (entrée des planches puis des pastilles, fiche, barres d'avancement),
+  réduites à de simples fondus quand le système demande moins de mouvement.
+
 Limites :
 
 - Un instantané, pas du direct : il faut relancer `pnpm refresh` pour voir les changements.
