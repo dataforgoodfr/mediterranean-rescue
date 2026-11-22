@@ -96,15 +96,12 @@ by ») est « bloquée ». Les issues abandonnées (Out) restent cachées, comme
   Refinement, back-end, API… sont soulignés en pointillés et s'expliquent au survol ou au toucher
   (`src/lexique.tsx`). L'aide les rassemble dans un lexique. Les bénévoles apprennent ainsi GitHub,
   qui leur servira sur d'autres projets.
-- **L'onglet « À relire »**, pour qui ne code pas : les maquettes et la recherche utilisateur à
-  valider, puis les questions à trancher (Refinement) par objectif, avec ce qu'on attend de la
-  personne et où répondre (commentaire GitHub ou canal SOS Med sur Mattermost).
 
 Pour guider de bout en bout :
 
 - **Une visite guidée en 4 étapes**, proposée par un bandeau à la première ouverture (jamais
   imposée), et relançable par le bouton « Visite guidée » : objectifs, couleurs, fiche d'une issue,
-  « À relire » et aide. Les captures s'agrandissent d'un clic.
+  la liste complète et l'aide. Les captures s'agrandissent d'un clic.
 - **La légende montre ou cache chaque couleur** d'un clic. Les issues faites sont cachées au
   départ (suggestion de Julien) : on regarde ce qui reste à faire.
 - **Les bulles d'aide ne sont jamais coupées** : elles sont rendues à la racine de la page et

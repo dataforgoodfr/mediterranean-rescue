@@ -849,38 +849,10 @@ button { font: inherit; color: inherit; }
 .lexique dt { font-weight: 800; }
 .lexique dd { margin: 0; color: var(--ink-soft); font-size: var(--fs-s); line-height: 1.45; }
 
-/* ---------- À relire ---------- */
-.relire { display: grid; gap: 28px; max-width: 700px; }
-.relire-head { display: grid; gap: 8px; }
-.relire-head h2 { font-size: var(--fs-xl); font-weight: 800; line-height: 1.15; }
-.relire-section { display: grid; gap: 10px; }
-.relire-section h3 { font-size: var(--fs-l); font-weight: 800; }
-.relire-ask { max-width: 70ch; color: var(--ink-soft); padding: 10px 14px; border-radius: 8px; background: var(--paper); border: 1px solid var(--border); }
-.relire-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.relire-item {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px 16px;
-  padding: 12px 14px;
-  background: var(--paper);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--step);
-  border-radius: 0 8px 8px 0;
-}
-.relire-main { display: grid; gap: 4px; min-width: 0; flex: 1 1 320px; }
-.relire-title { font-weight: 700; line-height: 1.35; overflow-wrap: anywhere; }
-.relire-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.relire-actions .btn { display: inline-flex; align-items: center; text-decoration: none; }
-.relire-group summary { min-height: 44px; display: flex; align-items: center; font-weight: 800; cursor: pointer; }
-.relire-group .relire-list { padding-bottom: 8px; }
-
 /* Une bulle fermée ne doit ni se voir ni élargir la page : elle sort du rendu. */
 .helptip-bubble[data-open="false"] { display: none; }
 .helptip-bubble[data-open="true"] { animation: fade-in 160ms var(--ease) backwards; }
 .term-bubble strong, .helptip-bubble strong { color: inherit; }
-.relire .lede { max-width: 70ch; }
 
 /* Sur téléphone : les bulles d'aide s'ouvrent en bas de l'écran, entières, au lieu de déborder. */
 @media (max-width: 599px) {

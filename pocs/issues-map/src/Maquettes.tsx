@@ -57,7 +57,7 @@ const NEXT: Record<Step, string> = {
   "a-prendre": "Personne n'est dessus. Pour la prendre : commente « Je prends » sur l'issue, puis assigne-la-toi.",
   "en-cours": "Quelqu'un est dessus. Pour aider, écris-lui un commentaire sur l'issue.",
   bloquee: "Elle attend qu'une autre issue soit finie (ci-dessus). Commence plutôt par celle-ci, ou attends qu'elle soit fermée.",
-  "a-preciser": "Pas encore prête : l'équipe produit doit la préciser avant qu'on la prenne. Tu peux poser une question sur l'issue.",
+  "a-preciser": "Pas encore prête : il manque une décision ou une information. Tu connais la réponse, même sans coder ? Écris-la en commentaire sur l'issue, ou dans le canal SOS Med sur Mattermost.",
   faite: "Terminée. Le détail du travail est sur GitHub.",
 };
 

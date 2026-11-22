@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { type Step, byNumber, epics, formatDate, issues, placedEpics, projectUrl, repoUrl, stepOf, takenAt } from "./data";
 import { emptyFilters, type Filters, TreeView } from "./Tree";
 import { MaquettesView } from "./Maquettes";
-import { RelireView } from "./Relire";
 import { Help } from "./Help";
 import { Tour, type TourStep } from "./Tour";
 import { SHOTS } from "./guide";
@@ -124,8 +123,8 @@ export function App() {
     },
     {
       target: ".tabs",
-      title: "Selon ce que tu fais",
-      text: "Tu ne codes pas ? L'onglet « À relire » rassemble les maquettes à valider et les questions à trancher. Un mot souligné s'explique au survol, et le bouton Aide reprend tout.",
+      title: "Et pour la suite",
+      text: "La liste complète montre toutes les issues d'un bloc. Un mot souligné s'explique au survol, et le bouton Aide reprend tout. Tu ne codes pas ? Réponds en commentaire sur une issue, c'est déjà aider.",
       before: () => setSelected(null),
     },
   ];
@@ -153,9 +152,6 @@ export function App() {
               <a href={viewHash({ ...view, tab: "maquettes" })} className="tab" aria-current={tab === "maquettes" ? "page" : undefined}>
                 Maquettes
               </a>
-              <a href="#relire" className="tab" aria-current={tab === "relire" ? "page" : undefined}>
-                À relire
-              </a>
               <a href="#liste" className="tab" aria-current={tab === "liste" ? "page" : undefined}>
                 Liste complète
               </a>
@@ -175,8 +171,6 @@ export function App() {
       <main className="content" key={tab}>
         {tab === "liste" ? (
           <TreeView filters={filters} setFilters={setFilters} />
-        ) : tab === "relire" ? (
-          <RelireView />
         ) : (
           <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} shown={shown} setShown={setShown} jalon={jalon} setJalon={setJalon} intro={intro} />
         )}

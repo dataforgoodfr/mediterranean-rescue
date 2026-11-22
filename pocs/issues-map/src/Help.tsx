@@ -101,6 +101,14 @@ export function Help({ open, onClose, onTour }: { open: boolean; onClose: () => 
             <li>Un tech lead relit et fusionne. Bloqué ? Écris-le sur l'issue ou sur Mattermost.</li>
           </ol>
           <p>
+            Tu ne codes pas ? Tu aides aussi en répondant aux issues grises, « à préciser » : un commentaire sur l'issue, ou
+            un message dans le{" "}
+            <a href="https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_sos-med" target="_blank" rel="noreferrer">
+              canal SOS Med
+            </a>
+            .
+          </p>
+          <p>
             Le détail est dans{" "}
             <a href={`${repoUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">
               CONTRIBUTING.md
