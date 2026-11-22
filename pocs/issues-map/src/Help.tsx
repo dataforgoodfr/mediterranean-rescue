@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { formatDate, penpot, projectUrl, repoUrl, STEPS, takenAt } from "./data";
+import { Figure, SHOTS } from "./guide";
 
 const MEANING: Record<string, string> = {
   "a-prendre": "Prête (Ready sur le tableau) et personne dessus. C'est là qu'un bénévole peut commencer.",
@@ -64,13 +65,20 @@ export function Help({ open, onClose, onTour }: { open: boolean; onClose: () => 
               </div>
             ))}
           </dl>
+          <Figure shot={SHOTS.tableau} />
         </section>
 
         <section>
           <h3>Prendre une issue</h3>
           <ol className="help-steps">
-            <li>Choisis une issue orange, « à prendre ».</li>
-            <li>Sur GitHub, commente « Je prends », puis assigne-la-toi.</li>
+            <li>
+              Choisis une issue orange, « à prendre ». Si sa fiche dit « Attend d'abord », commence par l'autre.
+              <Figure shot={SHOTS.prete} />
+            </li>
+            <li>
+              Sur GitHub, commente « Je prends », puis assigne-la-toi (lien « assign yourself », à droite).
+              <Figure shot={SHOTS.jePrends} />
+            </li>
             <li>Crée ta branche depuis main, code, puis ouvre ta pull request.</li>
             <li>Un tech lead relit et fusionne. Bloqué ? Écris-le sur l'issue ou sur Mattermost.</li>
           </ol>

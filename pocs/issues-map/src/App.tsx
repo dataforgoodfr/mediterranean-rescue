@@ -4,6 +4,7 @@ import { emptyFilters, type Filters, TreeView } from "./Tree";
 import { MaquettesView } from "./Maquettes";
 import { Help } from "./Help";
 import { Tour, type TourStep } from "./Tour";
+import { SHOTS } from "./guide";
 
 // Les maquettes sont l'accueil ; la liste complète reste à un clic.
 type Tab = "maquettes" | "liste";
@@ -28,8 +29,8 @@ function markSeen() {
 }
 
 const DEMO_EPIC = placedEpics[0]?.epic ?? epics[0]?.number ?? 0;
-// Une issue à prendre posée sur la carte, pour montrer la fiche pendant la visite.
-const DEMO_ISSUE = 17;
+// Une issue à prendre, que rien ne bloque, posée sur la carte : pour montrer la fiche pendant la visite.
+const DEMO_ISSUE = 24;
 
 export function App() {
   const [tab, setTab] = useState<Tab>(tabFromHash);
@@ -89,12 +90,14 @@ export function App() {
       target: "[data-tour=objectives]",
       title: "Choisis un objectif",
       text: "Chaque bouton est une épopée, un grand objectif du projet. La barre verte montre ce qui est fait, et le compte dit combien d'issues attendent quelqu'un.",
+      shot: SHOTS.epopee,
       before: reset,
     },
     {
       target: "[data-tour=legend]",
       title: "Quatre couleurs, quatre états",
       text: "Orange : à prendre. Bleu : en cours. Gris : à préciser. Vert : faite. Clique sur une couleur pour ne garder qu'elle.",
+      shot: SHOTS.tableau,
       before: () => setSelected(null),
     },
     {
@@ -110,6 +113,7 @@ export function App() {
       target: "[data-tour=fiche]",
       title: "La fiche de l'issue",
       text: "Elle dit qui est dessus, sur quels écrans elle apparaît, et ce que tu peux faire maintenant. Le bouton t'emmène sur GitHub.",
+      shot: SHOTS.issueCote,
       before: () => setSelected(DEMO_ISSUE),
     },
     {
@@ -117,6 +121,13 @@ export function App() {
       title: "Les issues sans écran",
       text: "Données, back-end, enquêtes : certaines issues ne changent aucun écran. Elles sont rangées ici, celles à prendre en premier.",
       before: () => setSelected(null),
+    },
+    {
+      target: "[data-tour=fiche]",
+      title: "Prendre une issue",
+      text: "Sur GitHub, commente « Je prends » sous l'issue, puis assigne-la-toi. Elle passe alors en cours, et tout le monde voit qui est dessus.",
+      shot: SHOTS.jePrends,
+      before: () => setSelected(DEMO_ISSUE),
     },
     {
       target: ".tabs",

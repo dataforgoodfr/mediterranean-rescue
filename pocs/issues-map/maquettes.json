@@ -68,7 +68,21 @@
       "name": "Chemin de la donnée (schéma de travail)",
       "kind": "schema",
       "width": 1000,
-      "height": 560
+      "height": 590
+    },
+    {
+      "id": "contribution",
+      "name": "Chemin d'une contribution (schéma de travail)",
+      "kind": "schema",
+      "width": 1000,
+      "height": 290
+    },
+    {
+      "id": "plaidoyer",
+      "name": "De la carte à l'argument (schéma de travail)",
+      "kind": "schema",
+      "width": 1000,
+      "height": 270
     }
   ],
   "epics": [
@@ -372,6 +386,93 @@
           108
         ]
       }
+    },
+    {
+      "epic": 15,
+      "boards": [
+        "donnee"
+      ],
+      "pins": [],
+      "zones": {
+        "ancienne-carte": [
+          27,
+          4
+        ],
+        "back-office": [
+          26,
+          28
+        ],
+        "carte": [
+          29
+        ],
+        "chaine": [
+          30,
+          76
+        ]
+      }
+    },
+    {
+      "epic": 77,
+      "boards": [
+        "contribution"
+      ],
+      "pins": [],
+      "zones": {
+        "benevole": [
+          49
+        ],
+        "depot": [
+          25,
+          43,
+          41,
+          47
+        ],
+        "ci": [
+          115
+        ],
+        "main": [
+          91
+        ],
+        "site": [
+          102,
+          103
+        ]
+      }
+    },
+    {
+      "epic": 13,
+      "boards": [
+        "plaidoyer"
+      ],
+      "pins": [],
+      "zones": {
+        "operation": [
+          72
+        ],
+        "acteurs": [
+          73
+        ],
+        "droit": [
+          74
+        ],
+        "attentes": [
+          105
+        ]
+      }
+    },
+    {
+      "epic": 14,
+      "boards": [
+        "carte-ordi"
+      ],
+      "pins": [
+        {
+          "issue": 145,
+          "board": "carte-ordi",
+          "x": 420,
+          "y": 150
+        }
+      ]
     }
   ]
 }

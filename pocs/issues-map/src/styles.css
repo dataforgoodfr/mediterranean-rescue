@@ -544,7 +544,9 @@ button { font: inherit; color: inherit; }
 .flow { display: block; width: 100%; height: auto; }
 .flow-zone { fill: var(--ground); stroke: var(--border); stroke-width: 1.5; }
 .flow-back-office, .flow-base { fill: var(--tint); stroke: var(--ink-soft); }
-.flow-carte { fill: var(--paper); stroke: var(--ink); stroke-dasharray: 6 5; }
+.flow-dashed { fill: var(--paper); stroke: var(--ink); stroke-dasharray: 6 5; }
+.flow-empty { opacity: 0.6; }
+.flow-chaine { fill: color-mix(in oklab, var(--accent) 10%, var(--paper)); stroke: var(--accent-text); stroke-dasharray: 6 5; }
 .flow-label { fill: var(--ink); font-family: var(--font); font-size: 15px; font-weight: 800; }
 .flow-note { fill: var(--muted); font-family: var(--font); font-size: 13px; font-weight: 600; }
 .flow-line { stroke: var(--ink-soft); stroke-width: 2; }
@@ -798,3 +800,43 @@ button { font: inherit; color: inherit; }
   .pin.is-on .pin-mark, .pin:hover .pin-mark, .pin.is-dim .pin-mark { transform: none; }
 }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Captures de GitHub (visite, aide, fiche) ---------- */
+.shot { margin: 0; display: grid; gap: 6px; }
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  object-position: left top;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+}
+.shot figcaption { font-size: var(--fs-xs); color: var(--muted); line-height: 1.4; }
+.tour-card .shot img { max-height: 190px; }
+@media (max-width: 599px) { .tour-card .shot img { max-height: 130px; } }
+.help .shot { margin-top: 8px; }
+.help .shot img { max-height: 320px; }
+
+/* ---------- Fiche : issue bloquée, comment la prendre ---------- */
+.fiche-blocked { display: grid; gap: 4px; font-size: var(--fs-s); }
+.fiche-blocked > span { color: var(--muted); font-weight: 600; }
+.blocker {
+  min-height: 44px;
+  text-align: left;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px dashed var(--muted);
+  background: transparent;
+  font-weight: 700;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: background-color 160ms var(--ease), transform 120ms var(--ease);
+}
+.blocker:active { transform: scale(0.98); }
+@media (hover: hover) { .blocker:hover { background: var(--ground); } }
+.howto summary { min-height: 44px; display: flex; align-items: center; font-weight: 700; color: var(--accent-text); cursor: pointer; }
+.howto[open] .shot { animation: rise-in 240ms var(--ease) backwards; }
+.pin.is-blocked .pin-mark { outline: 2px dashed var(--pin); outline-offset: 3px; }

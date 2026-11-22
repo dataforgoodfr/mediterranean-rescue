@@ -21,6 +21,7 @@ const QUERY = `query($cursor: String) {
         parent { number }
         subIssues(first: 100) { nodes { number } }
         subIssuesSummary { total completed }
+        blockedBy(first: 10) { nodes { number state } }
         assignees(first: 10) { nodes { login } }
         labels(first: 20) { nodes { name color } }
         milestone { title }
@@ -63,6 +64,8 @@ const issues = raw.map((i) => {
     children: i.subIssues.nodes.map((n) => n.number),
     subTotal: i.subIssuesSummary.total,
     subDone: i.subIssuesSummary.completed,
+    // Les issues ouvertes qui bloquent celle-ci (champ « Blocked by » de GitHub).
+    blockedBy: i.blockedBy.nodes.filter((b) => b.state === "OPEN").map((b) => b.number),
     assignees: i.assignees.nodes.map((a) => a.login),
     labels: i.labels.nodes.map((l) => ({ name: l.name, color: l.color })),
     milestone: i.milestone?.title ?? null,

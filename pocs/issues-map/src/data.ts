@@ -69,10 +69,19 @@ export const stepWord = (s: Step) => STEPS.find((x) => x.key === s)?.word ?? s;
 
 // Maquettes (planches Penpot) et repères posés à la main.
 export type Board = (typeof maquettes.boards)[number];
-export type Pin = (typeof maquettes.epics)[number]["pins"][number];
+export type Pin = { issue: number; board: string; x: number; y: number };
+/** Un objectif posé : sur des planches (repères en pixels) ou sur un schéma (issues rangées par zone). */
+export type Placed = { epic: number; boards: string[]; pins: Pin[]; zones?: Record<string, number[]> };
 export const penpot = maquettes.penpot;
 export const boards = maquettes.boards;
-export const placedEpics = maquettes.epics;
+// Le JSON mélange objectifs à repères et objectifs à zones : on le ramène à une seule forme.
+export const placedEpics: readonly Placed[] = maquettes.epics.map((e) => {
+  const zones: Record<string, number[]> = {};
+  if ("zones" in e && e.zones) {
+    for (const [k, v] of Object.entries(e.zones)) if (v) zones[k] = v;
+  }
+  return { epic: e.epic, boards: e.boards, pins: e.pins, zones };
+});
 
 const images = import.meta.glob<string>("../../../data/issues-map/boards/*.png", { eager: true, query: "?url", import: "default" });
 export const boardImage = (id: string) => images[`../../../data/issues-map/boards/${id}.png`];

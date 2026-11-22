@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
+import { Figure, type Shot } from "./guide";
 
 export type TourStep = {
   /** Sélecteur CSS de l'élément à montrer. */
   target: string;
   title: string;
   text: string;
+  /** Une capture de GitHub qui montre la même chose côté GitHub. */
+  shot?: Shot;
   /** Prépare l'écran avant l'étape (choisir un objectif, ouvrir une fiche…). */
   before?: () => void;
 };
@@ -95,6 +98,7 @@ export function Tour({ steps, onClose }: { steps: readonly TourStep[]; onClose: 
           {step.title}
         </h2>
         <p className="tour-text">{step.text}</p>
+        {step.shot && <Figure shot={step.shot} />}
         <div className="tour-dots" aria-hidden="true">
           {steps.map((s, k) => (
             <span key={s.title} className={k === n ? "is-on" : k < n ? "is-done" : ""} />

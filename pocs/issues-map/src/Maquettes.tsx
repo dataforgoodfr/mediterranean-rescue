@@ -1,5 +1,6 @@
 import {
   type Issue,
+  type Placed,
   type Step,
   boardImage,
   boards,
@@ -16,17 +17,17 @@ import {
   stepOf,
   stepWord,
 } from "./data";
-import { DataFlow, slot, ZONES } from "./DataFlow";
+import { Schema, SCHEMAS, slot, zoneOf } from "./Schemas";
 import { HelpTip } from "./HelpTip";
+import { Figure, SHOTS } from "./guide";
 
-type Placed = (typeof placedEpics)[number];
 type Board = (typeof boards)[number];
 
 /** Les repères d'une planche : posés à la main, ou rangés par zone sur le schéma de la donnée. */
 function pinsOn(placed: Placed, board: Board) {
   if (board.kind === "schema") {
     return Object.entries(placed.zones ?? {}).flatMap(([zoneId, nums]) => {
-      const zone = ZONES.find((z) => z.id === zoneId);
+      const zone = zoneOf(board.id, zoneId);
       return zone ? nums.map((issue, n) => ({ issue, ...slot(zone, n) })) : [];
     });
   }
@@ -37,7 +38,9 @@ function pinsOn(placed: Placed, board: Board) {
 function placesOf(issue: number) {
   const names = placedEpics.flatMap((p) => [
     ...p.pins.filter((pin) => pin.issue === issue).flatMap((pin) => boards.find((b) => b.id === pin.board)?.name ?? []),
-    ...Object.entries(p.zones ?? {}).flatMap(([zoneId, nums]) => (nums.includes(issue) ? (ZONES.find((z) => z.id === zoneId)?.label ?? []) : [])),
+    ...Object.entries(p.zones ?? {}).flatMap(([zoneId, nums]) =>
+      nums.includes(issue) ? p.boards.flatMap((bid) => zoneOf(bid, zoneId)?.label ?? []) : [],
+    ),
   ]);
   return [...new Set(names)];
 }
@@ -134,8 +137,8 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
         </ul>
         <HelpTip label="Que veulent dire les couleurs ?">
           <strong>à prendre</strong> : prête et personne dessus. <strong>en cours</strong> : quelqu'un y travaille.{" "}
-          <strong>à préciser</strong> : il manque encore des infos. <strong>faite</strong> : terminée. Clique sur une couleur
-          pour ne garder qu'elle.
+          <strong>à préciser</strong> : il manque encore des infos. <strong>faite</strong> : terminée. Un contour en
+          pointillés : elle attend une autre issue. Clique sur une couleur pour ne garder qu'elle.
         </HelpTip>
         {focus && (
           <button type="button" className="legend-reset" onClick={() => setFocus(null)}>
@@ -161,7 +164,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                       style={{ "--b": b }}
                     >
                       <div className="board-frame" style={{ aspectRatio: `${board.width} / ${board.height}` }}>
-                        {schema ? <DataFlow /> : <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />}
+                        {schema ? <Schema id={bid} used={new Set(Object.keys(placed.zones ?? {}))} /> : <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />}
                         {pins.map((p) => {
                           const i = byNumber.get(p.issue);
                           if (!i) return null;
@@ -174,14 +177,17 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                             <button
                               type="button"
                               key={`${p.issue}-${p.x}-${p.y}`}
-                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${focus && focus !== step ? " is-dim" : ""}${tipPos}`}
+                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${focus && focus !== step ? " is-dim" : ""}${i.blockedBy.length ? " is-blocked" : ""}${tipPos}`}
                               style={{ left: `${fx * 100}%`, top: `${fy * 100}%`, "--i": pinIndex }}
                               aria-label={`#${i.number} ${i.title}, ${stepWord(step)}`}
                               onClick={() => pick(p.issue)}
                             >
                               <span className="pin-mark">{i.number}</span>
                               <span className="tip" aria-hidden="true">
-                                <span className="tip-step">{stepWord(step)}</span>
+                                <span className="tip-step">
+                                  {stepWord(step)}
+                                  {i.blockedBy.length ? ` · attend #${i.blockedBy.join(", #")}` : ""}
+                                </span>
                                 {i.title}
                               </span>
                             </button>
@@ -227,26 +233,26 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
 
         <aside id="fiche" className="fiche" aria-live="polite" data-tour="fiche">
           {chosen ? (
-            <Fiche key={chosen.number} i={chosen} epicNo={epicNo} onClose={() => setSelected(null)} />
+            <Fiche key={chosen.number} i={chosen} epicNo={epicNo} onClose={() => setSelected(null)} onPick={pick} />
           ) : (
             <Summary key={`summary-${epicNo}`} count={count} placed={Boolean(placed)} setFocus={setFocus} focus={focus} />
           )}
         </aside>
       </div>
 
-      {placed?.boards.some((bid) => boards.find((b) => b.id === bid)?.kind !== "schema") ? (
+      {placed?.boards.some((bid) => boards.find((b) => b.id === bid)?.kind !== "schema") && (
         <p className="source">
           Planches Penpot « {penpot.fileName} » du {formatDate(new Date(penpot.fileModifiedAt))} ·{" "}
           <a href={penpotFileUrl} target="_blank" rel="noreferrer">
             ouvrir dans Penpot
           </a>
         </p>
-      ) : placed ? (
-        <p className="source">
-          Pas encore de maquette du back-office (#104) : ce schéma de travail range les issues par étape du chemin de la
-          donnée. À faire vérifier par l'équipe produit.
+      )}
+      {placed?.boards.flatMap((bid) => SCHEMAS[bid]?.note ?? []).map((note) => (
+        <p className="source" key={note}>
+          {note}
         </p>
-      ) : null}
+      ))}
     </div>
   );
 }
@@ -270,7 +276,7 @@ function Summary(props: { count: (s: Step) => number; placed: boolean; focus: St
   );
 }
 
-function Fiche({ i, epicNo, onClose }: { i: Issue; epicNo: number; onClose: () => void }) {
+function Fiche({ i, epicNo, onClose, onPick }: { i: Issue; epicNo: number; onClose: () => void; onPick: (n: number) => void }) {
   const step = stepOf(i);
   const ep = epicOf(i);
   const screens = placesOf(i.number);
@@ -306,7 +312,27 @@ function Fiche({ i, epicNo, onClose }: { i: Issue; epicNo: number; onClose: () =
           {i.iteration ? `, ${i.iteration.title.replace("Iteration", "itération")}` : ""}
         </dd>
       </dl>
-      <p className="fiche-next">{NEXT[step]}</p>
+      {i.blockedBy.length > 0 && step !== "faite" && (
+        <div className="fiche-blocked">
+          <span>Attend d'abord</span>
+          {i.blockedBy.map((b) => (
+            <button key={b} type="button" className="blocker" onClick={() => onPick(b)}>
+              #{b} {byNumber.get(b)?.title ?? ""}
+            </button>
+          ))}
+        </div>
+      )}
+      <p className="fiche-next">
+        {i.blockedBy.length && step === "a-prendre"
+          ? "Elle attend une autre issue : commence plutôt par celle-ci, ou attends qu'elle soit finie."
+          : NEXT[step]}
+      </p>
+      {step === "a-prendre" && i.blockedBy.length === 0 && (
+        <details className="howto">
+          <summary>Comment la prendre ?</summary>
+          <Figure shot={SHOTS.jePrends} />
+        </details>
+      )}
       <a className="btn fiche-open" href={i.url} target="_blank" rel="noreferrer">
         Ouvrir sur GitHub
       </a>

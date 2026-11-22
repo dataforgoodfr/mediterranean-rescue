@@ -43,10 +43,12 @@ Oui, et sans service à faire tourner :
   numérotées, d'une couleur par état : à prendre, en cours, à préciser, faite. Un clic sur une
   pastille ouvre sa fiche à côté (qui est dessus, sur quel écran, statut du tableau) et le lien
   vers GitHub. Les issues sans écran sont listées sous les planches, celles à prendre d'abord.
-  L'épopée #12 Transparence est posée sur 6 planches (4 de téléphone, 2 d'ordinateur). L'épopée #11 Data management n'a pas encore
-  de maquette du back-office (#104) : ses issues sont posées sur un schéma de travail du chemin de
-  la donnée (sources, base, back-office, carte, analyses), dessiné dans `src/DataFlow.tsx` à partir
-  des titres d'issues, à faire vérifier par l'équipe produit. Les autres épopées montrent leur liste.
+  L'épopée #12 Transparence est posée sur 6 planches (4 de téléphone, 2 d'ordinateur), et #14 Levée
+  de fonds sur la maquette de la carte. Les objectifs sans maquette d'écran sont posés sur des schémas
+  de travail dessinés dans `src/Schemas.tsx` à partir des titres d'issues, à faire vérifier par
+  l'équipe produit : #11 Data management sur le chemin de la donnée, #15 Cybersécurité en calque sur
+  ce même chemin, #77 Socle sur le chemin d'une contribution, #13 Plaidoyer sur le parcours d'un
+  lecteur, de la carte à l'argument.
 - **La liste complète** : l'arbre des épopées, issues et sous-issues, avec filtres (statut,
   domaine front, back ou data, libres et Ready, fermées).
 
@@ -58,6 +60,12 @@ Pour guider de bout en bout :
   guidée ») : objectifs, couleurs, pastilles, fiche, issues sans écran, liste complète, aide.
 - **Un panneau d'aide** (bouton « Aide » ou touche « ? ») : lire la page, les quatre couleurs,
   prendre une issue, d'où viennent les données.
+- **Des captures de GitHub** (`src/guide/`, prises le 22 novembre 2026 sur le dépôt et le tableau 44,
+  sans être connecté) montrent dans la visite, l'aide et la fiche à quoi ressemble chaque geste :
+  une épopée et ses sous-issues, le tableau, le côté d'une issue, la liste « Prête à prendre », un
+  « Je prends ». À refaire quand GitHub change d'apparence.
+- **Les blocages** : une issue qui attend une autre (« Blocked by » sur GitHub) porte un contour en
+  pointillés, et sa fiche propose d'ouvrir celle qui la bloque.
 - **Des aides en place** : infobulle au survol d'une pastille, « ? » à côté de la légende et des
   issues sans écran, et dans chaque fiche la prochaine action possible selon l'état.
 - **La légende filtre** : un clic sur une couleur estompe les autres pastilles.
