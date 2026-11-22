@@ -1,5 +1,15 @@
 # Atlas des issues
 
+Pour démarrer (il faut `gh` connecté : `gh auth login`) :
+
+```sh
+cd pocs/issues-map
+pnpm install && pnpm dev
+```
+
+Au premier lancement, `pnpm dev` lit GitHub et télécharge les vignettes Penpot dans `data/issues-map/`
+(ignoré par Git, jamais commité).
+
 ## La question
 
 Peut-on rendre les issues du projet lisibles d'un coup d'œil, sans quitter GitHub comme source :

@@ -934,3 +934,6 @@ button { font: inherit; color: inherit; }
 
 /* Interrupteur des issues faites, dans la rangée de la légende. */
 .done-switch { min-height: 40px; font-size: var(--fs-s); font-weight: 700; color: var(--ink-soft); }
+
+/* Vignette Penpot absente (clone neuf hors ligne) : la planche reste, vide, avec la commande. */
+.board-missing { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px; padding: 16px; text-align: center; color: #404d6d; font-size: var(--fs-s); border: 2px dashed #c4c9d6; border-radius: 16px; }

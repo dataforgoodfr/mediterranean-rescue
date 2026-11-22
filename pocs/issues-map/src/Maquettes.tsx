@@ -232,7 +232,16 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, shown,
                       style={{ "--b": b }}
                     >
                       <div className="board-frame" style={{ aspectRatio: `${board.width} / ${board.height}` }}>
-                        {schema ? <Schema id={bid} used={new Set(Object.keys(placed.zones ?? {}))} /> : <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />}
+                        {schema ? (
+                          <Schema id={bid} used={new Set(Object.keys(placed.zones ?? {}))} />
+                        ) : boardImage(bid) ? (
+                          <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />
+                        ) : (
+                          <div className="board-missing">
+                            <p>Vignette Penpot manquante.</p>
+                            <code>pnpm boards</code>
+                          </div>
+                        )}
                         {pins.map((p) => {
                           const i = byNumber.get(p.issue);
                           if (!i) return null;
