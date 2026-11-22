@@ -538,3 +538,16 @@ button { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 1ms !important; }
 }
+
+/* Le schéma de la donnée : plus large qu'une planche, il défile sur téléphone. */
+.board-schema { width: 900px; }
+@media (min-width: 1280px) { .board-schema { width: 940px; } }
+.board-schema .board-frame { background: var(--paper); }
+.flow { display: block; width: 100%; height: auto; }
+.flow-zone { fill: var(--ground); stroke: var(--border); stroke-width: 1.5; }
+.flow-back-office, .flow-base { fill: var(--tint); stroke: var(--ink-soft); }
+.flow-carte { fill: var(--paper); stroke: var(--ink); stroke-dasharray: 6 5; }
+.flow-label { fill: var(--ink); font-family: var(--font); font-size: 15px; font-weight: 800; }
+.flow-note { fill: var(--muted); font-family: var(--font); font-size: 13px; font-weight: 600; }
+.flow-line { stroke: var(--ink-soft); stroke-width: 2; }
+.flow-arrow-head { fill: var(--ink-soft); }

@@ -17,6 +17,30 @@ import {
   stepOf,
   stepWord,
 } from "./data";
+import { DataFlow, slot, ZONES } from "./DataFlow";
+
+type Placed = (typeof placedEpics)[number];
+type Board = (typeof boards)[number];
+
+/** Les repères d'une planche : posés à la main, ou rangés par zone sur le schéma de la donnée. */
+function pinsOn(placed: Placed, board: Board) {
+  if (board.kind === "schema") {
+    return Object.entries(placed.zones ?? {}).flatMap(([zoneId, nums]) => {
+      const zone = ZONES.find((z) => z.id === zoneId);
+      return zone ? nums.map((issue, n) => ({ issue, ...slot(zone, n) })) : [];
+    });
+  }
+  return placed.pins.filter((p) => p.board === board.id);
+}
+
+/** Où apparaît une issue : noms des planches et des zones du schéma. */
+function placesOf(issue: number) {
+  const names = placedEpics.flatMap((p) => [
+    ...p.pins.filter((pin) => pin.issue === issue).flatMap((pin) => boards.find((b) => b.id === pin.board)?.name ?? []),
+    ...Object.entries(p.zones ?? {}).flatMap(([zoneId, nums]) => (nums.includes(issue) ? (ZONES.find((z) => z.id === zoneId)?.label ?? []) : [])),
+  ]);
+  return [...new Set(names)];
+}
 
 export function MaquettesView() {
   // Par défaut, le premier objectif posé sur les maquettes.
@@ -27,7 +51,7 @@ export function MaquettesView() {
 
   const placed = placedEpics.find((p) => p.epic === epicNo);
   const all = descendants(epicNo).filter((i) => i.status !== "Out");
-  const pinned = new Set(placed?.pins.map((p) => p.issue) ?? []);
+  const pinned = new Set(placed ? boards.flatMap((b) => pinsOn(placed, b)).map((p) => p.issue) : []);
   // À prendre d'abord, puis en cours, puis à préciser : ce qu'un bénévole cherche en premier.
   const rank = (i: Issue) => STEPS.findIndex((s) => s.key === stepOf(i));
   const withoutScreen = all.filter((i) => i.state === "OPEN" && !pinned.has(i.number)).sort((a, b) => rank(a) - rank(b));
@@ -87,11 +111,16 @@ export function MaquettesView() {
                 {placed.boards.map((bid) => {
                   const board = boards.find((b) => b.id === bid);
                   if (!board) return null;
-                  const pins = placed.pins.filter((p) => p.board === bid);
+                  const pins = pinsOn(placed, board);
+                  const schema = board.kind === "schema";
                   return (
-                    <figure className="board" key={bid}>
+                    <figure className={schema ? "board board-schema" : "board"} key={bid}>
                       <div className="board-frame" style={{ aspectRatio: `${board.width} / ${board.height}` }}>
-                        <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />
+                        {schema ? (
+                          <DataFlow />
+                        ) : (
+                          <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />
+                        )}
                         {pins.map((p) => {
                           const i = byNumber.get(p.issue);
                           if (!i) return null;
@@ -146,12 +175,19 @@ export function MaquettesView() {
         </aside>
       </div>
 
-      <p className="source">
-        Planches Penpot « {penpot.fileName} » du {formatDate(new Date(penpot.fileModifiedAt))} ·{" "}
-        <a href={penpotFileUrl} target="_blank" rel="noreferrer">
-          ouvrir dans Penpot
-        </a>
-      </p>
+      {placed?.boards.some((bid) => boards.find((b) => b.id === bid)?.kind !== "schema") ? (
+        <p className="source">
+          Planches Penpot « {penpot.fileName} » du {formatDate(new Date(penpot.fileModifiedAt))} ·{" "}
+          <a href={penpotFileUrl} target="_blank" rel="noreferrer">
+            ouvrir dans Penpot
+          </a>
+        </p>
+      ) : placed ? (
+        <p className="source">
+          Pas encore de maquette du back-office (#104) : ce schéma de travail range les issues par étape du chemin de la
+          donnée. À faire vérifier par l'équipe produit.
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -175,10 +211,7 @@ function Summary({ issues, placed }: { issues: Issue[]; placed: boolean }) {
 function Fiche({ i, epicNo, onClose }: { i: Issue; epicNo: number; onClose: () => void }) {
   const step = stepOf(i);
   const ep = epicOf(i);
-  const screens = placedEpics
-    .flatMap((p) => p.pins)
-    .filter((p) => p.issue === i.number)
-    .flatMap((p) => boards.find((b) => b.id === p.board)?.name ?? []);
+  const screens = placesOf(i.number);
   return (
     <div className={`fiche-card st-${step}`}>
       <div className="fiche-top">
@@ -195,8 +228,8 @@ function Fiche({ i, epicNo, onClose }: { i: Issue; epicNo: number; onClose: () =
         <dd>{i.assignees.length ? i.assignees.map((a) => `@${a}`).join(", ") : "personne"}</dd>
         {screens.length > 0 && (
           <>
-            <dt>Écran</dt>
-            <dd>{[...new Set(screens)].join(", ")}</dd>
+            <dt>Où</dt>
+            <dd>{screens.join(", ")}</dd>
           </>
         )}
         {ep && ep.number !== epicNo && (

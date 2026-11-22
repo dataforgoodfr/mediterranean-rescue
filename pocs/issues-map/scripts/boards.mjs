@@ -9,6 +9,7 @@ import maquettes from "../maquettes.json" with { type: "json" };
 const out = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "data", "issues-map", "boards");
 mkdirSync(out, { recursive: true });
 for (const b of maquettes.boards) {
+  if (!b.asset) continue; // un schéma dessiné dans le code, pas une planche Penpot
   const url = `${maquettes.penpot.base}/assets/by-id/${b.asset}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${b.id} : HTTP ${res.status} sur ${url}. Identifiant périmé : relancer scripts/penpot-assets.js.`);
