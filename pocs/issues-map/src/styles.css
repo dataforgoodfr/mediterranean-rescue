@@ -19,14 +19,6 @@
   --focus: #f03e1b;
   --shadow: 0 1px 2px rgb(27 39 71 / 0.06), 0 6px 18px -8px rgb(27 39 71 / 0.18);
 
-  /* Statut du tableau 44 : écrit en toutes lettres, et cette couleur sur le filet gauche de la ligne. */
-  --st-refinement: #7a8399;
-  --st-ready: #17634a;
-  --st-in-progress: #2563a8;
-  --st-in-review: #b7791f;
-  --st-done: #a3abbc;
-  --st-out: #9f2534;
-  --st-sans-statut: #c4c9d6;
   --step-a-prendre: #c53215;
   --step-en-cours: #2563a8;
   --step-a-preciser: #5f6a80;
@@ -63,13 +55,6 @@
     --link: #eceef5;
     --focus: #ff8d72;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 22px -10px rgb(0 0 0 / 0.6);
-    --st-refinement: #8b95ad;
-    --st-ready: #4fb58e;
-    --st-in-progress: #6fa8e6;
-    --st-in-review: #e0a93b;
-    --st-done: #55607a;
-    --st-out: #e07a86;
-    --st-sans-statut: #46516c;
     --step-a-prendre: #ff8d72;
     --step-en-cours: #6fa8e6;
     --step-a-preciser: #a3acc0;
@@ -94,13 +79,6 @@
   --link: #eceef5;
   --focus: #ff8d72;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 22px -10px rgb(0 0 0 / 0.6);
-  --st-refinement: #8b95ad;
-  --st-ready: #4fb58e;
-  --st-in-progress: #6fa8e6;
-  --st-in-review: #e0a93b;
-  --st-done: #55607a;
-  --st-out: #e07a86;
-  --st-sans-statut: #46516c;
   --step-a-prendre: #ff8d72;
   --step-en-cours: #6fa8e6;
   --step-a-preciser: #a3acc0;
@@ -292,13 +270,6 @@ button { font: inherit; color: inherit; }
 .row-main, .pin-item { position: relative; }
 .row-title::after, .pin-item a::after { content: ""; position: absolute; inset: 0; }
 
-.s-refinement { --st: var(--st-refinement); }
-.s-ready { --st: var(--st-ready); }
-.s-in-progress { --st: var(--st-in-progress); }
-.s-in-review { --st: var(--st-in-review); }
-.s-done { --st: var(--st-done); }
-.s-out { --st: var(--st-out); }
-.s-sans-statut { --st: var(--st-sans-statut); }
 
 .sections { display: grid; gap: 20px; min-width: 0; }
 .epic {
@@ -324,7 +295,7 @@ button { font: inherit; color: inherit; }
 .epic-progress { grid-column: 2; display: grid; gap: 6px; font-size: var(--fs-s); color: var(--ink-soft); }
 .epic-counts strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 .bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; max-width: 320px; }
-.bar span { display: block; height: 100%; background: var(--st-ready); }
+.bar span { display: block; height: 100%; background: var(--step-faite); }
 @media (min-width: 700px) {
   .epic-head { grid-template-columns: auto minmax(0, 1fr) 260px; }
   .epic-progress { grid-column: 3; justify-items: end; text-align: right; }
@@ -367,7 +338,6 @@ button { font: inherit; color: inherit; }
 @media (hover: hover) { .row-title:hover { text-decoration: underline; } }
 .meta { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: var(--fs-s); color: var(--muted); }
 .status-word { color: var(--ink-soft); font-weight: 700; }
-.free { color: var(--accent-text); font-weight: 800; }
 .domains { color: var(--ink-soft); font-weight: 600; }
 .warn { color: var(--accent-text); }
 .is-context .row-title, .is-context .meta { opacity: 0.55; }
@@ -387,10 +357,10 @@ button { font: inherit; color: inherit; }
 /* ---------- Maquettes ---------- */
 /* Quatre états, une couleur chacun. Les repères gardent les teintes claires : ils sont posés sur
    des planches blanches, quel que soit le thème. */
-.st-a-prendre { --step: var(--step-a-prendre); --pin: #c53215; }
-.st-en-cours { --step: var(--step-en-cours); --pin: #2563a8; }
-.st-a-preciser { --step: var(--step-a-preciser); --pin: #5f6a80; }
-.st-faite { --step: var(--step-faite); --pin: #17634a; }
+.st-a-prendre { --st: var(--step-a-prendre); --step: var(--step-a-prendre); --pin: #c53215; }
+.st-en-cours { --st: var(--step-en-cours); --step: var(--step-en-cours); --pin: #2563a8; }
+.st-a-preciser { --st: var(--step-a-preciser); --step: var(--step-a-preciser); --pin: #5f6a80; }
+.st-faite { --st: var(--step-faite); --step: var(--step-faite); --pin: #17634a; }
 
 .mq { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 .objectives { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1 * var(--gutter-r)); padding-left: var(--gutter); padding-right: var(--gutter-r); }
@@ -686,13 +656,15 @@ button { font: inherit; color: inherit; }
 @keyframes rise-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes slide-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
 @keyframes ring { from { opacity: 0.7; transform: scale(1); } to { opacity: 0; transform: scale(1.9); } }
-.board { animation: board-in 420ms var(--ease) backwards; animation-delay: calc(var(--b, 0) * 70ms); }
-.pin .pin-mark { animation: pin-in 300ms var(--ease) backwards; animation-delay: calc(220ms + var(--i, 0) * 18ms); }
+.mq.is-intro .board { animation: board-in 420ms var(--ease) backwards; animation-delay: calc(var(--b, 0) * 70ms); }
+/* Changer d'objectif ou de jalon est fréquent : un fondu court, sans cascade. */
+.mq:not(.is-intro) .boards { animation: fade-in 150ms var(--ease) backwards; }
+.mq.is-intro .pin .pin-mark { animation: pin-in 300ms var(--ease) backwards; animation-delay: calc(220ms + var(--i, 0) * 18ms); }
 .pin.is-on .pin-mark::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--pin); animation: ring 700ms var(--ease) 2; z-index: -1; }
 .pin-mark { position: relative; }
-.fiche-card, .fiche-empty { animation: slide-in 240ms var(--ease) backwards; }
-.no-screen li { animation: rise-in 240ms var(--ease) backwards; animation-delay: calc(var(--i, 0) * 20ms); }
-.content { animation: rise-in 260ms var(--ease) backwards; }
+.fiche-card, .fiche-empty { animation: fade-in 160ms var(--ease) backwards; }
+.mq.is-intro .no-screen li { animation: rise-in 240ms var(--ease) backwards; animation-delay: calc(var(--i, 0) * 20ms); }
+.content { animation: fade-in 150ms var(--ease) backwards; }
 
 /* ---------- Fiche : ce qu'on peut faire ---------- */
 .fiche-next { padding: 10px 12px; border-radius: 8px; background: var(--ground); font-size: var(--fs-s); line-height: 1.45; border-left: 4px solid var(--step); }
@@ -791,8 +763,8 @@ button { font: inherit; color: inherit; }
 
 /* Mouvement réduit : on garde les fondus, on retire les déplacements et les agrandissements. */
 @media (prefers-reduced-motion: reduce) {
-  .board, .no-screen li, .content, .fiche-card, .fiche-empty, .help[open] { animation-name: fade-in; }
-  .pin .pin-mark { animation-name: fade-in; animation-delay: 0ms; }
+  .mq.is-intro .board, .mq.is-intro .no-screen li, .help[open] { animation-name: fade-in; }
+  .mq.is-intro .pin .pin-mark { animation-name: fade-in; animation-delay: 0ms; }
   .tour-card { animation: none; }
   .pin.is-on .pin-mark::after { animation: none; }
   .tour-spot, .objective-bar span { transition: none; }
@@ -875,3 +847,8 @@ button { font: inherit; color: inherit; }
 .ecran-issue:active { transform: scale(0.97); }
 @media (hover: hover) { .ecran-issue:hover { background: var(--ground); } }
 .ecran-step { font-weight: 600; color: var(--muted); }
+
+/* Liste complète : l'état en mots, le statut exact du tableau en plus discret. */
+.step-word { color: var(--step); }
+.board-status { color: var(--muted); }
+.milestone { font-weight: 700; color: var(--ink-soft); }

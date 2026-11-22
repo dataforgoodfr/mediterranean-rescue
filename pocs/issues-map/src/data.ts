@@ -11,11 +11,6 @@ export const takenAt = new Date(snapshot.takenAt);
 export const repoUrl = snapshot.source;
 export const projectUrl = snapshot.project;
 
-// Ordre du champ Status du tableau 44.
-export const STATUSES: readonly string[] = ["Refinement", "Ready", "In progress", "In review", "Done", "Out"];
-export const NO_STATUS = "Sans statut";
-export const statusOf = (i: Issue) => i.status ?? NO_STATUS;
-export const statusKey = (s: string) => s.toLowerCase().replace(/\s+/g, "-");
 
 export const DOMAINS: readonly string[] = ["front", "back", "data"];
 
@@ -56,8 +51,6 @@ export const MILESTONES: readonly { title: string; due: string | null }[] = [
   .sort((a, b) => (a.due ?? "9999").localeCompare(b.due ?? "9999"));
 const dayFmt = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "Europe/Paris" });
 export const formatDay = (iso: string) => dayFmt.format(new Date(iso));
-
-export const isFreeReady = (i: Issue) => i.state === "OPEN" && i.status === "Ready" && i.assignees.length === 0;
 
 // Quatre états en mots simples, pour la vue maquettes. Le statut exact du tableau reste affiché
 // dans la fiche de l'issue.

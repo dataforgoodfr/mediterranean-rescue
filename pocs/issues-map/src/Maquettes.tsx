@@ -65,9 +65,11 @@ export type MaquettesState = {
   setFocus: (s: Step | null) => void;
   jalon: string | null;
   setJalon: (j: string | null) => void;
+  /** Premier chargement : la grande entrée animée. */
+  intro: boolean;
 };
 
-export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus, setFocus, jalon, setJalon }: MaquettesState) {
+export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus, setFocus, jalon, setJalon, intro }: MaquettesState) {
   const inJalon = (i: Issue) => !jalon || i.milestone?.title === jalon;
   const epic = byNumber.get(epicNo);
   if (!epic) return null;
@@ -95,7 +97,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
   let pinIndex = 0;
 
   return (
-    <div className="mq">
+    <div className={intro ? "mq is-intro" : "mq"}>
       <div className="mq-row">
         <nav className="objectives" aria-label="Objectifs" data-tour="objectives">
           {epics.map((e) => {

@@ -22,6 +22,10 @@ Une petite page React, Vite et TypeScript (les versions de `frontend/`), en lect
 
 Les fichiers téléchargés vont dans `data/issues-map/` à la racine du dépôt, que Git ignore.
 
+`pnpm check` (lancé avant chaque build) vérifie que `maquettes.json` colle encore à GitHub : une
+issue posée qui n'existe plus, une planche ou une zone inconnue arrêtent le build ; une issue
+posée hors de son objectif s'affiche en avertissement.
+
 Pour relancer (il faut `gh` connecté, Node 24 ou plus et pnpm) :
 
 ```sh
@@ -78,8 +82,11 @@ Oui, et sans service à faire tourner :
   n'a renseigné s'affiche « inconnu ».
 - **Les jalons** (P0 · MVP, P1, P2, P3, dans l'ordre de leur échéance) : un clic estompe tout ce qui
   n'est pas dans le jalon, pour voir ce qu'on fait en premier.
-- **La liste complète** : l'arbre des épopées, issues et sous-issues, avec filtres (statut,
-  domaine front, back ou data, libres et Ready, fermées).
+- **La liste complète** : l'arbre des épopées, issues et sous-issues, avec les mêmes quatre états
+  et les mêmes jalons que les maquettes, plus les blocages, le domaine et les issues fermées.
+- **Un lien vers chaque vue** : l'objectif, l'issue ouverte et les filtres vivent dans l'adresse
+  (`#maquettes?o=11&i=58&j=P0 · MVP`). Un lien s'envoie tel quel, un rechargement garde la vue,
+  le bouton Retour revient à l'objectif d'avant.
 
 « À prendre » veut dire Ready et personne dessus ; une issue Ready déjà assignée compte « en cours ».
 
@@ -99,8 +106,9 @@ Pour guider de bout en bout :
 - **Des aides en place** : infobulle au survol d'une pastille, « ? » à côté de la légende et des
   issues sans écran, et dans chaque fiche la prochaine action possible selon l'état.
 - **La légende filtre** : un clic sur une couleur estompe les autres pastilles.
-- **Des animations courtes** (entrée des planches puis des pastilles, fiche, barres d'avancement),
-  réduites à de simples fondus quand le système demande moins de mouvement.
+- **Des animations courtes** : l'entrée des planches puis des pastilles au premier chargement
+  seulement, puis de simples fondus quand on change d'objectif ou de jalon ; des fondus seuls
+  quand le système demande moins de mouvement.
 
 Limites :
 

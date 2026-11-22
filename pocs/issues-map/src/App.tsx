@@ -1,14 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type Step, epics, formatDate, issues, placedEpics, projectUrl, repoUrl, stepOf, takenAt } from "./data";
 import { emptyFilters, type Filters, TreeView } from "./Tree";
 import { MaquettesView } from "./Maquettes";
 import { Help } from "./Help";
 import { Tour, type TourStep } from "./Tour";
 import { SHOTS } from "./guide";
-
-// Les maquettes sont l'accueil ; la liste complète reste à un clic.
-type Tab = "maquettes" | "liste";
-const tabFromHash = (): Tab => (location.hash === "#liste" ? "liste" : "maquettes");
+import { readView, type View, viewHash, writeView } from "./route";
 
 // La visite se lance seule à la première visite. Le navigateur peut refuser le stockage : on
 // lance alors la visite sans s'en souvenir.
@@ -33,19 +30,37 @@ const DEMO_EPIC = placedEpics[0]?.epic ?? epics[0]?.number ?? 0;
 const DEMO_ISSUE = 24;
 
 export function App() {
-  const [tab, setTab] = useState<Tab>(tabFromHash);
+  // Les maquettes sont l'accueil ; la liste complète reste à un clic. La vue suit l'adresse.
+  const [view, setView] = useState<View>(() => readView(DEMO_EPIC));
   const [filters, setFilters] = useState<Filters>(emptyFilters);
-  const [epicNo, setEpicNo] = useState(DEMO_EPIC);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [focus, setFocus] = useState<Step | null>(null);
-  const [jalon, setJalon] = useState<string | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
   const [touring, setTouring] = useState(false);
+  // La grande entrée animée ne se joue qu'au premier chargement ; ensuite, un simple fondu.
+  const [intro, setIntro] = useState(true);
+  const { tab, epic: epicNo, issue: selected, focus, jalon } = view;
+  const setEpicNo = (epic: number) => setView((v) => ({ ...v, epic, issue: null }));
+  const setSelected = (issue: number | null) => setView((v) => ({ ...v, issue }));
+  const setFocus = (f: Step | null) => setView((v) => ({ ...v, focus: f }));
+  const setJalon = (j: string | null) => setView((v) => ({ ...v, jalon: j }));
 
+  const last = useRef(view);
   useEffect(() => {
-    const onHash = () => setTab(tabFromHash());
-    addEventListener("hashchange", onHash);
-    return () => removeEventListener("hashchange", onHash);
+    const prev = last.current;
+    writeView(view, prev.tab !== view.tab || prev.epic !== view.epic);
+    last.current = view;
+  }, [view]);
+  useEffect(() => {
+    const onNav = () => setView(readView(DEMO_EPIC));
+    addEventListener("popstate", onNav);
+    addEventListener("hashchange", onNav);
+    return () => {
+      removeEventListener("popstate", onNav);
+      removeEventListener("hashchange", onNav);
+    };
+  }, []);
+  useEffect(() => {
+    const t = window.setTimeout(() => setIntro(false), 1400);
+    return () => window.clearTimeout(t);
   }, []);
 
   useEffect(() => {
@@ -69,17 +84,7 @@ export function App() {
   const free = open.filter((i) => stepOf(i) === "a-prendre").length;
   const doing = open.filter((i) => stepOf(i) === "en-cours").length;
 
-  const showMaquettes = () => {
-    if (location.hash === "#liste") location.hash = "maquettes";
-    setTab("maquettes");
-  };
-  const reset = () => {
-    showMaquettes();
-    setEpicNo(DEMO_EPIC);
-    setFocus(null);
-    setJalon(null);
-    setSelected(null);
-  };
+  const reset = () => setView({ tab: "maquettes", epic: DEMO_EPIC, issue: null, focus: null, jalon: null });
 
   const steps: TourStep[] = [
     {
@@ -175,7 +180,7 @@ export function App() {
           </div>
           <div className="mast-bar">
             <nav className="tabs" aria-label="Vues">
-              <a href="#maquettes" className="tab" aria-current={tab === "maquettes" ? "page" : undefined}>
+              <a href={viewHash({ ...view, tab: "maquettes" })} className="tab" aria-current={tab === "maquettes" ? "page" : undefined}>
                 Maquettes
               </a>
               <a href="#liste" className="tab" aria-current={tab === "liste" ? "page" : undefined}>
@@ -198,7 +203,7 @@ export function App() {
         {tab === "liste" ? (
           <TreeView filters={filters} setFilters={setFilters} />
         ) : (
-          <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} focus={focus} setFocus={setFocus} jalon={jalon} setJalon={setJalon} />
+          <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} focus={focus} setFocus={setFocus} jalon={jalon} setJalon={setJalon} intro={intro} />
         )}
       </main>
 

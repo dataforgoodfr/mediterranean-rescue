@@ -5,35 +5,36 @@ import {
   DOMAINS,
   descendants,
   epics,
-  isFreeReady,
   looseRoots,
-  NO_STATUS,
+  MILESTONES,
   shortTitle,
-  STATUSES,
-  statusKey,
-  statusOf,
+  type Step,
+  STEPS,
+  stepOf,
+  stepWord,
 } from "./data";
 
+// Les mêmes quatre états et les mêmes jalons que la vue maquettes.
 export type Filters = {
-  statuses: Set<string>;
+  steps: Set<Step>;
   domains: Set<string>;
-  freeReady: boolean;
+  jalon: string | null;
   showClosed: boolean;
   query: string;
 };
 
 export const emptyFilters = (): Filters => ({
-  statuses: new Set(),
+  steps: new Set(),
   domains: new Set(),
-  freeReady: false,
+  jalon: null,
   showClosed: false,
   query: "",
 });
 
 function matches(i: Issue, f: Filters): boolean {
   if (!f.showClosed && i.state === "CLOSED") return false;
-  if (f.freeReady && !isFreeReady(i)) return false;
-  if (f.statuses.size && !f.statuses.has(statusOf(i))) return false;
+  if (f.steps.size && !f.steps.has(stepOf(i))) return false;
+  if (f.jalon && i.milestone?.title !== f.jalon) return false;
   if (f.domains.size && !i.labels.some((l) => f.domains.has(l.name))) return false;
   const q = f.query.trim().toLowerCase().replace(/^#/, "");
   if (q && !(String(i.number) === q || i.title.toLowerCase().includes(q))) return false;
@@ -164,14 +165,14 @@ function Row(props: { n: number; depth: number; hit: Set<number>; shown: Set<num
   if (!i) return null;
   const kids = i.children.filter((c) => shown.has(c));
   const isFolded = folded.has(n);
-  const status = statusOf(i);
+  const step = stepOf(i);
   const domains = i.labels.map((l) => l.name).filter((l) => DOMAINS.includes(l));
   const others = i.labels.map((l) => l.name).filter((l) => !DOMAINS.includes(l));
   const context = !hit.has(n);
 
   return (
     <li className={`row-item depth-${Math.min(depth, 3)}`}>
-      <div className={`row s-${statusKey(status)}${context ? " is-context" : ""}${i.state === "CLOSED" ? " is-closed" : ""}`}>
+      <div className={`row st-${step}${context ? " is-context" : ""}${i.state === "CLOSED" ? " is-closed" : ""}`}>
         {kids.length > 0 ? (
           <button
             type="button"
@@ -190,8 +191,10 @@ function Row(props: { n: number; depth: number; hit: Set<number>; shown: Set<num
             <span className="num">#{i.number}</span> {i.title}
           </a>
           <p className="meta">
-            <span className="status-word">{i.state === "CLOSED" && status !== "Done" ? `${status}, fermée` : status}</span>
-            {isFreeReady(i) && <span className="free">libre</span>}
+            <span className="status-word step-word">{stepWord(step)}</span>
+            <span className="board-status">{i.status ?? "sans statut"}</span>
+            {i.blockedBy.length > 0 && step !== "faite" && <span className="warn">attend #{i.blockedBy.join(", #")}</span>}
+            {i.milestone && <span className="milestone">{i.milestone.title}</span>}
             {i.iteration && <span>{i.iteration.title.replace("Iteration", "Itération")}</span>}
             {i.assignees.length > 0 && <span>{i.assignees.map((a) => `@${a}`).join(", ")}</span>}
             {domains.length > 0 && <span className="domains">{domains.join(" · ")}</span>}
@@ -216,7 +219,7 @@ function Row(props: { n: number; depth: number; hit: Set<number>; shown: Set<num
   );
 }
 
-function toggleIn(set: Set<string>, v: string) {
+function toggleIn<T>(set: Set<T>, v: T) {
   const next = new Set(set);
   if (next.has(v)) next.delete(v);
   else next.add(v);
@@ -224,10 +227,10 @@ function toggleIn(set: Set<string>, v: string) {
 }
 
 function FilterBar({ filters, setFilters, count }: { filters: Filters; setFilters: (f: Filters) => void; count: number }) {
-  const statusOptions = [...STATUSES, NO_STATUS];
   // Ouvert d'office sur grand écran ; sur téléphone, l'arbre passe d'abord.
   const [wide, setWide] = useState(() => matchMedia("(min-width: 900px)").matches);
-  const active = filters.statuses.size || filters.domains.size || filters.freeReady || filters.showClosed || filters.query;
+  const active = filters.steps.size || filters.domains.size || filters.jalon || filters.showClosed || filters.query;
+  const more = filters.domains.size + (filters.jalon ? 1 : 0) + (filters.showClosed ? 1 : 0);
   return (
     <aside className="filters" aria-label="Filtres">
       <div className="field">
@@ -241,39 +244,41 @@ function FilterBar({ filters, setFilters, count }: { filters: Filters; setFilter
         />
       </div>
 
-      <label className="switch" htmlFor="free-ready">
-        <input
-          id="free-ready"
-          type="checkbox"
-          checked={filters.freeReady}
-          onChange={(e) => setFilters({ ...filters, freeReady: e.target.checked })}
-        />
-        <span>
-          <strong>Libres et Ready</strong>
-          <small>Prêtes, personne dessus</small>
-        </span>
-      </label>
+      <fieldset className="group">
+        <legend>État</legend>
+        <div className="toggles">
+          {STEPS.map((s) => (
+            <button
+              key={s.key}
+              type="button"
+              className={`toggle st-${s.key}`}
+              aria-pressed={filters.steps.has(s.key)}
+              onClick={() => setFilters({ ...filters, steps: toggleIn(filters.steps, s.key) })}
+            >
+              {s.word}
+            </button>
+          ))}
+        </div>
+      </fieldset>
 
       <details className="more" open={wide} onToggle={(e) => setWide(e.currentTarget.open)}>
         <summary>
-          Statut, domaine, fermées
-          {filters.statuses.size + filters.domains.size + (filters.showClosed ? 1 : 0) > 0 && (
-            <span className="more-count"> ({filters.statuses.size + filters.domains.size + (filters.showClosed ? 1 : 0)} actifs)</span>
-          )}
+          Jalon, domaine, fermées
+          {more > 0 && <span className="more-count"> ({more} actifs)</span>}
         </summary>
         <div className="more-body">
       <fieldset className="group">
-        <legend>Statut (tableau 44)</legend>
+        <legend>Jalon</legend>
         <div className="toggles">
-          {statusOptions.map((s) => (
+          {MILESTONES.map((m) => (
             <button
-              key={s}
+              key={m.title}
               type="button"
-              className={`toggle s-${statusKey(s)}`}
-              aria-pressed={filters.statuses.has(s)}
-              onClick={() => setFilters({ ...filters, statuses: toggleIn(filters.statuses, s) })}
+              className="toggle"
+              aria-pressed={filters.jalon === m.title}
+              onClick={() => setFilters({ ...filters, jalon: filters.jalon === m.title ? null : m.title })}
             >
-              {s}
+              {m.title}
             </button>
           ))}
         </div>
