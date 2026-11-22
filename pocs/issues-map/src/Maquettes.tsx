@@ -23,6 +23,7 @@ import { Schema, SCHEMAS, slot, zoneOf } from "./Schemas";
 import { HelpTip } from "./HelpTip";
 import { Figure, SHOTS } from "./guide";
 import { Ecran } from "./Ecran";
+import { Term, type TermKey } from "./lexique";
 
 type Board = (typeof boards)[number];
 
@@ -52,8 +53,18 @@ function placesOf(issue: number) {
 const NEXT: Record<Step, string> = {
   "a-prendre": "Personne n'est dessus. Pour la prendre : commente « Je prends » sur l'issue, puis assigne-la-toi.",
   "en-cours": "Quelqu'un est dessus. Pour aider, écris-lui un commentaire sur l'issue.",
+  bloquee: "Elle attend qu'une autre issue soit finie (ci-dessus). Commence plutôt par celle-ci, ou attends qu'elle soit fermée.",
   "a-preciser": "Pas encore prête : l'équipe produit doit la préciser avant qu'on la prenne. Tu peux poser une question sur l'issue.",
   faite: "Terminée. Le détail du travail est sur GitHub.",
+};
+
+// Le mot du tableau GitHub, expliqué au survol dans la fiche.
+const STATUS_TERM: Record<string, TermKey> = {
+  Refinement: "refinement",
+  Ready: "ready",
+  "In progress": "inprogress",
+  "In review": "inreview",
+  Done: "done",
 };
 
 export type MaquettesState = {
@@ -84,7 +95,8 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
     .filter((i) => (!focus || stepOf(i) === focus) && inJalon(i))
     .sort((a, b) => rank(a) - rank(b));
   const chosen = selected === null ? undefined : byNumber.get(selected);
-  const count = (s: Step) => all.filter((i) => stepOf(i) === s).length;
+  // Les compteurs suivent le jalon choisi, comme les pastilles.
+  const count = (s: Step) => all.filter((i) => stepOf(i) === s && inJalon(i)).length;
 
   const pick = (n: number) => {
     setSelected(n);
@@ -99,6 +111,9 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
   return (
     <div className={intro ? "mq is-intro" : "mq"}>
       <div className="mq-row">
+        <p className="row-label row-label-top">
+          Objectifs, c'est-à-dire les <Term t="epic">épopées</Term> du projet
+        </p>
         <nav className="objectives" aria-label="Objectifs" data-tour="objectives">
           {epics.map((e) => {
             const d = descendants(e.number);
@@ -130,7 +145,9 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
       </div>
 
       <div className="legend-row jalon-row" data-tour="jalons">
-        <span className="row-label">Jalon</span>
+        <span className="row-label">
+          <Term t="milestone">Jalon</Term>
+        </span>
         <ul className="legend" aria-label="Filtrer par jalon">
           {MILESTONES.map((m) => (
             <li key={m.title}>
@@ -168,9 +185,10 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
           ))}
         </ul>
         <HelpTip label="Que veulent dire les couleurs ?">
-          <strong>à prendre</strong> : prête et personne dessus. <strong>en cours</strong> : quelqu'un y travaille.{" "}
-          <strong>à préciser</strong> : il manque encore des infos. <strong>faite</strong> : terminée. Un contour en
-          pointillés : elle attend une autre issue. Clique sur une couleur pour ne garder qu'elle.
+          Chaque couleur traduit un statut du tableau GitHub. <strong>à prendre</strong> : Ready et personne dessus.{" "}
+          <strong>en cours</strong> : In progress, In review, ou Ready avec quelqu'un d'assigné. <strong>bloquée</strong> :
+          Ready mais elle attend une autre issue. <strong>à préciser</strong> : Refinement. <strong>faite</strong> : Done ou
+          fermée. Clique sur une couleur pour ne garder qu'elle.
         </HelpTip>
         {focus && (
           <button type="button" className="legend-reset" onClick={() => setFocus(null)}>
@@ -209,7 +227,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                             <button
                               type="button"
                               key={`${p.issue}-${p.x}-${p.y}`}
-                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${(focus && focus !== step) || !inJalon(i) ? " is-dim" : ""}${i.blockedBy.length ? " is-blocked" : ""}${tipPos}`}
+                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${(focus && focus !== step) || !inJalon(i) ? " is-dim" : ""}${i.blockedBy.length && step !== "faite" ? " is-blocked" : ""}${tipPos}`}
                               style={{ left: `${fx * 100}%`, top: `${fy * 100}%`, "--i": pinIndex }}
                               aria-label={`#${i.number} ${i.title}, ${stepWord(step)}`}
                               onClick={() => pick(p.issue)}
@@ -218,7 +236,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                               <span className="tip" aria-hidden="true">
                                 <span className="tip-step">
                                   {stepWord(step)}
-                                  {i.blockedBy.length ? ` · attend #${i.blockedBy.join(", #")}` : ""}
+                                  {i.blockedBy.length && step !== "faite" ? ` · attend #${i.blockedBy.join(", #")}` : ""}
                                 </span>
                                 {i.title}
                               </span>
@@ -300,7 +318,11 @@ function Summary(props: { count: (s: Step) => number; placed: boolean; focus: St
   const { count, placed, focus, setFocus } = props;
   return (
     <div className="fiche-empty">
-      <p className="fiche-hint">{placed ? "Clique sur un numéro pour voir l'issue." : "Clique sur une issue pour la voir."}</p>
+      <p className="fiche-hint">
+        {placed ? "Clique sur un numéro pour voir l'" : "Clique sur une "}
+        <Term t="issue">issue</Term>
+        {placed ? "." : " pour la voir."}
+      </p>
       <ul className="counts">
         {STEPS.map((s) => (
           <li key={s.key}>
@@ -331,7 +353,9 @@ function Fiche({ i, epicNo, onClose, onPick }: { i: Issue; epicNo: number; onClo
         <span className="num">#{i.number}</span> {i.title}
       </h3>
       <dl className="fiche-facts">
-        <dt>Qui</dt>
+        <dt>
+          <Term t="assignee">Qui</Term>
+        </dt>
         <dd>{i.assignees.length ? i.assignees.map((a) => `@${a}`).join(", ") : "personne"}</dd>
         {screens.length > 0 && (
           <>
@@ -345,15 +369,19 @@ function Fiche({ i, epicNo, onClose, onPick }: { i: Issue; epicNo: number; onClo
             <dd>{shortTitle(ep.title)}</dd>
           </>
         )}
-        <dt>Tableau</dt>
+        <dt>
+          <Term t="project">Tableau</Term>
+        </dt>
         <dd>
-          {i.status ?? "sans statut"}
+          {i.status && STATUS_TERM[i.status] ? <Term t={STATUS_TERM[i.status]}>{i.status}</Term> : (i.status ?? "sans statut")}
           {i.iteration ? `, ${i.iteration.title.replace("Iteration", "itération")}` : ""}
         </dd>
       </dl>
       {i.blockedBy.length > 0 && step !== "faite" && (
         <div className="fiche-blocked">
-          <span>Attend d'abord</span>
+          <span>
+            <Term t="blocked">Attend d'abord</Term>
+          </span>
           {i.blockedBy.map((b) => (
             <button key={b} type="button" className="blocker" onClick={() => onPick(b)}>
               #{b} {byNumber.get(b)?.title ?? ""}
@@ -361,12 +389,8 @@ function Fiche({ i, epicNo, onClose, onPick }: { i: Issue; epicNo: number; onClo
           ))}
         </div>
       )}
-      <p className="fiche-next">
-        {i.blockedBy.length && step === "a-prendre"
-          ? "Elle attend une autre issue : commence plutôt par celle-ci, ou attends qu'elle soit finie."
-          : NEXT[step]}
-      </p>
-      {step === "a-prendre" && i.blockedBy.length === 0 && (
+      <p className="fiche-next">{NEXT[step]}</p>
+      {step === "a-prendre" && (
         <details className="howto">
           <summary>Comment la prendre ?</summary>
           <Figure shot={SHOTS.jePrends} />

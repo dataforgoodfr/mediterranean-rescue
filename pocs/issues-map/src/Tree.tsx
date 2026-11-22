@@ -32,7 +32,8 @@ export const emptyFilters = (): Filters => ({
 });
 
 function matches(i: Issue, f: Filters): boolean {
-  if (!f.showClosed && i.state === "CLOSED") return false;
+  // Fermées et abandonnées (Out) restent cachées tant qu'on ne demande pas à les voir.
+  if (!f.showClosed && (i.state === "CLOSED" || i.status === "Out")) return false;
   if (f.steps.size && !f.steps.has(stepOf(i))) return false;
   if (f.jalon && i.milestone?.title !== f.jalon) return false;
   if (f.domains.size && !i.labels.some((l) => f.domains.has(l.name))) return false;

@@ -1,6 +1,7 @@
 // Sous chaque maquette : ce qu'il faut pour que l'écran existe, couche par couche
 // (suggestion de Julien, 22 novembre 2026). Ce qu'on ne sait pas s'écrit « inconnu ».
 import { type Issue, byNumber, stepOf, stepWord } from "./data";
+import { Term } from "./lexique";
 
 export type EcranData = {
   sources?: readonly { label: string; url: string }[];
@@ -54,20 +55,28 @@ export function Ecran({ data, pinned, onPick }: { data: EcranData | undefined; p
             <span className="ecran-unknown">{data && !data.sources ? "aucune" : "inconnu"}</span>
           )}
         </dd>
-        <dt>Données fictives</dt>
+        <dt>
+          <Term t="fictives">Données fictives</Term>
+        </dt>
         <dd>
           <IssueChips issues={fictives} onPick={onPick} empty={data && !data.fictives ? "aucune" : "inconnu"} />
         </dd>
-        <dt>Maquette</dt>
+        <dt>
+          Maquette (<Term t="penpot">Penpot</Term>)
+        </dt>
         <dd>
           {design.length > 0 && <span className={validated ? "ecran-ok" : "ecran-wait"}>{validated ? "validée" : "pas encore validée"}</span>}
           <IssueChips issues={design} onPick={onPick} empty="inconnu" />
         </dd>
-        <dt>API back-end</dt>
+        <dt>
+          <Term t="api">API</Term> <Term t="back">back-end</Term>
+        </dt>
         <dd>
           <IssueChips issues={api} onPick={onPick} empty="aucun ticket" />
         </dd>
-        <dt>Front</dt>
+        <dt>
+          <Term t="front">Front</Term>
+        </dt>
         <dd>
           <IssueChips issues={front} onPick={onPick} empty="aucun ticket" />
         </dd>

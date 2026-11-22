@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { type Step, epics, formatDate, issues, placedEpics, projectUrl, repoUrl, stepOf, takenAt } from "./data";
 import { emptyFilters, type Filters, TreeView } from "./Tree";
 import { MaquettesView } from "./Maquettes";
+import { RelireView } from "./Relire";
 import { Help } from "./Help";
 import { Tour, type TourStep } from "./Tour";
 import { SHOTS } from "./guide";
+import { Term } from "./lexique";
 import { readView, type View, viewHash, writeView } from "./route";
 
 // La visite se lance seule à la première visite. Le navigateur peut refuser le stockage : on
@@ -90,26 +92,26 @@ export function App() {
     {
       target: ".brand h1",
       title: "Bienvenue dans l'atlas des issues",
-      text: "Ici, chaque issue de Rescue Atlas est posée sur l'écran qu'elle va changer. On voit d'un coup d'œil où en est le projet et ce qu'on peut prendre.",
+      text: "Sur GitHub, chaque tâche du projet s'appelle une issue. Ici, chaque issue est posée sur l'écran qu'elle va changer. Un mot souligné en pointillés s'explique au survol.",
       before: reset,
     },
     {
       target: "[data-tour=objectives]",
       title: "Choisis un objectif",
-      text: "Chaque bouton est une épopée, un grand objectif du projet. La barre verte montre ce qui est fait, et le compte dit combien d'issues attendent quelqu'un.",
+      text: "Chaque bouton est une épopée (Epic sur GitHub) : une grande issue qui en regroupe d'autres. La barre verte montre ce qui est fait.",
       shot: SHOTS.epopee,
       before: reset,
     },
     {
       target: "[data-tour=jalons]",
       title: "Ce qu'on fait en premier",
-      text: "Les jalons rangent le travail dans l'ordre : P0 · MVP d'abord, puis P1, P2, P3. Clique sur un jalon pour ne garder que ses issues.",
+      text: "Un jalon (Milestone) est un lot d'issues à livrer ensemble, avec une date. P0 · MVP, la première version utile, passe d'abord.",
       before: reset,
     },
     {
       target: "[data-tour=legend]",
       title: "Quatre couleurs, quatre états",
-      text: "Orange : à prendre. Bleu : en cours. Gris : à préciser. Vert : faite. Clique sur une couleur pour ne garder qu'elle.",
+      text: "Chaque couleur traduit un statut du tableau GitHub. Rouge : à prendre (Ready). Bleu : en cours. Ocre : bloquée. Gris : à préciser (Refinement). Vert : faite.",
       shot: SHOTS.tableau,
       before: () => setSelected(null),
     },
@@ -150,8 +152,8 @@ export function App() {
     },
     {
       target: ".tabs",
-      title: "La liste complète",
-      text: "Besoin de tout voir d'un bloc ? La liste complète montre l'arbre des épopées, issues et sous-issues, avec des filtres.",
+      title: "Deux autres vues",
+      text: "« À relire » rassemble ce qui attend un avis : maquettes à valider, questions à trancher, sans coder. « Liste complète » montre tout l'arbre des issues.",
     },
     {
       target: ".help-btn",
@@ -174,7 +176,7 @@ export function App() {
             <p className="eyebrow on-ink">Rescue Atlas · Data for Good × SOS MEDITERRANEE</p>
             <h1>Atlas des issues</h1>
             <p className="summary">
-              <strong>{open.length}</strong> issues ouvertes · <strong>{doing}</strong> en cours ·{" "}
+              <strong>{open.length}</strong> <Term t="issue">issues</Term> ouvertes · <strong>{doing}</strong> en cours ·{" "}
               <strong className="sum-free">{free}</strong> à prendre
             </p>
           </div>
@@ -182,6 +184,9 @@ export function App() {
             <nav className="tabs" aria-label="Vues">
               <a href={viewHash({ ...view, tab: "maquettes" })} className="tab" aria-current={tab === "maquettes" ? "page" : undefined}>
                 Maquettes
+              </a>
+              <a href="#relire" className="tab" aria-current={tab === "relire" ? "page" : undefined}>
+                À relire
               </a>
               <a href="#liste" className="tab" aria-current={tab === "liste" ? "page" : undefined}>
                 Liste complète
@@ -202,6 +207,8 @@ export function App() {
       <main className="content" key={tab}>
         {tab === "liste" ? (
           <TreeView filters={filters} setFilters={setFilters} />
+        ) : tab === "relire" ? (
+          <RelireView />
         ) : (
           <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} focus={focus} setFocus={setFocus} jalon={jalon} setJalon={setJalon} intro={intro} />
         )}

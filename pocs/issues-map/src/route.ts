@@ -3,7 +3,7 @@
 // Seule la partie après « # » est lue : c'est aussi la seule qu'un Artifact transmet à la page.
 import { type Step, byNumber, epics, MILESTONES, STEPS } from "./data";
 
-export type Tab = "maquettes" | "liste";
+export type Tab = "maquettes" | "relire" | "liste";
 export type View = { tab: Tab; epic: number; issue: number | null; focus: Step | null; jalon: string | null };
 
 export function readView(fallbackEpic: number): View {
@@ -13,7 +13,7 @@ export function readView(fallbackEpic: number): View {
   const i = Number(q.get("i"));
   const j = q.get("j");
   return {
-    tab: path === "liste" ? "liste" : "maquettes",
+    tab: path === "liste" ? "liste" : path === "relire" ? "relire" : "maquettes",
     epic: epics.some((e) => e.number === o) ? o : fallbackEpic,
     issue: byNumber.has(i) ? i : null,
     focus: STEPS.find((s) => s.key === q.get("e"))?.key ?? null,
@@ -23,6 +23,7 @@ export function readView(fallbackEpic: number): View {
 
 export function viewHash(v: View) {
   if (v.tab === "liste") return "#liste";
+  if (v.tab === "relire") return "#relire";
   const q = new URLSearchParams({ o: String(v.epic) });
   if (v.issue) q.set("i", String(v.issue));
   if (v.focus) q.set("e", v.focus);

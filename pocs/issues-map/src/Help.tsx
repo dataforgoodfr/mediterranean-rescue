@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import { formatDate, penpot, projectUrl, repoUrl, STEPS, takenAt } from "./data";
 import { Figure, SHOTS } from "./guide";
+import { Lexique } from "./lexique";
 
 const MEANING: Record<string, string> = {
   "a-prendre": "Prête (Ready sur le tableau) et personne dessus. C'est là qu'un bénévole peut commencer.",
   "en-cours": "Quelqu'un y travaille : In progress, In review, ou Ready avec une personne assignée.",
+  bloquee: "Ready, mais elle attend qu'une autre issue soit finie (Blocked by sur GitHub).",
   "a-preciser": "Refinement : l'équipe produit doit encore la préciser avant qu'on la prenne.",
   faite: "Fermée, ou Done sur le tableau.",
 };
@@ -88,7 +90,7 @@ export function Help({ open, onClose, onTour }: { open: boolean; onClose: () => 
           <h3>Prendre une issue</h3>
           <ol className="help-steps">
             <li>
-              Choisis une issue orange, « à prendre ». Si sa fiche dit « Attend d'abord », commence par l'autre.
+              Choisis une issue rouge, « à prendre ». Si sa fiche dit « Attend d'abord », commence par l'autre.
               <Figure shot={SHOTS.prete} />
             </li>
             <li>
@@ -105,6 +107,15 @@ export function Help({ open, onClose, onTour }: { open: boolean; onClose: () => 
             </a>
             .
           </p>
+        </section>
+
+        <section>
+          <h3>Le vocabulaire de GitHub</h3>
+          <p>
+            L'atlas garde les mots de GitHub, pour qu'ils te servent aussi sur d'autres projets. Un mot souligné en pointillés
+            s'explique quand on le survole ou le touche. Les voici tous :
+          </p>
+          <Lexique />
         </section>
 
         <section>

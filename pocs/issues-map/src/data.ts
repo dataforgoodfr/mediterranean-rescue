@@ -52,19 +52,24 @@ export const MILESTONES: readonly { title: string; due: string | null }[] = [
 const dayFmt = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "Europe/Paris" });
 export const formatDay = (iso: string) => dayFmt.format(new Date(iso));
 
-// Quatre états en mots simples, pour la vue maquettes. Le statut exact du tableau reste affiché
+// Cinq états en mots simples, pour la vue maquettes. Le statut exact du tableau reste affiché
 // dans la fiche de l'issue.
-export type Step = "faite" | "en-cours" | "a-prendre" | "a-preciser";
+export type Step = "faite" | "en-cours" | "a-prendre" | "bloquee" | "a-preciser";
 export const STEPS: readonly { key: Step; word: string }[] = [
   { key: "a-prendre", word: "à prendre" },
   { key: "en-cours", word: "en cours" },
+  { key: "bloquee", word: "bloquée" },
   { key: "a-preciser", word: "à préciser" },
   { key: "faite", word: "faite" },
 ];
 export function stepOf(i: Issue): Step {
   if (i.state === "CLOSED" || i.status === "Done") return "faite";
   if (i.status === "In progress" || i.status === "In review") return "en-cours";
-  if (i.status === "Ready") return i.assignees.length ? "en-cours" : "a-prendre";
+  if (i.status === "Ready") {
+    if (i.assignees.length) return "en-cours";
+    // Prête mais elle attend une autre issue encore ouverte (« Blocked by » sur GitHub).
+    return i.blockedBy.length ? "bloquee" : "a-prendre";
+  }
   return "a-preciser";
 }
 export const stepWord = (s: Step) => STEPS.find((x) => x.key === s)?.word ?? s;

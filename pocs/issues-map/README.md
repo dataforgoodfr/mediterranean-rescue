@@ -88,7 +88,17 @@ Oui, et sans service à faire tourner :
   (`#maquettes?o=11&i=58&j=P0 · MVP`). Un lien s'envoie tel quel, un rechargement garde la vue,
   le bouton Retour revient à l'objectif d'avant.
 
-« À prendre » veut dire Ready et personne dessus ; une issue Ready déjà assignée compte « en cours ».
+Cinq états : « à prendre » veut dire Ready, personne dessus et rien qui bloque ; une issue Ready
+déjà assignée compte « en cours » ; une issue Ready qui attend une autre issue ouverte (« Blocked
+by ») est « bloquée ». Les issues abandonnées (Out) restent cachées, comme les fermées.
+
+- **On garde les mots de GitHub, et on les explique** : issue, épopée, jalon, MVP, Ready,
+  Refinement, back-end, API… sont soulignés en pointillés et s'expliquent au survol ou au toucher
+  (`src/lexique.tsx`). L'aide les rassemble dans un lexique. Les bénévoles apprennent ainsi GitHub,
+  qui leur servira sur d'autres projets.
+- **L'onglet « À relire »**, pour qui ne code pas : les maquettes et la recherche utilisateur à
+  valider, puis les questions à trancher (Refinement) par objectif, avec ce qu'on attend de la
+  personne et où répondre (commentaire GitHub ou canal SOS Med sur Mattermost).
 
 Pour guider de bout en bout :
 

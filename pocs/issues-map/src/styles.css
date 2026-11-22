@@ -22,6 +22,7 @@
   --step-a-prendre: #c53215;
   --step-en-cours: #2563a8;
   --step-a-preciser: #5f6a80;
+  --step-bloquee: #8a5a00;
   --step-faite: #17634a;
 
   --font: "Raleway", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -58,6 +59,7 @@
     --step-a-prendre: #ff8d72;
     --step-en-cours: #6fa8e6;
     --step-a-preciser: #a3acc0;
+    --step-bloquee: #e0a93b;
     --step-faite: #4fb58e;
   }
 }
@@ -82,6 +84,7 @@
   --step-a-prendre: #ff8d72;
   --step-en-cours: #6fa8e6;
   --step-a-preciser: #a3acc0;
+  --step-bloquee: #e0a93b;
   --step-faite: #4fb58e;
 }
 
@@ -194,7 +197,7 @@ button { font: inherit; color: inherit; }
   transition: transform 120ms var(--ease);
 }
 .btn:active { transform: scale(0.97); }
-.btn-quiet { background: transparent; color: var(--ink); border-color: var(--border); }
+.btn-quiet { background: transparent; color: var(--ink); border-color: var(--muted); }
 @media (hover: hover) { .btn-quiet:hover { border-color: var(--ink); } }
 
 /* ---------- Arbre ---------- */
@@ -360,6 +363,7 @@ button { font: inherit; color: inherit; }
 .st-a-prendre { --st: var(--step-a-prendre); --step: var(--step-a-prendre); --pin: #c53215; }
 .st-en-cours { --st: var(--step-en-cours); --step: var(--step-en-cours); --pin: #2563a8; }
 .st-a-preciser { --st: var(--step-a-preciser); --step: var(--step-a-preciser); --pin: #5f6a80; }
+.st-bloquee { --st: var(--step-bloquee); --step: var(--step-bloquee); --pin: #8a5a00; }
 .st-faite { --st: var(--step-faite); --step: var(--step-faite); --pin: #17634a; }
 
 .mq { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
@@ -500,7 +504,7 @@ button { font: inherit; color: inherit; }
 .fiche-facts dt { color: var(--muted); font-weight: 600; }
 .fiche-facts dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
 .fiche-open { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
-.source { font-size: var(--fs-s); color: var(--muted); }
+.source { font-size: var(--fs-s); color: var(--muted); max-width: 72ch; }
 
 
 
@@ -852,3 +856,78 @@ button { font: inherit; color: inherit; }
 .step-word { color: var(--step); }
 .board-status { color: var(--muted); }
 .milestone { font-weight: 700; color: var(--ink-soft); }
+
+/* ---------- Mots de GitHub expliqués sur place ---------- */
+.term { position: relative; display: inline; }
+.term-btn {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.2em;
+  cursor: help;
+  position: relative;
+}
+.term-btn::after { content: ""; position: absolute; inset: -10px -4px; }
+.term .term-bubble { top: calc(100% + 8px); font-weight: 500; text-transform: none; letter-spacing: 0; }
+.row-label-top { margin-bottom: 6px; }
+.st-bloquee .tip-step { color: #f3cf8a; }
+.lexique { margin: 0; display: grid; gap: 8px; }
+.lexique div { display: grid; gap: 2px; }
+.lexique dt { font-weight: 800; }
+.lexique dd { margin: 0; color: var(--ink-soft); font-size: var(--fs-s); line-height: 1.45; }
+
+/* ---------- À relire ---------- */
+.relire { display: grid; gap: 28px; max-width: 700px; }
+.relire-head { display: grid; gap: 8px; }
+.relire-head h2 { font-size: var(--fs-xl); font-weight: 800; line-height: 1.15; }
+.relire-section { display: grid; gap: 10px; }
+.relire-section h3 { font-size: var(--fs-l); font-weight: 800; }
+.relire-ask { max-width: 70ch; color: var(--ink-soft); padding: 10px 14px; border-radius: 8px; background: var(--paper); border: 1px solid var(--border); }
+.relire-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.relire-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--step);
+  border-radius: 0 8px 8px 0;
+}
+.relire-main { display: grid; gap: 4px; min-width: 0; flex: 1 1 320px; }
+.relire-title { font-weight: 700; line-height: 1.35; overflow-wrap: anywhere; }
+.relire-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.relire-actions .btn { display: inline-flex; align-items: center; text-decoration: none; }
+.relire-group summary { min-height: 44px; display: flex; align-items: center; font-weight: 800; cursor: pointer; }
+.relire-group .relire-list { padding-bottom: 8px; }
+
+/* Une bulle fermée ne doit ni se voir ni élargir la page : elle sort du rendu. */
+.helptip-bubble[data-open="false"] { display: none; }
+.helptip-bubble[data-open="true"] { animation: fade-in 160ms var(--ease) backwards; }
+.term-bubble strong, .helptip-bubble strong { color: inherit; }
+.relire .lede { max-width: 70ch; }
+
+/* Sur téléphone : les bulles d'aide s'ouvrent en bas de l'écran, entières, au lieu de déborder. */
+@media (max-width: 599px) {
+  .helptip-bubble,
+  .term .term-bubble {
+    position: fixed;
+    left: max(16px, env(safe-area-inset-left, 0px));
+    right: max(16px, env(safe-area-inset-right, 0px));
+    top: auto;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    width: auto;
+    transform: none;
+    z-index: 40;
+  }
+  .helptip-bubble[data-open="true"] { transform: none; }
+  .tabs { overflow-x: auto; }
+  .tab { padding: 0 12px; font-size: var(--fs-s); white-space: nowrap; }
+}
