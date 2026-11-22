@@ -1,6 +1,7 @@
 // Le vocabulaire de GitHub, gardé tel quel : les bénévoles l'apprennent ici et le retrouveront sur
 // d'autres projets. Chaque mot souligné en pointillés s'explique au survol, au focus ou au toucher.
-import { type ReactNode, useId, useState } from "react";
+import { type ReactNode, useId, useRef, useState } from "react";
+import { Bubble } from "./Bubble";
 
 export const LEXIQUE = {
   issue: {
@@ -63,10 +64,12 @@ export type TermKey = keyof typeof LEXIQUE;
 export function Term({ t, children }: { t: TermKey; children?: ReactNode }) {
   const [open, setOpen] = useState(false);
   const id = useId();
+  const btn = useRef<HTMLButtonElement>(null);
   const entry = LEXIQUE[t];
   return (
     <span className="term" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       <button
+        ref={btn}
         type="button"
         className="term-btn"
         aria-describedby={open ? id : undefined}
@@ -80,9 +83,9 @@ export function Term({ t, children }: { t: TermKey; children?: ReactNode }) {
       >
         {children ?? entry.mot}
       </button>
-      <span id={id} role="tooltip" className="helptip-bubble term-bubble" data-open={open}>
+      <Bubble id={id} open={open} anchor={btn} className="term-bubble">
         <strong>{entry.mot}</strong> : {entry.def}
-      </span>
+      </Bubble>
     </span>
   );
 }

@@ -4,7 +4,11 @@
 import { type Step, byNumber, epics, MILESTONES, STEPS } from "./data";
 
 export type Tab = "maquettes" | "relire" | "liste";
-export type View = { tab: Tab; epic: number; issue: number | null; focus: Step | null; jalon: string | null; done: boolean };
+export type View = { tab: Tab; epic: number; issue: number | null; shown: Step[]; jalon: string | null };
+
+// Par défaut on montre tout sauf les issues faites : on regarde ce qui reste à faire.
+export const DEFAULT_SHOWN: Step[] = STEPS.map((s) => s.key).filter((k) => k !== "faite");
+const sameShown = (a: readonly Step[], b: readonly Step[]) => a.length === b.length && a.every((k) => b.includes(k));
 
 export function readView(fallbackEpic: number): View {
   const [path, query = ""] = location.hash.replace(/^#\/?/, "").split("?");
@@ -16,9 +20,8 @@ export function readView(fallbackEpic: number): View {
     tab: path === "liste" ? "liste" : path === "relire" ? "relire" : "maquettes",
     epic: epics.some((e) => e.number === o) ? o : fallbackEpic,
     issue: byNumber.has(i) ? i : null,
-    focus: STEPS.find((s) => s.key === q.get("e"))?.key ?? null,
+    shown: q.has("e") ? STEPS.map((s) => s.key).filter((k) => (q.get("e") ?? "").split(",").includes(k)) : DEFAULT_SHOWN,
     jalon: MILESTONES.some((m) => m.title === j) ? j : null,
-    done: q.get("f") === "1",
   };
 }
 
@@ -27,9 +30,8 @@ export function viewHash(v: View) {
   if (v.tab === "relire") return "#relire";
   const q = new URLSearchParams({ o: String(v.epic) });
   if (v.issue) q.set("i", String(v.issue));
-  if (v.focus) q.set("e", v.focus);
+  if (!sameShown(v.shown, DEFAULT_SHOWN)) q.set("e", v.shown.join(","));
   if (v.jalon) q.set("j", v.jalon);
-  if (v.done) q.set("f", "1");
   return `#maquettes?${q}`;
 }
 

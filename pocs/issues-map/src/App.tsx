@@ -7,7 +7,7 @@ import { Help } from "./Help";
 import { Tour, type TourStep } from "./Tour";
 import { SHOTS } from "./guide";
 import { Term } from "./lexique";
-import { readView, type View, viewHash, writeView } from "./route";
+import { DEFAULT_SHOWN, readView, type View, viewHash, writeView } from "./route";
 
 // La visite se lance seule à la première visite. Le navigateur peut refuser le stockage : on
 // lance alors la visite sans s'en souvenir.
@@ -50,12 +50,11 @@ export function App() {
   const [offer, setOffer] = useState(false);
   // La grande entrée animée ne se joue qu'au premier chargement ; ensuite, un simple fondu.
   const [intro, setIntro] = useState(true);
-  const { tab, epic: epicNo, issue: selected, focus, jalon, done } = view;
+  const { tab, epic: epicNo, issue: selected, shown, jalon } = view;
   const setEpicNo = (epic: number) => setView((v) => ({ ...v, epic, issue: null }));
   const setSelected = (issue: number | null) => setView((v) => ({ ...v, issue }));
-  const setFocus = (f: Step | null) => setView((v) => ({ ...v, focus: f }));
+  const setShown = (list: Step[]) => setView((v) => ({ ...v, shown: list }));
   const setJalon = (j: string | null) => setView((v) => ({ ...v, jalon: j }));
-  const setDone = (d: boolean) => setView((v) => ({ ...v, done: d }));
 
   const last = useRef(view);
   useEffect(() => {
@@ -98,7 +97,7 @@ export function App() {
   const free = open.filter((i) => stepOf(i) === "a-prendre").length;
   const doing = open.filter((i) => stepOf(i) === "en-cours").length;
 
-  const reset = () => setView({ tab: "maquettes", epic: DEMO_EPIC, issue: null, focus: null, jalon: null, done: false });
+  const reset = () => setView({ tab: "maquettes", epic: DEMO_EPIC, issue: null, shown: DEFAULT_SHOWN, jalon: null });
 
   // Quatre étapes, pas plus : l'écran doit se lire seul, la visite ne fait que montrer où regarder.
   const steps: TourStep[] = [
@@ -112,7 +111,7 @@ export function App() {
     {
       target: "[data-tour=legend]",
       title: "Où en est chaque issue",
-      text: "Chaque couleur traduit un statut du tableau GitHub : rouge, à prendre (Ready) ; bleu, en cours ; ocre, bloquée ; gris, à préciser (Refinement) ; vert, faite. Les jalons, au-dessus, disent ce qu'on livre en premier.",
+      text: "Chaque couleur traduit un statut du tableau GitHub : rouge, à prendre (Ready) ; bleu, en cours ; ocre, bloquée ; gris, à préciser (Refinement) ; vert, faite. Un clic sur une couleur la montre ou la cache : les faites sont cachées au départ.",
       shot: SHOTS.tableau,
       before: () => setSelected(null),
     },
@@ -179,7 +178,7 @@ export function App() {
         ) : tab === "relire" ? (
           <RelireView />
         ) : (
-          <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} focus={focus} setFocus={setFocus} jalon={jalon} setJalon={setJalon} done={done} setDone={setDone} intro={intro} />
+          <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} shown={shown} setShown={setShown} jalon={jalon} setJalon={setJalon} intro={intro} />
         )}
       </main>
 

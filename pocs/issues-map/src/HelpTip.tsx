@@ -1,12 +1,15 @@
-import { type ReactNode, useId, useState } from "react";
+import { type ReactNode, useId, useRef, useState } from "react";
+import { Bubble } from "./Bubble";
 
 /** Un petit « ? » qui explique un élément : au survol, au focus ou au toucher. Échap le ferme. */
 export function HelpTip({ label, children }: { label: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const id = useId();
+  const btn = useRef<HTMLButtonElement>(null);
   return (
     <span className="helptip" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       <button
+        ref={btn}
         type="button"
         className="helptip-btn"
         aria-label={label}
@@ -21,9 +24,9 @@ export function HelpTip({ label, children }: { label: string; children: ReactNod
       >
         ?
       </button>
-      <span id={id} role="tooltip" className="helptip-bubble" data-open={open}>
+      <Bubble id={id} open={open} anchor={btn}>
         {children}
-      </span>
+      </Bubble>
     </span>
   );
 }

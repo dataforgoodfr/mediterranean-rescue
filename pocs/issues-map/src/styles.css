@@ -588,70 +588,38 @@ button { font: inherit; color: inherit; }
   position: relative;
 }
 .helptip-btn::after { content: ""; position: absolute; inset: -8px; }
+/* Rendue à la racine de la page et placée par Bubble.tsx : jamais rognée par une zone qui défile. */
 .helptip-bubble {
-  position: absolute;
-  left: 50%;
-  top: calc(100% + 10px);
-  z-index: 20;
-  width: min(280px, 80vw);
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  z-index: 60;
+  width: min(280px, calc(100vw - 32px));
   padding: 12px 14px;
   border-radius: var(--radius);
   background: var(--ink);
   color: var(--paper);
+  font-family: var(--font);
   font-size: var(--fs-s);
   font-weight: 500;
   line-height: 1.45;
+  text-align: left;
   text-transform: none;
   letter-spacing: 0;
   box-shadow: 0 2px 4px rgb(10 16 32 / 0.2), 0 12px 28px -8px rgb(10 16 32 / 0.45);
-  opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, -4px) scale(0.96);
-  transform-origin: top center;
-  transition: opacity 160ms var(--ease), transform 200ms var(--ease);
 }
-.helptip-bubble[data-open="true"] { opacity: 1; transform: translate(-50%, 0) scale(1); pointer-events: auto; }
-@media (max-width: 599px) { .helptip-bubble { left: auto; right: -8px; transform: translate(0, -4px) scale(0.96); transform-origin: top right; } .helptip-bubble[data-open="true"] { transform: none; } }
+.helptip-bubble.is-above { transform: translateY(-100%); }
+.helptip-bubble[data-open="true"] { pointer-events: auto; }
 
-/* ---------- Infobulle des pastilles ---------- */
-.tip {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% - 2px);
-  z-index: 3;
-  width: max-content;
-  max-width: 220px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: #1a2747;
-  color: #ffffff;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1.35;
-  text-align: left;
-  box-shadow: 0 2px 4px rgb(10 16 32 / 0.2), 0 10px 24px -8px rgb(10 16 32 / 0.5);
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, 4px) scale(0.96);
-  transform-origin: bottom center;
-  transition: opacity 140ms var(--ease), transform 180ms var(--ease);
-}
-.tip-step { display: block; font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tip-step, #ffb4a3); }
+/* ---------- Infobulle des pastilles (rendue par Bubble.tsx) ---------- */
+.pin-bubble { background: #1a2747; color: #ffffff; font-weight: 600; width: auto; max-width: 240px; }
+.tip-step { display: block; font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #ffb4a3; }
 .st-en-cours .tip-step { color: #a9cdf5; }
 .st-a-preciser .tip-step { color: #c9cfdc; }
 .st-faite .tip-step { color: #8fd9b8; }
-.pin.tip-below .tip { bottom: auto; top: calc(100% - 2px); transform: translate(-50%, -4px) scale(0.96); transform-origin: top center; }
-.pin.tip-left .tip { left: auto; right: 6px; transform: translate(0, 4px) scale(0.96); }
-.pin.tip-right .tip { left: 6px; transform: translate(0, 4px) scale(0.96); }
-@media (hover: hover) {
-  .pin:hover .tip { opacity: 1; transform: translate(-50%, 0) scale(1); }
-  .pin.tip-left:hover .tip, .pin.tip-right:hover .tip { transform: none; }
-}
-.pin:focus-visible .tip { opacity: 1; transform: translate(-50%, 0) scale(1); }
-.pin.tip-left:focus-visible .tip, .pin.tip-right:focus-visible .tip { transform: none; }
 .pin:hover, .pin:focus-visible { z-index: 4; }
 .pin.is-dim .pin-mark { opacity: 0.25; transform: scale(0.85); }
-.pin.is-dim .tip { display: none; }
 .pin-mark { transition: transform 200ms var(--ease), opacity 200ms var(--ease); }
 
 /* ---------- Le moment d'entrée : planches puis pastilles ---------- */
@@ -687,7 +655,8 @@ button { font: inherit; color: inherit; }
   transition: background-color 160ms var(--ease);
 }
 @media (hover: hover) { .count-btn:hover { background: var(--ground); } }
-.count-btn[aria-pressed="true"] { background: var(--ground); font-weight: 800; }
+/* Un état caché se lit en gris barré ; un état montré garde ses couleurs. */
+.count-btn[aria-pressed="false"] { color: var(--muted); text-decoration: line-through; }
 .counts li { padding-left: 0; border-left: 0; }
 .counts strong { font-size: var(--fs-l); font-weight: 800; font-variant-numeric: tabular-nums; min-width: 2ch; }
 .issue-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; transition: background-color 160ms var(--ease), transform 120ms var(--ease); }
@@ -772,7 +741,7 @@ button { font: inherit; color: inherit; }
   .tour-card { animation: none; }
   .pin.is-on .pin-mark::after { animation: none; }
   .tour-spot, .objective-bar span { transition: none; }
-  .pin-mark, .tip, .helptip-bubble, .legend-btn::before { transition-property: opacity; }
+  .pin-mark, .helptip-bubble, .legend-btn::before { transition-property: opacity; }
   .pin.is-on .pin-mark, .pin:hover .pin-mark, .pin.is-dim .pin-mark { transform: none; }
 }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -873,7 +842,6 @@ button { font: inherit; color: inherit; }
   position: relative;
 }
 .term-btn::after { content: ""; position: absolute; inset: -10px -4px; }
-.term .term-bubble { top: calc(100% + 8px); font-weight: 500; text-transform: none; letter-spacing: 0; }
 .row-label-top { margin-bottom: 6px; }
 .st-bloquee .tip-step { color: #f3cf8a; }
 .lexique { margin: 0; display: grid; gap: 8px; }
@@ -916,8 +884,7 @@ button { font: inherit; color: inherit; }
 
 /* Sur téléphone : les bulles d'aide s'ouvrent en bas de l'écran, entières, au lieu de déborder. */
 @media (max-width: 599px) {
-  .helptip-bubble,
-  .term .term-bubble {
+  .helptip-bubble {
     position: fixed;
     left: max(16px, env(safe-area-inset-left, 0px));
     right: max(16px, env(safe-area-inset-right, 0px));

@@ -20,10 +20,13 @@ import {
   stepWord,
 } from "./data";
 import { Schema, SCHEMAS, slot, zoneOf } from "./Schemas";
+import { useRef, useState } from "react";
+import { Bubble } from "./Bubble";
 import { HelpTip } from "./HelpTip";
 import { Figure, SHOTS } from "./guide";
 import { Ecran } from "./Ecran";
 import { Term, type TermKey } from "./lexique";
+import { DEFAULT_SHOWN } from "./route";
 
 type Board = (typeof boards)[number];
 
@@ -72,18 +75,27 @@ export type MaquettesState = {
   setEpicNo: (n: number) => void;
   selected: number | null;
   setSelected: (n: number | null) => void;
-  focus: Step | null;
-  setFocus: (s: Step | null) => void;
+  /** Les états affichés : la légende montre ou cache chaque couleur. */
+  shown: Step[];
+  setShown: (list: Step[]) => void;
   jalon: string | null;
   setJalon: (j: string | null) => void;
-  /** Montrer aussi les issues faites (cachées par défaut : on regarde ce qui reste à faire). */
-  done: boolean;
-  setDone: (d: boolean) => void;
   /** Premier chargement : la grande entrée animée. */
   intro: boolean;
 };
 
-export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus, setFocus, jalon, setJalon, done, setDone, intro }: MaquettesState) {
+export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, shown, setShown, jalon, setJalon, intro }: MaquettesState) {
+  // L'infobulle des pastilles : une seule, rendue hors de la zone qui défile pour n'être jamais coupée.
+  const tipAnchor = useRef<HTMLElement | null>(null);
+  const [tip, setTip] = useState<number | null>(null);
+  const showTip = (n: number, el: HTMLElement, allowed: boolean) => {
+    if (!allowed) return;
+    tipAnchor.current = el;
+    setTip(n);
+  };
+  const tipIssue = tip === null ? undefined : byNumber.get(tip);
+  const toggle = (k: Step) => setShown(shown.includes(k) ? shown.filter((x) => x !== k) : [...shown, k]);
+  const isDefault = shown.length === DEFAULT_SHOWN.length && shown.every((k) => DEFAULT_SHOWN.includes(k));
   const inJalon = (i: Issue) => !jalon || i.milestone?.title === jalon;
   const epic = byNumber.get(epicNo);
   if (!epic) return null;
@@ -95,7 +107,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
   const rank = (i: Issue) => STEPS.findIndex((s) => s.key === stepOf(i));
   const withoutScreen = all
     .filter((i) => i.state === "OPEN" && !pinned.has(i.number))
-    .filter((i) => (!focus || stepOf(i) === focus) && inJalon(i))
+    .filter((i) => shown.includes(stepOf(i)) && inJalon(i))
     .sort((a, b) => rank(a) - rank(b));
   const chosen = selected === null ? undefined : byNumber.get(selected);
   // Les compteurs suivent le jalon choisi, comme les pastilles.
@@ -182,8 +194,8 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
               <button
                 type="button"
                 className={`legend-btn st-${s.key}`}
-                aria-pressed={focus === s.key}
-                onClick={() => setFocus(focus === s.key ? null : s.key)}
+                aria-pressed={shown.includes(s.key)}
+                onClick={() => toggle(s.key)}
               >
                 {s.word} <span className="legend-count">{count(s.key)}</span>
               </button>
@@ -194,15 +206,11 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
           Chaque couleur traduit un statut du tableau GitHub. <strong>à prendre</strong> : Ready et personne dessus.{" "}
           <strong>en cours</strong> : In progress, In review, ou Ready avec quelqu'un d'assigné. <strong>bloquée</strong> :
           Ready mais elle attend une autre issue. <strong>à préciser</strong> : Refinement. <strong>faite</strong> : Done ou
-          fermée. Clique sur une couleur pour ne garder qu'elle.
+          fermée. Un clic sur une couleur la montre ou la cache ; les faites sont cachées au départ.
         </HelpTip>
-        <label className="switch done-switch" htmlFor="show-done">
-          <input id="show-done" type="checkbox" checked={done} onChange={(e) => setDone(e.target.checked)} />
-          <span>Montrer les faites</span>
-        </label>
-        {focus && (
-          <button type="button" className="legend-reset" onClick={() => setFocus(null)}>
-            Tout montrer
+        {!isDefault && (
+          <button type="button" className="legend-reset" onClick={() => setShown(DEFAULT_SHOWN)}>
+            Revenir au départ
           </button>
         )}
       </div>
@@ -229,28 +237,24 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                           const i = byNumber.get(p.issue);
                           if (!i) return null;
                           const step = stepOf(i);
-                          if (step === "faite" && !done && focus !== "faite") return null;
+                          if (!shown.includes(step)) return null;
                           const fx = p.x / board.width;
                           const fy = p.y / board.height;
-                          const tipPos = `${fy < 0.2 ? " tip-below" : ""}${fx > 0.7 ? " tip-left" : fx < 0.3 ? " tip-right" : ""}`;
                           pinIndex += 1;
                           return (
                             <button
                               type="button"
                               key={`${p.issue}-${p.x}-${p.y}`}
-                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${(focus && focus !== step) || !inJalon(i) ? " is-dim" : ""}${i.blockedBy.length && step !== "faite" ? " is-blocked" : ""}${tipPos}`}
+                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${!inJalon(i) ? " is-dim" : ""}${i.blockedBy.length && step !== "faite" ? " is-blocked" : ""}`}
                               style={{ left: `${fx * 100}%`, top: `${fy * 100}%`, "--i": pinIndex }}
                               aria-label={`#${i.number} ${i.title}, ${stepWord(step)}`}
                               onClick={(e) => pick(p.issue, e.currentTarget)}
+                              onMouseEnter={(e) => showTip(p.issue, e.currentTarget, matchMedia("(hover: hover)").matches)}
+                              onMouseLeave={() => setTip(null)}
+                              onFocus={(e) => showTip(p.issue, e.currentTarget, e.currentTarget.matches(":focus-visible"))}
+                              onBlur={() => setTip(null)}
                             >
                               <span className="pin-mark">{i.number}</span>
-                              <span className="tip" aria-hidden="true">
-                                <span className="tip-step">
-                                  {stepWord(step)}
-                                  {i.blockedBy.length && step !== "faite" ? ` · attend #${i.blockedBy.join(", #")}` : ""}
-                                </span>
-                                {i.title}
-                              </span>
                             </button>
                           );
                         })}
@@ -303,7 +307,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
           {chosen ? (
             <Fiche key={chosen.number} i={chosen} epicNo={epicNo} onClose={() => setSelected(null)} onPick={pick} />
           ) : (
-            <Summary key={`summary-${epicNo}`} count={count} placed={Boolean(placed)} setFocus={setFocus} focus={focus} />
+            <Summary key={`summary-${epicNo}`} count={count} placed={Boolean(placed)} shown={shown} toggle={toggle} />
           )}
         </aside>
       </div>
@@ -321,12 +325,21 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
           {note}
         </p>
       ))}
+      {tipIssue && (
+        <Bubble id="pin-tip" open anchor={tipAnchor} className={`pin-bubble st-${stepOf(tipIssue)}`}>
+          <span className="tip-step">
+            {stepWord(stepOf(tipIssue))}
+            {tipIssue.blockedBy.length && stepOf(tipIssue) !== "faite" ? ` · attend #${tipIssue.blockedBy.join(", #")}` : ""}
+          </span>
+          {tipIssue.title}
+        </Bubble>
+      )}
     </div>
   );
 }
 
-function Summary(props: { count: (s: Step) => number; placed: boolean; focus: Step | null; setFocus: (s: Step | null) => void }) {
-  const { count, placed, focus, setFocus } = props;
+function Summary(props: { count: (s: Step) => number; placed: boolean; shown: Step[]; toggle: (s: Step) => void }) {
+  const { count, placed, shown, toggle } = props;
   return (
     <div className="fiche-empty">
       <p className="fiche-hint">
@@ -337,13 +350,13 @@ function Summary(props: { count: (s: Step) => number; placed: boolean; focus: St
       <ul className="counts">
         {STEPS.map((s) => (
           <li key={s.key}>
-            <button type="button" className={`count-btn st-${s.key}`} aria-pressed={focus === s.key} onClick={() => setFocus(focus === s.key ? null : s.key)}>
+            <button type="button" className={`count-btn st-${s.key}`} aria-pressed={shown.includes(s.key)} onClick={() => toggle(s.key)}>
               <strong>{count(s.key)}</strong> {s.word}
             </button>
           </li>
         ))}
       </ul>
-      <p className="muted small">Un clic sur un état ne garde que ses issues.</p>
+      <p className="muted small">Un clic sur un état le montre ou le cache.</p>
     </div>
   );
 }

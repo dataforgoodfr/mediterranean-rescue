@@ -105,8 +105,10 @@ Pour guider de bout en bout :
 - **Une visite guidée en 4 étapes**, proposée par un bandeau à la première ouverture (jamais
   imposée), et relançable par le bouton « Visite guidée » : objectifs, couleurs, fiche d'une issue,
   « À relire » et aide. Les captures s'agrandissent d'un clic.
-- **Les issues faites sont cachées par défaut** (suggestion de Julien) : on regarde ce qui reste à
-  faire ; l'interrupteur « Montrer les faites » les fait revenir.
+- **La légende montre ou cache chaque couleur** d'un clic. Les issues faites sont cachées au
+  départ (suggestion de Julien) : on regarde ce qui reste à faire.
+- **Les bulles d'aide ne sont jamais coupées** : elles sont rendues à la racine de la page et
+  calées dans l'écran (`src/Bubble.tsx`) ; sur téléphone, elles s'ouvrent en bas de l'écran.
 - **Un écran sobre** : sous chaque maquette, « Ce qu'il faut pour cet écran » est replié derrière
   une ligne de résumé, et chaque issue y montre son titre. Sur téléphone, la fiche s'ouvre en
   panneau qui monte du bas, la maquette reste visible au-dessus.
