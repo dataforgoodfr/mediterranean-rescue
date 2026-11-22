@@ -69,7 +69,7 @@ export function Help({ open, onClose, onTour }: { open: boolean; onClose: () => 
           <h3>Ce qu'il faut pour un écran</h3>
           <p>
             Sous chaque maquette, cinq lignes : la source des données réelles, les données fictives, la maquette (validée
-            ou non), les tickets d'API back-end et ceux du front. « inconnu » veut dire que personne ne l'a encore renseigné.
+            ou non), les tickets d'API back-end et ceux du front. « à trouver » veut dire que personne ne l'a encore renseigné.
           </p>
         </section>
 

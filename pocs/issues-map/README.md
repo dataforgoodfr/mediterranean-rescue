@@ -79,7 +79,7 @@ Oui, et sans service à faire tourner :
   des données réelles, les données fictives, la maquette validée ou non, les tickets d'API back-end
   et de front. API, front et maquette se déduisent des étiquettes `back`, `front` et `design` des
   issues posées sur l'écran, complétées à la main dans `maquettes.json` (`ecran`). Ce que personne
-  n'a renseigné s'affiche « inconnu ».
+  n'a renseigné s'affiche « à trouver ».
 - **Les jalons** (P0 · MVP, P1, P2, P3, dans l'ordre de leur échéance) : un clic estompe tout ce qui
   n'est pas dans le jalon, pour voir ce qu'on fait en premier.
 - **La liste complète** : l'arbre des épopées, issues et sous-issues, avec les mêmes quatre états

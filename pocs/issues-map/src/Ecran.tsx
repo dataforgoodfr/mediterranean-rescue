@@ -1,5 +1,5 @@
 // Sous chaque maquette : ce qu'il faut pour que l'écran existe, couche par couche
-// (suggestion de Julien, 22 novembre 2026). Ce qu'on ne sait pas s'écrit « inconnu ».
+// (suggestion de Julien, 22 novembre 2026). Ce que personne n'a renseigné s'écrit « à trouver », jamais inventé.
 import { type Issue, byNumber, stepOf, stepWord } from "./data";
 import { Term } from "./lexique";
 
@@ -42,7 +42,7 @@ export function Ecran({ data, pinned, onPick }: { data: EcranData | undefined; p
   // Le résumé replié : l'essentiel en une ligne, le détail au clic.
   const tickets = new Set([...fictives, ...design, ...api, ...front].map((i) => i.number));
   const free = [...fictives, ...design, ...api, ...front].filter((i, k, all) => stepOf(i) === "a-prendre" && all.indexOf(i) === k).length;
-  const maquette = validated ? "validée" : design.length ? "à valider" : "inconnue";
+  const maquette = validated ? "validée" : design.length ? "à valider" : "à trouver";
 
   return (
     <details className="ecran">
@@ -62,21 +62,21 @@ export function Ecran({ data, pinned, onPick }: { data: EcranData | undefined; p
               </a>
             ))
           ) : (
-            <span className="ecran-unknown">{data && !data.sources ? "aucune" : "inconnu"}</span>
+            <span className="ecran-unknown">{data && !data.sources ? "aucune" : "à trouver"}</span>
           )}
         </dd>
         <dt>
           <Term t="fictives">Données fictives</Term>
         </dt>
         <dd>
-          <IssueChips issues={fictives} onPick={onPick} empty={data && !data.fictives ? "aucune" : "inconnu"} />
+          <IssueChips issues={fictives} onPick={onPick} empty={data && !data.fictives ? "aucune" : "à trouver"} />
         </dd>
         <dt>
           Maquette (<Term t="penpot">Penpot</Term>)
         </dt>
         <dd>
           {design.length > 0 && <span className={validated ? "ecran-ok" : "ecran-wait"}>{validated ? "validée" : "pas encore validée"}</span>}
-          <IssueChips issues={design} onPick={onPick} empty="inconnu" />
+          <IssueChips issues={design} onPick={onPick} empty="à trouver" />
         </dd>
         <dt>
           <Term t="api">API</Term> <Term t="back">back-end</Term>
