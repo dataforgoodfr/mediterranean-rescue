@@ -50,6 +50,23 @@ export const shortTitle = (t: string) => t.replace(/^Épopée\s*:\s*/, "");
 
 export const isFreeReady = (i: Issue) => i.state === "OPEN" && i.status === "Ready" && i.assignees.length === 0;
 
+// Quatre états en mots simples, pour la vue maquettes. Le statut exact du tableau reste affiché
+// dans la fiche de l'issue.
+export type Step = "faite" | "en-cours" | "a-prendre" | "a-preciser";
+export const STEPS: readonly { key: Step; word: string }[] = [
+  { key: "a-prendre", word: "à prendre" },
+  { key: "en-cours", word: "en cours" },
+  { key: "a-preciser", word: "à préciser" },
+  { key: "faite", word: "faite" },
+];
+export function stepOf(i: Issue): Step {
+  if (i.state === "CLOSED" || i.status === "Done") return "faite";
+  if (i.status === "In progress" || i.status === "In review") return "en-cours";
+  if (i.status === "Ready") return i.assignees.length ? "en-cours" : "a-prendre";
+  return "a-preciser";
+}
+export const stepWord = (s: Step) => STEPS.find((x) => x.key === s)?.word ?? s;
+
 // Maquettes (planches Penpot) et repères posés à la main.
 export type Board = (typeof maquettes.boards)[number];
 export type Pin = (typeof maquettes.epics)[number]["pins"][number];

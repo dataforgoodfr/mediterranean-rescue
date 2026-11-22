@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   type Issue,
+  type Step,
   boardImage,
   boards,
   byNumber,
@@ -12,134 +13,207 @@ import {
   penpotFileUrl,
   placedEpics,
   shortTitle,
-  statusKey,
-  statusOf,
+  STEPS,
+  stepOf,
+  stepWord,
 } from "./data";
 
 export function MaquettesView() {
-  // Une seule épopée posée pour l'instant (#12) : un sélecteur viendra avec la deuxième.
-  const epicNo = placedEpics[0]?.epic ?? 12;
-  const [hover, setHover] = useState<number | null>(null);
-  const placed = placedEpics.find((p) => p.epic === epicNo);
+  // Par défaut, le premier objectif posé sur les maquettes.
+  const [epicNo, setEpicNo] = useState(placedEpics[0]?.epic ?? epics[0]?.number ?? 0);
+  const [selected, setSelected] = useState<number | null>(null);
   const epic = byNumber.get(epicNo);
+  if (!epic) return null;
 
-  if (!placed || !epic) return null;
-  const pinned = new Set(placed.pins.map((p) => p.issue));
-  const openUnplaced = descendants(epicNo).filter((i) => i.state === "OPEN" && !pinned.has(i.number));
-  const pinnedIssues = [...pinned].flatMap((n) => byNumber.get(n) ?? []).sort((a, b) => a.number - b.number);
-  const notPlacedEpics = epics.filter((e) => !placedEpics.some((p) => p.epic === e.number));
+  const placed = placedEpics.find((p) => p.epic === epicNo);
+  const all = descendants(epicNo).filter((i) => i.status !== "Out");
+  const pinned = new Set(placed?.pins.map((p) => p.issue) ?? []);
+  // À prendre d'abord, puis en cours, puis à préciser : ce qu'un bénévole cherche en premier.
+  const rank = (i: Issue) => STEPS.findIndex((s) => s.key === stepOf(i));
+  const withoutScreen = all.filter((i) => i.state === "OPEN" && !pinned.has(i.number)).sort((a, b) => rank(a) - rank(b));
+  const chosen = selected === null ? undefined : byNumber.get(selected);
+
+  const pick = (n: number) => {
+    setSelected(n);
+    // Sur téléphone, la fiche est sous les planches : on l'amène à l'écran.
+    if (matchMedia("(max-width: 979px)").matches) {
+      requestAnimationFrame(() => document.getElementById("fiche")?.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+    }
+  };
 
   return (
-    <div className="maquettes">
-      <div className="maquettes-head">
-        <div>
-          <p className="eyebrow">Épopée #{epic.number} posée sur les maquettes</p>
-          <h2 className="epic-title">
-            <a href={epic.url} target="_blank" rel="noreferrer">
-              {shortTitle(epic.title)}
-            </a>
-          </h2>
-          <p className="lede">
-            Chaque repère porte le numéro d'une issue, posé à l'endroit de l'écran qu'elle change. Un clic ouvre l'issue sur
-            GitHub. Le contour dit le statut ; un contour en pointillés signale une issue rangée dans une autre épopée.
-          </p>
+    <div className="mq">
+      <nav className="objectives" aria-label="Objectifs">
+        {epics.map((e) => {
+          const d = descendants(e.number);
+          const done = d.filter((i) => stepOf(i) === "faite").length;
+          const free = d.filter((i) => stepOf(i) === "a-prendre").length;
+          return (
+            <button
+              key={e.number}
+              type="button"
+              className="objective"
+              aria-pressed={e.number === epicNo}
+              onClick={() => {
+                setEpicNo(e.number);
+                setSelected(null);
+              }}
+            >
+              <span className="objective-name">{shortTitle(e.title)}</span>
+              <span className="objective-meta">
+                {done}/{d.length} faites{free > 0 ? ` · ${free} à prendre` : ""}
+              </span>
+              <span className="objective-bar" aria-hidden="true">
+                <span style={{ width: `${d.length ? (done / d.length) * 100 : 0}%` }} />
+              </span>
+            </button>
+          );
+        })}
+      </nav>
+
+      <ul className="legend" aria-label="Légende des couleurs">
+        {STEPS.map((s) => (
+          <li key={s.key} className={`st-${s.key}`}>
+            {s.word}
+          </li>
+        ))}
+      </ul>
+
+      <div className="mq-layout">
+        <div className="mq-main">
+          {placed ? (
+            <div className="boards-scroll" role="region" aria-label="Planches de maquette" tabIndex={0}>
+              <div className="boards">
+                {placed.boards.map((bid) => {
+                  const board = boards.find((b) => b.id === bid);
+                  if (!board) return null;
+                  const pins = placed.pins.filter((p) => p.board === bid);
+                  return (
+                    <figure className="board" key={bid}>
+                      <div className="board-frame" style={{ aspectRatio: `${board.width} / ${board.height}` }}>
+                        <img src={boardImage(bid)} alt={`Maquette « ${board.name} »`} width={board.width} height={board.height} />
+                        {pins.map((p) => {
+                          const i = byNumber.get(p.issue);
+                          if (!i) return null;
+                          return (
+                            <button
+                              type="button"
+                              key={`${p.issue}-${p.x}-${p.y}`}
+                              className={`pin st-${stepOf(i)}${selected === p.issue ? " is-on" : ""}`}
+                              style={{ left: `${(p.x / board.width) * 100}%`, top: `${(p.y / board.height) * 100}%` }}
+                              aria-label={`#${i.number} ${i.title}, ${stepWord(stepOf(i))}`}
+                              title={`#${i.number} ${i.title}`}
+                              onClick={() => pick(p.issue)}
+                            >
+                              <span className="pin-mark">{i.number}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <figcaption>{board.name}</figcaption>
+                    </figure>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="no-board">
+              <p className="no-board-title">Pas encore de maquette pour cet objectif.</p>
+              <p className="muted">Ses issues sont listées ci-dessous.</p>
+            </div>
+          )}
+
+          {withoutScreen.length > 0 && (
+            <details className="no-screen" open={!placed}>
+              <summary>
+                {placed ? "Sans écran sur ces maquettes" : "Les issues de cet objectif"} ({withoutScreen.length})
+              </summary>
+              <ul>
+                {withoutScreen.map((i) => (
+                  <li key={i.number}>
+                    <button type="button" className={`issue-line st-${stepOf(i)}${selected === i.number ? " is-on" : ""}`} onClick={() => pick(i.number)}>
+                      <span className="num">#{i.number}</span> {i.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
         </div>
-        <p className="source">
-          Planches du fichier Penpot{" "}
-          <a href={penpotFileUrl} target="_blank" rel="noreferrer">
-            {penpot.fileName}
-          </a>
-          , modifié le {formatDate(new Date(penpot.fileModifiedAt))}. Les autres épopées ({notPlacedEpics.map((e) => `#${e.number}`).join(", ")}) ne
-          sont pas encore posées.
-        </p>
+
+        <aside id="fiche" className="fiche" aria-live="polite">
+          {chosen ? <Fiche i={chosen} epicNo={epicNo} onClose={() => setSelected(null)} /> : <Summary issues={all} placed={Boolean(placed)} />}
+        </aside>
       </div>
 
-      <div className="boards-scroll" role="region" aria-label="Planches de maquette" tabIndex={0}>
-        <div className="boards">
-          {placed.boards.map((bid) => {
-            const board = boards.find((b) => b.id === bid);
-            if (!board) return null;
-            const pins = placed.pins.filter((p) => p.board === bid);
-            return (
-              <figure className="board" key={bid}>
-                <div className="board-frame" style={{ aspectRatio: `${board.width} / ${board.height}` }}>
-                  <img src={boardImage(bid)} alt={`Maquette « ${board.name} » (planche Penpot ${board.penpotName})`} width={board.width} height={board.height} />
-                  {pins.map((p) => {
-                    const i = byNumber.get(p.issue);
-                    if (!i) return null;
-                    const foreign = epicOf(i)?.number !== epicNo;
-                    return (
-                      <a
-                        key={`${p.issue}-${p.x}-${p.y}`}
-                        className={`pin s-${statusKey(statusOf(i))}${foreign ? " is-foreign" : ""}${hover === p.issue ? " is-hot" : ""}${i.state === "CLOSED" ? " is-closed" : ""}`}
-                        style={{ left: `${(p.x / board.width) * 100}%`, top: `${(p.y / board.height) * 100}%` }}
-                        href={i.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`#${i.number} ${i.title}, ${statusOf(i)}`}
-                        title={`#${i.number} ${i.title} (${statusOf(i)})`}
-                        onMouseEnter={() => setHover(p.issue)}
-                        onMouseLeave={() => setHover(null)}
-                        onFocus={() => setHover(p.issue)}
-                        onBlur={() => setHover(null)}
-                      >
-                        <span className="pin-mark">{i.number}</span>
-                      </a>
-                    );
-                  })}
-                </div>
-                <figcaption>
-                  <strong>{board.name}</strong>
-                  <span className="muted">
-                    {pins.length} repère{pins.length > 1 ? "s" : ""}
-                  </span>
-                </figcaption>
-              </figure>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="pin-lists">
-        <section aria-labelledby="placed-h">
-          <h3 id="placed-h">Posées sur les maquettes ({pinnedIssues.length})</h3>
-          <ul className="pin-list">
-            {pinnedIssues.map((i) => (
-              <PinListItem key={i.number} i={i} epicNo={epicNo} hot={hover === i.number} setHover={setHover} />
-            ))}
-          </ul>
-        </section>
-        <section aria-labelledby="unplaced-h">
-          <h3 id="unplaced-h">Ouvertes, pas encore posées ({openUnplaced.length})</h3>
-          <p className="muted small">Pas d'écran évident dans ces planches : back-end, données, recherche utilisateur, ou maquette encore à dessiner.</p>
-          <ul className="pin-list">
-            {openUnplaced.map((i) => (
-              <PinListItem key={i.number} i={i} epicNo={epicNo} hot={false} setHover={setHover} />
-            ))}
-          </ul>
-        </section>
-      </div>
+      <p className="source">
+        Planches Penpot « {penpot.fileName} » du {formatDate(new Date(penpot.fileModifiedAt))} ·{" "}
+        <a href={penpotFileUrl} target="_blank" rel="noreferrer">
+          ouvrir dans Penpot
+        </a>
+      </p>
     </div>
   );
 }
 
-function PinListItem({ i, epicNo, hot, setHover }: { i: Issue; epicNo: number; hot: boolean; setHover: (n: number | null) => void }) {
-  const ep = epicOf(i);
-  const foreign = ep?.number !== epicNo;
+function Summary({ issues, placed }: { issues: Issue[]; placed: boolean }) {
+  const count = (s: Step) => issues.filter((i) => stepOf(i) === s).length;
   return (
-    <li
-      className={`pin-item s-${statusKey(statusOf(i))}${hot ? " is-hot" : ""}`}
-      onMouseEnter={() => setHover(i.number)}
-      onMouseLeave={() => setHover(null)}
-    >
-      <a href={i.url} target="_blank" rel="noreferrer" onFocus={() => setHover(i.number)} onBlur={() => setHover(null)}>
+    <div className="fiche-empty">
+      <p className="fiche-hint">{placed ? "Clique sur un numéro pour voir l'issue." : "Clique sur une issue pour la voir."}</p>
+      <ul className="counts">
+        {STEPS.map((s) => (
+          <li key={s.key} className={`st-${s.key}`}>
+            <strong>{count(s.key)}</strong> {s.word}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Fiche({ i, epicNo, onClose }: { i: Issue; epicNo: number; onClose: () => void }) {
+  const step = stepOf(i);
+  const ep = epicOf(i);
+  const screens = placedEpics
+    .flatMap((p) => p.pins)
+    .filter((p) => p.issue === i.number)
+    .flatMap((p) => boards.find((b) => b.id === p.board)?.name ?? []);
+  return (
+    <div className={`fiche-card st-${step}`}>
+      <div className="fiche-top">
+        <p className="fiche-step">{stepWord(step)}</p>
+        <button type="button" className="fiche-close" onClick={onClose} aria-label="Fermer la fiche">
+          ×
+        </button>
+      </div>
+      <h3 className="fiche-title">
         <span className="num">#{i.number}</span> {i.title}
+      </h3>
+      <dl className="fiche-facts">
+        <dt>Qui</dt>
+        <dd>{i.assignees.length ? i.assignees.map((a) => `@${a}`).join(", ") : "personne"}</dd>
+        {screens.length > 0 && (
+          <>
+            <dt>Écran</dt>
+            <dd>{[...new Set(screens)].join(", ")}</dd>
+          </>
+        )}
+        {ep && ep.number !== epicNo && (
+          <>
+            <dt>Objectif</dt>
+            <dd>{shortTitle(ep.title)}</dd>
+          </>
+        )}
+        <dt>Tableau</dt>
+        <dd>
+          {i.status ?? "sans statut"}
+          {i.iteration ? `, ${i.iteration.title.replace("Iteration", "itération")}` : ""}
+        </dd>
+      </dl>
+      <a className="btn fiche-open" href={i.url} target="_blank" rel="noreferrer">
+        Ouvrir sur GitHub
       </a>
-      <span className="meta">
-        <span className="status-word">{statusOf(i)}</span>
-        {i.assignees.length > 0 && <span>{i.assignees.map((a) => `@${a}`).join(", ")}</span>}
-        {foreign && <span>{ep ? `épopée #${ep.number} ${shortTitle(ep.title)}` : "hors épopée"}</span>}
-      </span>
-    </li>
+    </div>
   );
 }

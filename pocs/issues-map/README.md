@@ -38,12 +38,17 @@ vignettes : on le publie tel quel, sans API derrière.
 
 Oui, et sans service à faire tourner :
 
-- **L'arbre** : les 6 épopées, puis leurs issues et sous-issues, avec pour chacune son statut,
-  son itération, la personne assignée et ses étiquettes. Filtres : statut, domaine front, back ou
-  data, « libres et Ready » (prêtes et personne dessus), fermées.
-- **La vue maquettes** : l'épopée #12 sur 4 planches (carte, fiche d'une opération, liste,
-  accueil), 19 issues en repères numérotés ; un clic ouvre l'issue. Les issues ouvertes de
-  l'épopée sans écran évident sont listées à part.
+- **L'accueil, ce sont les maquettes.** En haut, les 6 objectifs (les épopées) avec leur
+  avancement. Pour l'objectif choisi, ses planches Penpot portent les issues en pastilles
+  numérotées, d'une couleur par état : à prendre, en cours, à préciser, faite. Un clic sur une
+  pastille ouvre sa fiche à côté (qui est dessus, sur quel écran, statut du tableau) et le lien
+  vers GitHub. Les issues sans écran sont listées sous les planches, celles à prendre d'abord.
+  L'épopée #12 Transparence est posée sur 4 planches ; les autres n'ont pas encore de maquette et
+  montrent leur liste.
+- **La liste complète** : l'arbre des épopées, issues et sous-issues, avec filtres (statut,
+  domaine front, back ou data, libres et Ready, fermées).
+
+« À prendre » veut dire Ready et personne dessus ; une issue Ready déjà assignée compte « en cours ».
 
 Limites :
 
