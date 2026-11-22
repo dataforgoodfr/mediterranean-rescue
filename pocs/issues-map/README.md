@@ -49,6 +49,13 @@ Oui, et sans service à faire tourner :
   l'équipe produit : #11 Data management sur le chemin de la donnée, #15 Cybersécurité en calque sur
   ce même chemin, #77 Socle sur le chemin d'une contribution, #13 Plaidoyer sur le parcours d'un
   lecteur, de la carte à l'argument.
+- **Sous chaque maquette, ce qu'il faut pour que l'écran existe** (suggestion de Julien) : la source
+  des données réelles, les données fictives, la maquette validée ou non, les tickets d'API back-end
+  et de front. API, front et maquette se déduisent des étiquettes `back`, `front` et `design` des
+  issues posées sur l'écran, complétées à la main dans `maquettes.json` (`ecran`). Ce que personne
+  n'a renseigné s'affiche « inconnu ».
+- **Les jalons** (P0 · MVP, P1, P2, P3, dans l'ordre de leur échéance) : un clic estompe tout ce qui
+  n'est pas dans le jalon, pour voir ce qu'on fait en premier.
 - **La liste complète** : l'arbre des épopées, issues et sous-issues, avec filtres (statut,
   domaine front, back ou data, libres et Ready, fermées).
 
@@ -56,8 +63,9 @@ Oui, et sans service à faire tourner :
 
 Pour guider de bout en bout :
 
-- **Une visite guidée** en 8 étapes se lance à la première ouverture (puis par le bouton « Visite
-  guidée ») : objectifs, couleurs, pastilles, fiche, issues sans écran, liste complète, aide.
+- **Une visite guidée** en 11 étapes se lance à la première ouverture (puis par le bouton « Visite
+  guidée ») : objectifs, jalons, couleurs, pastilles, fiche, prendre une issue, ce qu'il faut pour un écran,
+  issues sans écran, liste complète, aide.
 - **Un panneau d'aide** (bouton « Aide » ou touche « ? ») : lire la page, les quatre couleurs,
   prendre une issue, d'où viennent les données.
 - **Des captures de GitHub** (`src/guide/`, prises le 22 novembre 2026 sur le dépôt et le tableau 44,

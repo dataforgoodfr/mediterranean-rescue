@@ -48,6 +48,15 @@ export function epicOf(i: Issue): Issue | null {
 
 export const shortTitle = (t: string) => t.replace(/^Épopée\s*:\s*/, "");
 
+// Les jalons du dépôt (P0 · MVP, P1…), dans l'ordre de leur échéance : ce qu'on fait en premier.
+export const MILESTONES: readonly { title: string; due: string | null }[] = [
+  ...new Map(issues.flatMap((i) => (i.milestone ? [[i.milestone.title, i.milestone.due] as const] : []))),
+]
+  .map(([title, due]) => ({ title, due }))
+  .sort((a, b) => (a.due ?? "9999").localeCompare(b.due ?? "9999"));
+const dayFmt = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "Europe/Paris" });
+export const formatDay = (iso: string) => dayFmt.format(new Date(iso));
+
 export const isFreeReady = (i: Issue) => i.state === "OPEN" && i.status === "Ready" && i.assignees.length === 0;
 
 // Quatre états en mots simples, pour la vue maquettes. Le statut exact du tableau reste affiché

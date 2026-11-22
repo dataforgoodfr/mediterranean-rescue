@@ -13,6 +13,8 @@ import {
   penpotFileUrl,
   placedEpics,
   shortTitle,
+  MILESTONES,
+  formatDay,
   STEPS,
   stepOf,
   stepWord,
@@ -20,6 +22,7 @@ import {
 import { Schema, SCHEMAS, slot, zoneOf } from "./Schemas";
 import { HelpTip } from "./HelpTip";
 import { Figure, SHOTS } from "./guide";
+import { Ecran } from "./Ecran";
 
 type Board = (typeof boards)[number];
 
@@ -60,9 +63,12 @@ export type MaquettesState = {
   setSelected: (n: number | null) => void;
   focus: Step | null;
   setFocus: (s: Step | null) => void;
+  jalon: string | null;
+  setJalon: (j: string | null) => void;
 };
 
-export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus, setFocus }: MaquettesState) {
+export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus, setFocus, jalon, setJalon }: MaquettesState) {
+  const inJalon = (i: Issue) => !jalon || i.milestone?.title === jalon;
   const epic = byNumber.get(epicNo);
   if (!epic) return null;
 
@@ -73,7 +79,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
   const rank = (i: Issue) => STEPS.findIndex((s) => s.key === stepOf(i));
   const withoutScreen = all
     .filter((i) => i.state === "OPEN" && !pinned.has(i.number))
-    .filter((i) => !focus || stepOf(i) === focus)
+    .filter((i) => (!focus || stepOf(i) === focus) && inJalon(i))
     .sort((a, b) => rank(a) - rank(b));
   const chosen = selected === null ? undefined : byNumber.get(selected);
   const count = (s: Step) => all.filter((i) => stepOf(i) === s).length;
@@ -96,6 +102,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
             const d = descendants(e.number);
             const done = d.filter((i) => stepOf(i) === "faite").length;
             const free = d.filter((i) => stepOf(i) === "a-prendre").length;
+            const inJ = jalon ? d.filter((i) => i.milestone?.title === jalon && i.state === "OPEN").length : 0;
             return (
               <button
                 key={e.number}
@@ -109,7 +116,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
               >
                 <span className="objective-name">{shortTitle(e.title)}</span>
                 <span className="objective-meta">
-                  {done}/{d.length} faites{free > 0 ? ` · ${free} à prendre` : ""}
+                  {jalon ? `${inJ} ouvertes dans ${jalon}` : `${done}/${d.length} faites${free > 0 ? ` · ${free} à prendre` : ""}`}
                 </span>
                 <span className="objective-bar" aria-hidden="true">
                   <span style={{ transform: `scaleX(${d.length ? done / d.length : 0})` }} />
@@ -118,6 +125,29 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
             );
           })}
         </nav>
+      </div>
+
+      <div className="legend-row jalon-row" data-tour="jalons">
+        <span className="row-label">Jalon</span>
+        <ul className="legend" aria-label="Filtrer par jalon">
+          {MILESTONES.map((m) => (
+            <li key={m.title}>
+              <button type="button" className="legend-btn jalon-btn" aria-pressed={jalon === m.title} onClick={() => setJalon(jalon === m.title ? null : m.title)}>
+                {m.title}
+                {m.due && <span className="legend-count">{formatDay(m.due)}</span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <HelpTip label="Qu'est-ce qu'un jalon ?">
+          Un jalon regroupe ce qu'on livre ensemble, dans l'ordre : <strong>P0 · MVP</strong> d'abord, puis P1, P2, P3. Clique
+          sur un jalon pour ne garder que ses issues, sur tous les objectifs.
+        </HelpTip>
+        {jalon && (
+          <button type="button" className="legend-reset" onClick={() => setJalon(null)}>
+            Tous les jalons
+          </button>
+        )}
       </div>
 
       <div className="legend-row" data-tour="legend">
@@ -177,7 +207,7 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                             <button
                               type="button"
                               key={`${p.issue}-${p.x}-${p.y}`}
-                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${focus && focus !== step ? " is-dim" : ""}${i.blockedBy.length ? " is-blocked" : ""}${tipPos}`}
+                              className={`pin st-${step}${selected === p.issue ? " is-on" : ""}${(focus && focus !== step) || !inJalon(i) ? " is-dim" : ""}${i.blockedBy.length ? " is-blocked" : ""}${tipPos}`}
                               style={{ left: `${fx * 100}%`, top: `${fy * 100}%`, "--i": pinIndex }}
                               aria-label={`#${i.number} ${i.title}, ${stepWord(step)}`}
                               onClick={() => pick(p.issue)}
@@ -195,6 +225,13 @@ export function MaquettesView({ epicNo, setEpicNo, selected, setSelected, focus,
                         })}
                       </div>
                       <figcaption>{board.name}</figcaption>
+                      {!schema && (
+                        <Ecran
+                          data={board.ecran}
+                          pinned={[...new Set(pins.map((p) => p.issue))].flatMap((n) => byNumber.get(n) ?? [])}
+                          onPick={pick}
+                        />
+                      )}
                     </figure>
                   );
                 })}

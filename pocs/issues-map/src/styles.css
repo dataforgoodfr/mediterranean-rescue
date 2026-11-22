@@ -434,8 +434,8 @@ button { font: inherit; color: inherit; }
   scroll-padding-inline: var(--gutter) var(--gutter-r);
 }
 @media (min-width: 980px) { .boards-scroll { margin-right: 0; padding-right: 0; } }
-.boards { display: flex; gap: 16px; width: max-content; }
-.board { margin: 0; display: grid; gap: 8px; width: min(300px, calc(100vw - 72px)); scroll-snap-align: start; }
+.boards { display: flex; align-items: flex-start; gap: 16px; width: max-content; }
+.board { margin: 0; display: grid; align-content: start; gap: 8px; width: min(300px, calc(100vw - 72px)); scroll-snap-align: start; }
 @media (min-width: 1280px) { .board { width: 226px; } }
 .board-frame {
   position: relative;
@@ -840,3 +840,38 @@ button { font: inherit; color: inherit; }
 .howto summary { min-height: 44px; display: flex; align-items: center; font-weight: 700; color: var(--accent-text); cursor: pointer; }
 .howto[open] .shot { animation: rise-in 240ms var(--ease) backwards; }
 .pin.is-blocked .pin-mark { outline: 2px dashed var(--pin); outline-offset: 3px; }
+
+/* ---------- Jalons ---------- */
+.row-label { font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); min-width: 4.5em; }
+.jalon-btn::before { content: none; }
+.jalon-btn { padding-left: 14px; }
+
+/* ---------- Ce qu'il faut pour un écran ---------- */
+.ecran { font-size: var(--fs-xs); border-top: 1px solid var(--border); padding-top: 2px; }
+.ecran summary { min-height: 36px; display: flex; align-items: center; font-weight: 700; color: var(--ink-soft); cursor: pointer; font-size: var(--fs-s); }
+.ecran-list { margin: 0; display: grid; gap: 6px; }
+.ecran-list dt { font-weight: 800; color: var(--ink); }
+.ecran-list dd { margin: 0 0 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; color: var(--ink-soft); line-height: 1.35; }
+.ecran-list a { font-weight: 600; }
+.ecran-unknown { color: var(--muted); font-style: italic; }
+.ecran-ok { color: var(--step-faite); font-weight: 800; }
+.ecran-wait { color: var(--step-a-prendre); font-weight: 800; }
+.ecran-issues { display: flex; flex-wrap: wrap; gap: 4px; }
+.ecran-issue {
+  position: relative;
+  min-height: 28px;
+  padding: 2px 8px 2px 6px;
+  border: 1px solid var(--muted);
+  border-left: 4px solid var(--step);
+  border-radius: 6px;
+  background: var(--paper);
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color 140ms var(--ease), transform 120ms var(--ease);
+}
+.ecran-issue::after { content: ""; position: absolute; inset: -8px -2px; }
+.ecran-issue:active { transform: scale(0.97); }
+@media (hover: hover) { .ecran-issue:hover { background: var(--ground); } }
+.ecran-step { font-weight: 600; color: var(--muted); }

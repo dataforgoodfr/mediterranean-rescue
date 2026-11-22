@@ -16,7 +16,30 @@
       "penpotId": "d6b0915d-3ba5-8046-8008-f03b0937d888",
       "asset": "a82d9672-702f-400a-890d-2d7c31f82bac",
       "width": 421,
-      "height": 744
+      "height": 744,
+      "ecran": {
+        "sources": [
+          {
+            "label": "Google Sheet de la carte actuelle",
+            "url": "https://github.com/dataforgoodfr/mediterranean-rescue/blob/main/docs/donnees.md"
+          },
+          {
+            "label": "Marine Regions (eaux territoriales)",
+            "url": "https://www.marineregions.org/"
+          }
+        ],
+        "fictives": [
+          4,
+          27
+        ],
+        "design": [
+          92
+        ],
+        "api": [
+          6,
+          141
+        ]
+      }
     },
     {
       "id": "sauvetage",
@@ -25,7 +48,25 @@
       "penpotId": "d6b0915d-3ba5-8046-8008-f046a14aae2d",
       "asset": "f1c96720-076a-496c-b509-52c455958556",
       "width": 421,
-      "height": 744
+      "height": 744,
+      "ecran": {
+        "sources": [
+          {
+            "label": "Google Sheet de la carte actuelle",
+            "url": "https://github.com/dataforgoodfr/mediterranean-rescue/blob/main/docs/donnees.md"
+          }
+        ],
+        "fictives": [
+          4,
+          27
+        ],
+        "design": [
+          95
+        ],
+        "api": [
+          6
+        ]
+      }
     },
     {
       "id": "liste",
@@ -34,7 +75,22 @@
       "penpotId": "8e275c6d-89d6-8085-8008-f951ca98d33a",
       "asset": "3d3edbd2-4f36-4430-881d-122bc69eb1d6",
       "width": 421,
-      "height": 744
+      "height": 744,
+      "ecran": {
+        "sources": [
+          {
+            "label": "Google Sheet de la carte actuelle",
+            "url": "https://github.com/dataforgoodfr/mediterranean-rescue/blob/main/docs/donnees.md"
+          }
+        ],
+        "fictives": [
+          4,
+          27
+        ],
+        "api": [
+          6
+        ]
+      }
     },
     {
       "id": "accueil",
@@ -43,7 +99,12 @@
       "penpotId": "7d4efaab-5c1c-8045-8008-f052805d8e53",
       "asset": "b1d3c6bc-3c90-441b-9417-5525b0df60e7",
       "width": 421,
-      "height": 744
+      "height": 744,
+      "ecran": {
+        "design": [
+          96
+        ]
+      }
     },
     {
       "id": "carte-ordi",
@@ -52,7 +113,30 @@
       "penpotId": "79f72ebf-2c05-8018-8008-f1f779cae07d",
       "asset": "9ac37331-ee5d-4b89-b322-1c144511bfc5",
       "width": 1080,
-      "height": 1500
+      "height": 1500,
+      "ecran": {
+        "sources": [
+          {
+            "label": "Google Sheet de la carte actuelle",
+            "url": "https://github.com/dataforgoodfr/mediterranean-rescue/blob/main/docs/donnees.md"
+          },
+          {
+            "label": "Marine Regions (eaux territoriales)",
+            "url": "https://www.marineregions.org/"
+          }
+        ],
+        "fictives": [
+          4,
+          27
+        ],
+        "design": [
+          92
+        ],
+        "api": [
+          6,
+          141
+        ]
+      }
     },
     {
       "id": "archive-ordi",
@@ -61,7 +145,22 @@
       "penpotId": "7edde369-ae2a-8061-8008-f30e65806bf0",
       "asset": "841ad666-516e-4929-9d8b-277c7e6a8583",
       "width": 1080,
-      "height": 1500
+      "height": 1500,
+      "ecran": {
+        "sources": [
+          {
+            "label": "Google Sheet de la carte actuelle",
+            "url": "https://github.com/dataforgoodfr/mediterranean-rescue/blob/main/docs/donnees.md"
+          }
+        ],
+        "fictives": [
+          4,
+          27
+        ],
+        "api": [
+          6
+        ]
+      }
     },
     {
       "id": "donnee",

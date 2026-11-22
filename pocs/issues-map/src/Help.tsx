@@ -56,6 +56,22 @@ export function Help({ open, onClose, onTour }: { open: boolean; onClose: () => 
         </section>
 
         <section>
+          <h3>Ce qu'on fait en premier</h3>
+          <p>
+            Les jalons rangent le travail dans l'ordre : P0 · MVP d'abord, puis P1, P2, P3. Un clic sur un jalon estompe tout
+            ce qui n'en fait pas partie, sur tous les objectifs.
+          </p>
+        </section>
+
+        <section>
+          <h3>Ce qu'il faut pour un écran</h3>
+          <p>
+            Sous chaque maquette, cinq lignes : la source des données réelles, les données fictives, la maquette (validée
+            ou non), les tickets d'API back-end et ceux du front. « inconnu » veut dire que personne ne l'a encore renseigné.
+          </p>
+        </section>
+
+        <section>
           <h3>Les quatre couleurs</h3>
           <dl className="help-states">
             {STEPS.map((s) => (

@@ -38,6 +38,7 @@ export function App() {
   const [epicNo, setEpicNo] = useState(DEMO_EPIC);
   const [selected, setSelected] = useState<number | null>(null);
   const [focus, setFocus] = useState<Step | null>(null);
+  const [jalon, setJalon] = useState<string | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
   const [touring, setTouring] = useState(false);
 
@@ -76,6 +77,7 @@ export function App() {
     showMaquettes();
     setEpicNo(DEMO_EPIC);
     setFocus(null);
+    setJalon(null);
     setSelected(null);
   };
 
@@ -91,6 +93,12 @@ export function App() {
       title: "Choisis un objectif",
       text: "Chaque bouton est une épopée, un grand objectif du projet. La barre verte montre ce qui est fait, et le compte dit combien d'issues attendent quelqu'un.",
       shot: SHOTS.epopee,
+      before: reset,
+    },
+    {
+      target: "[data-tour=jalons]",
+      title: "Ce qu'on fait en premier",
+      text: "Les jalons rangent le travail dans l'ordre : P0 · MVP d'abord, puis P1, P2, P3. Clique sur un jalon pour ne garder que ses issues.",
       before: reset,
     },
     {
@@ -115,6 +123,12 @@ export function App() {
       text: "Elle dit qui est dessus, sur quels écrans elle apparaît, et ce que tu peux faire maintenant. Le bouton t'emmène sur GitHub.",
       shot: SHOTS.issueCote,
       before: () => setSelected(DEMO_ISSUE),
+    },
+    {
+      target: ".ecran",
+      title: "Ce qu'il faut pour un écran",
+      text: "Sous chaque maquette : la source des données réelles, les données fictives, la maquette validée ou non, puis les tickets d'API et de front. Un numéro ouvre sa fiche.",
+      before: () => setSelected(null),
     },
     {
       target: "[data-tour=no-screen]",
@@ -184,7 +198,7 @@ export function App() {
         {tab === "liste" ? (
           <TreeView filters={filters} setFilters={setFilters} />
         ) : (
-          <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} focus={focus} setFocus={setFocus} />
+          <MaquettesView epicNo={epicNo} setEpicNo={setEpicNo} selected={selected} setSelected={setSelected} focus={focus} setFocus={setFocus} jalon={jalon} setJalon={setJalon} />
         )}
       </main>
 

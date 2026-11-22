@@ -24,7 +24,7 @@ const QUERY = `query($cursor: String) {
         blockedBy(first: 10) { nodes { number state } }
         assignees(first: 10) { nodes { login } }
         labels(first: 20) { nodes { name color } }
-        milestone { title }
+        milestone { title dueOn }
         projectItems(first: 10) {
           nodes {
             project { number }
@@ -68,7 +68,7 @@ const issues = raw.map((i) => {
     blockedBy: i.blockedBy.nodes.filter((b) => b.state === "OPEN").map((b) => b.number),
     assignees: i.assignees.nodes.map((a) => a.login),
     labels: i.labels.nodes.map((l) => ({ name: l.name, color: l.color })),
-    milestone: i.milestone?.title ?? null,
+    milestone: i.milestone ? { title: i.milestone.title, due: i.milestone.dueOn } : null,
     inProject: Boolean(item),
     status: item?.status?.name ?? null,
     size: item?.size?.name ?? null,
