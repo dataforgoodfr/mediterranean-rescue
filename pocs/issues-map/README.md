@@ -43,7 +43,7 @@ Oui, et sans service à faire tourner :
   numérotées, d'une couleur par état : à prendre, en cours, à préciser, faite. Un clic sur une
   pastille ouvre sa fiche à côté (qui est dessus, sur quel écran, statut du tableau) et le lien
   vers GitHub. Les issues sans écran sont listées sous les planches, celles à prendre d'abord.
-  L'épopée #12 Transparence est posée sur 4 planches. L'épopée #11 Data management n'a pas encore
+  L'épopée #12 Transparence est posée sur 6 planches (4 de téléphone, 2 d'ordinateur). L'épopée #11 Data management n'a pas encore
   de maquette du back-office (#104) : ses issues sont posées sur un schéma de travail du chemin de
   la donnée (sources, base, back-office, carte, analyses), dessiné dans `src/DataFlow.tsx` à partir
   des titres d'issues, à faire vérifier par l'équipe produit. Les autres épopées montrent leur liste.

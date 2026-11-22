@@ -539,6 +539,9 @@ button { font: inherit; color: inherit; }
   *, *::before, *::after { transition-duration: 1ms !important; }
 }
 
+/* Les planches pour ordinateur, plus détaillées, ont plus de place. */
+.board-desktop { width: min(380px, calc(100vw - 72px)); }
+
 /* Le schéma de la donnée : plus large qu'une planche, il défile sur téléphone. */
 .board-schema { width: 900px; }
 @media (min-width: 1280px) { .board-schema { width: 940px; } }

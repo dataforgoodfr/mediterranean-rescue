@@ -114,7 +114,7 @@ export function MaquettesView() {
                   const pins = pinsOn(placed, board);
                   const schema = board.kind === "schema";
                   return (
-                    <figure className={schema ? "board board-schema" : "board"} key={bid}>
+                    <figure className={schema ? "board board-schema" : board.width > 600 ? "board board-desktop" : "board"} key={bid}>
                       <div className="board-frame" style={{ aspectRatio: `${board.width} / ${board.height}` }}>
                         {schema ? (
                           <DataFlow />

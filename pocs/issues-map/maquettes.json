@@ -46,6 +46,24 @@
       "height": 744
     },
     {
+      "id": "carte-ordi",
+      "name": "Carte sur ordinateur",
+      "penpotName": "Map - Menu - white + shadow - infos ouvertes",
+      "penpotId": "79f72ebf-2c05-8018-8008-f1f779cae07d",
+      "asset": "9ac37331-ee5d-4b89-b322-1c144511bfc5",
+      "width": 1080,
+      "height": 1500
+    },
+    {
+      "id": "archive-ordi",
+      "name": "Archive sur ordinateur",
+      "penpotName": "Archive - 1 filtre sélectionné - tri par date",
+      "penpotId": "7edde369-ae2a-8061-8008-f30e65806bf0",
+      "asset": "841ad666-516e-4929-9d8b-277c7e6a8583",
+      "width": 1080,
+      "height": 1500
+    },
+    {
       "id": "donnee",
       "name": "Chemin de la donnée (schéma de travail)",
       "kind": "schema",
@@ -60,7 +78,9 @@
         "chiffres",
         "sauvetage",
         "liste",
-        "accueil"
+        "accueil",
+        "carte-ordi",
+        "archive-ordi"
       ],
       "pins": [
         {
@@ -200,6 +220,78 @@
           "board": "accueil",
           "x": 60,
           "y": 449
+        },
+        {
+          "issue": 92,
+          "board": "carte-ordi",
+          "x": 470,
+          "y": 70
+        },
+        {
+          "issue": 8,
+          "board": "carte-ordi",
+          "x": 560,
+          "y": 300
+        },
+        {
+          "issue": 82,
+          "board": "carte-ordi",
+          "x": 640,
+          "y": 715
+        },
+        {
+          "issue": 142,
+          "board": "carte-ordi",
+          "x": 730,
+          "y": 790
+        },
+        {
+          "issue": 9,
+          "board": "carte-ordi",
+          "x": 1030,
+          "y": 1225
+        },
+        {
+          "issue": 68,
+          "board": "carte-ordi",
+          "x": 700,
+          "y": 1130
+        },
+        {
+          "issue": 70,
+          "board": "carte-ordi",
+          "x": 455,
+          "y": 1300
+        },
+        {
+          "issue": 70,
+          "board": "archive-ordi",
+          "x": 830,
+          "y": 230
+        },
+        {
+          "issue": 61,
+          "board": "archive-ordi",
+          "x": 585,
+          "y": 345
+        },
+        {
+          "issue": 53,
+          "board": "archive-ordi",
+          "x": 790,
+          "y": 345
+        },
+        {
+          "issue": 17,
+          "board": "archive-ordi",
+          "x": 1045,
+          "y": 430
+        },
+        {
+          "issue": 95,
+          "board": "archive-ordi",
+          "x": 1045,
+          "y": 535
         }
       ]
     },
