@@ -208,10 +208,13 @@ peut tout y casser, rien n'y est réel.
   base MySQL, le plugin activé, les fiches `FICTIF` de `dev/seed.php`. Les moteurs de recherche
   ne l'indexent pas. On ne peut ni installer ni mettre à jour une extension depuis l'admin : le
   code ne change que par un nouveau déploiement.
-- **Les comptes** : `admin`, `saisie`, `validation`, comme en local, mais avec d'autres mots de
-  passe, puisque ce site est ouvert sur Internet. Ils ne sont pas dans Git : demande-les à un
-  tech lead. Avec l'accès à Clever Cloud : `clever env --alias rescue-atlas-wp-test`
-  (variables `RA_PASS_*`).
+- **Les comptes** : chaque personne a **son compte**, pour qu'on sache qui a saisi quoi. Un tech
+  lead le crée, connecté en `admin` : Comptes, Ajouter, avec le rôle Saisie (`rsatlas_entry`)
+  ou Validation (`rsatlas_validation`). Le site n'envoie pas de mail : décocher l'envoi d'un e-mail au
+  nouveau compte, copier le mot de passe proposé et le transmettre en message privé, jamais dans
+  un canal public, une issue ou une PR. Les comptes `admin`, `saisie` et `validation` existent
+  aussi, avec d'autres mots de passe qu'en local ; ils ne sont pas dans Git. Avec l'accès à
+  Clever Cloud : `clever env --alias rescue-atlas-wp-test` (variables `RA_PASS_*`).
 - **Vérifier le contrat** : `RA_BASE=https://rescue-atlas-wp-test.cleverapps.io pnpm test:contract`.
 
 Comment c'est fait (guide officiel : https://www.clever.cloud/developers/guides/self-hosted/wordpress/) :
