@@ -1,0 +1,26 @@
+{
+  "name": "rescue-atlas-issues-map",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "snapshot": "node scripts/snapshot.mjs",
+    "boards": "node scripts/boards.mjs",
+    "dev": "node scripts/ensure-data.mjs && vite",
+    "build": "node scripts/ensure-data.mjs && node scripts/check.ts && tsc -b && vite build && node scripts/artifact.mjs",
+    "refresh": "pnpm snapshot && pnpm boards && pnpm build",
+    "check": "node scripts/ensure-data.mjs && node scripts/check.ts"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.3.0",
+    "typescript": "~7.0.2",
+    "vite": "8.3.8",
+    "vite-plugin-singlefile": "2.3.4"
+  }
+}

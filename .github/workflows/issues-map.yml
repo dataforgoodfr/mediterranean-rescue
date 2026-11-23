@@ -1,0 +1,74 @@
+# L'atlas des issues (pocs/issues-map) : chaque heure, relire GitHub et republier la page sur
+# GitHub Pages. Lecture seule : le jeton sert à lire les issues et le tableau 44, rien d'autre.
+#
+# Le GITHUB_TOKEN ne peut pas lire un projet d'organisation (« GITHUB_TOKEN is scoped to the
+# repository level and cannot access projects ») ; la doc recommande une GitHub App de
+# l'organisation : https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions
+# Aucune clé personnelle : le service ne doit dépendre du compte d'aucun développeur.
+#
+# Prérequis, réglés par un admin de dataforgoodfr (détail : pocs/issues-map/README.md) :
+# - la GitHub App, installée sur ce dépôt : variable ISSUES_MAP_APP_CLIENT_ID et secret
+#   ISSUES_MAP_APP_PRIVATE_KEY ;
+# - Settings > Pages > Source : « GitHub Actions ».
+# Tant que la variable n'existe pas, le workflow ne fait rien (pas de run rouge).
+name: Atlas des issues
+
+on:
+  schedule:
+    - cron: "17 * * * *" # chaque heure, à la 17e minute, pour éviter le pic de l'heure pile
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "pocs/issues-map/**"
+      - ".github/workflows/issues-map.yml"
+
+concurrency:
+  group: issues-map
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: vars.ISSUES_MAP_APP_CLIENT_ID != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Node et pnpm viennent de mise.toml, comme en local.
+      - uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          install_args: "node pnpm"
+      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        id: app
+        with:
+          client-id: ${{ vars.ISSUES_MAP_APP_CLIENT_ID }}
+          private-key: ${{ secrets.ISSUES_MAP_APP_PRIVATE_KEY }}
+          owner: dataforgoodfr
+      # Instantané GitHub (gh lit GH_TOKEN), vignettes Penpot publiques, contrôle des types, build.
+      - name: Relire GitHub et construire la page
+        working-directory: pocs/issues-map
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm refresh
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: pocs/issues-map/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write # publier sur GitHub Pages
+      id-token: write # prouver à Pages que le déploiement vient de ce workflow
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
