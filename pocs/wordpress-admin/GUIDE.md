@@ -30,6 +30,7 @@ base de données** : WordPress Playground fait tourner WordPress en WebAssembly.
 | `pnpm start` | Construit l'écran, lance WordPress 7.1.4 sur http://127.0.0.1:9400 avec des données fictives |
 | `pnpm watch` | Reconstruit l'écran à chaque modification (dans un second terminal) |
 | `pnpm test` | Lance un WordPress neuf et vérifie l'API, les contrôles et les rôles |
+| `RA_BASE=https://… pnpm test:contract` | Vérifie le contrat de l'API sur n'importe quel WordPress (voir « Les tests ») |
 | `pnpm typecheck` et `pnpm lint:js` | Types et règles JavaScript de WordPress |
 | `composer install` puis `composer lint` | Normes de code PHP de WordPress (`composer fix` corrige ce qui peut l'être) |
 | `pnpm i18n` | Met à jour les traductions (voir « Traduire ») |
@@ -71,9 +72,27 @@ plugin/rescue-atlas-admin/
 
 src/operations/                 l'écran Opérations, en React (TypeScript)
 contract/rescue-atlas.openapi.yaml   le contrat de l'API de lecture
-tests/plugin.test.mjs           les tests (un vrai WordPress)
+tests/contract.test.mjs         le contrat de l'API, pour n'importe quel WordPress
+tests/plugin.test.mjs           ce que notre plugin garantit en plus
 dev/                            WordPress de test : blueprint et données fictives
 ```
+
+## Les tests
+
+Deux fichiers, deux rôles :
+
+- **`tests/contract.test.mjs`, les critères d'acceptation de l'API de lecture.** Ils ne supposent
+  aucune donnée et ne connaissent pas notre plugin : ils vérifient seulement que chaque route
+  répond, que chaque élément suit le contrat (`contract/rescue-atlas.openapi.yaml`), et que la
+  pagination et `modified_after` se comportent comme prévu. Ils tournent contre **n'importe quel
+  WordPress** : `RA_BASE=https://site-de-test.example pnpm test:contract` (et `RA_API_KEY=…` si
+  le site demande une clé). C'est ce qu'on donne à un webmaster comme cahier des charges : quelle
+  que soit sa façon de faire, c'est conforme si ces tests passent sur son site de test.
+- **`tests/plugin.test.mjs`, ce que notre plugin garantit en plus** : les contrôles, l'archivage,
+  les rôles, sur le WordPress de test et ses données fictives.
+
+`pnpm test` lance les deux sur un WordPress neuf. Une règle de plus dans le contrat se teste dans
+le premier ; une règle de notre plugin, dans le second.
 
 ## Les règles qu'on ne contourne jamais
 

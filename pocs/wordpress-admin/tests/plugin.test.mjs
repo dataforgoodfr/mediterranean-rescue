@@ -1,35 +1,9 @@
-// Ce que le plugin garantit, vérifié sur un vrai WordPress 7.1.4 (lancé par `pnpm test`) :
-// l'API publique respecte le contrat, et une fiche incohérente ou non validée ne sort jamais.
+// Ce que NOTRE plugin garantit en plus du contrat (contract.test.mjs), vérifié sur le WordPress de
+// test lancé par `pnpm test`, avec ses données fictives (dev/seed.php) : une fiche incohérente ou
+// non validée ne sort jamais, l'archivage, les rôles.
 import { strict as assert } from 'node:assert'
-import { readFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
 import { describe, test } from 'node:test'
-import { fileURLToPath } from 'node:url'
-import Ajv2020 from 'ajv/dist/2020.js'
-import addFormats from 'ajv-formats'
-import { parse } from 'yaml'
-
-const BASE = process.env.RA_BASE ?? 'http://127.0.0.1:9410'
-
-// Sans ce cookie, le WordPress de test (Playground) connecte d'office chaque visiteur comme admin
-// en le redirigeant : un visiteur anonyme doit l'envoyer pour rester anonyme.
-const ANONYMOUS = { cookie: 'playground_auto_login_already_happened=1' }
-const get = (url) => fetch(url, { headers: ANONYMOUS, redirect: 'manual' })
-const API = `${BASE}/wp-json/rescue-atlas/v1`
-const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-
-// Le contrat (contract/rescue-atlas.openapi.yaml) sert de référence : ses schémas valident les réponses.
-const contract = parse(readFileSync(join(root, 'contract', 'rescue-atlas.openapi.yaml'), 'utf8'))
-const ajv = new Ajv2020({ strict: false, allErrors: true })
-addFormats(ajv)
-ajv.addSchema(contract, 'contract')
-const schema = (name) => ajv.getSchema(`contract#/components/schemas/${name}`)
-
-function assertContract(name, value) {
-  const validate = schema(name)
-  assert.ok(validate, `schéma ${name} absent du contrat`)
-  assert.ok(validate(value), `${name} hors contrat : ${ajv.errorsText(validate.errors)}\n${JSON.stringify(value)}`)
-}
+import { API, BASE, assertContract, get, publicList } from './helpers.mjs'
 
 // Une session WordPress minimale : on garde les cookies d'une requête à l'autre.
 class Session {
@@ -80,11 +54,6 @@ const admin = () => Session.login('admin', 'password')
 const validation = () => Session.login('validation', 'ra-test-valid-3Kp')
 const saisie = () => Session.login('saisie', 'ra-test-saisie-7Qx')
 
-const publicList = async (route, query = '') => {
-  const res = await get(`${API}/${route}${query}`)
-  assert.equal(res.status, 200, `${route} : ${res.status}`)
-  return { items: await res.json(), total: Number(res.headers.get('x-wp-total')) }
-}
 const byId = async (id) => (await publicList('map-operations', '?per_page=100')).items.find((o) => o.operation_id === `op-${id}`)
 
 const VALID = {
@@ -92,24 +61,11 @@ const VALID = {
   nb_survivor: '48', male: '30', female: '18', under_18: '12', under_18_unacc: '9', under_5: '2',
 }
 
-describe("l'API publique respecte le contrat", () => {
-  for (const [route, name] of [['map-operations', 'MapOperation'], ['map-other', 'MapEvent'], ['ports', 'Port'], ['ships', 'Ship'], ['glossary', 'GlossaryEntry']]) {
-    test(`${route} : chaque élément suit le schéma ${name}`, async () => {
-      const { items, total } = await publicList(route)
-      assert.ok(items.length > 0, `${route} vide : les données fictives n'ont pas été chargées`)
-      assert.equal(total, items.length, 'en-tête X-WP-Total')
-      for (const item of items) assertContract(name, item)
-    })
-  }
-
-  test('web-log-book suit le schéma WebLogBook', async () => {
-    const res = await get(`${API}/web-log-book`)
-    assertContract('WebLogBook', await res.json())
-  })
-
-  test('modified_after ne renvoie que ce qui a changé après la date', async () => {
-    assert.equal((await publicList('ports', '?modified_after=2099-01-01T00:00:00Z')).items.length, 0)
-    assert.ok((await publicList('ports', '?modified_after=2000-01-01T00:00:00Z')).items.length > 0)
+describe('les données fictives et la lecture publique', () => {
+  test('les données fictives sont chargées', async () => {
+    for (const route of ['map-operations', 'map-other', 'ports', 'ships', 'glossary']) {
+      assert.ok((await publicList(route)).items.length > 0, `${route} vide`)
+    }
   })
 
   test("une fiche en attente de relecture n'en sort pas", async () => {

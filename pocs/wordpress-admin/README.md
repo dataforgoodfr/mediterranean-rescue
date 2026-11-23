@@ -51,6 +51,10 @@ couvrent :
 Le PHP respecte les normes de code WordPress. L'écran passe le lint JavaScript et la vérification
 des types.
 
+Les tests du contrat (`tests/contract.test.mjs`) ne dépendent pas de notre plugin : ils peuvent
+servir de cahier des charges à un webmaster, en les lançant contre son site de test
+(`RA_BASE=… pnpm test:contract`).
+
 Pour SOS MEDITERRANEE, il n'y a rien à coder : téléverser `dist/rescue-atlas-admin.zip` (fabriqué
 par `pnpm zip`), puis l'activer.
 
