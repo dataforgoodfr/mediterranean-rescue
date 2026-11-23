@@ -42,6 +42,7 @@ tasks:
     cmds:
       - pnpm install --frozen-lockfile
       - pnpm lint
+      - pnpm format:check
       - pnpm api:check
       - pnpm test
       - pnpm build

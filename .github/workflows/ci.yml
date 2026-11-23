@@ -80,7 +80,7 @@ jobs:
           install_args: "uv task"
       - run: task check:pre-commit
         env:
-          SKIP: oxlint,tsc,mypy,schema-api,types-api # lancés par les jobs frontend et backend
+          SKIP: oxlint,oxfmt,tsc,mypy,schema-api,types-api # lancés par les jobs frontend et backend
 
   # Le backend FastAPI, sur la plus ancienne version de Python acceptée (3.12) et sur celle de
   # l'image de production et du développement local (backend/.python-version).
