@@ -53,7 +53,13 @@ if ( 'seed' === $rsatlas_mode ) {
 		update_option( 'rsatlas_test_seeded', gmdate( 'c' ) );
 		echo "Données FICTIVES chargées.\n";
 	}
-	// À chaque démarrage, pour qu'un changement de variable suffise à changer un mot de passe.
+	// Les comptes saisie et validation sont partagés, leurs mots de passe publics (GUIDE.md) : sur
+	// ce site, leurs rôles ne téléversent pas de fichiers, pour que personne n'en héberge ici.
+	foreach ( array( 'rsatlas_entry', 'rsatlas_validation' ) as $rsatlas_role ) {
+		get_role( $rsatlas_role )?->remove_cap( 'upload_files' );
+	}
+	// À chaque démarrage, pour qu'un changement de variable suffise à changer un mot de passe, et
+	// qu'un redémarrage (clever restart) rende leur mot de passe aux comptes partagés.
 	foreach ( array( 'admin' => 'RA_PASS_ADMIN', 'saisie' => 'RA_PASS_SAISIE', 'validation' => 'RA_PASS_VALIDATION' ) as $rsatlas_login => $rsatlas_var ) {
 		$rsatlas_user = get_user_by( 'login', $rsatlas_login );
 		$rsatlas_pass = (string) getenv( $rsatlas_var );

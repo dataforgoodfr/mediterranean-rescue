@@ -39,7 +39,8 @@ base de données** : WordPress Playground fait tourner WordPress en WebAssembly.
 Le WordPress de test est en mémoire : il repart de zéro à chaque lancement. Il est dans la même
 version que celui de SOS MEDITERRANEE (7.1.4, relevée le 23/11/2026) : `scripts/server.mjs`.
 
-**Comptes de test** (site local seulement, tous fictifs) :
+**Comptes de test** (tous fictifs ; `saisie` et `validation` servent aussi sur le site de test
+commun, voir plus bas) :
 
 | Identifiant | Mot de passe | Rôle |
 |---|---|---|
@@ -208,13 +209,13 @@ peut tout y casser, rien n'y est réel.
   base MySQL, le plugin activé, les fiches `FICTIF` de `dev/seed.php`. Les moteurs de recherche
   ne l'indexent pas. On ne peut ni installer ni mettre à jour une extension depuis l'admin : le
   code ne change que par un nouveau déploiement.
-- **Les comptes** : toute l'équipe, tech leads et bénévoles, se sert des comptes partagés
-  `saisie` et `validation`. Leurs mots de passe ne sont pas ceux du local, ni dans Git : ils sont
-  donnés dans le canal Mattermost de l'équipe, jamais dans une issue ou une PR. Le compte
-  `admin` reste aux tech leads, qui peuvent créer un compte personnel à qui veut qu'on voie ses
-  saisies : Comptes, Ajouter, rôle Saisie ou Validation, sans e-mail (le site n'en envoie pas),
-  et le mot de passe proposé envoyé en message privé. Avec l'accès à Clever Cloud :
-  `clever env --alias rescue-atlas-wp-test` (variables `RA_PASS_*`).
+- **Les comptes** : `saisie` et `validation`, avec les mêmes mots de passe qu'en local (tableau
+  « Comptes de test »). Personne n'a de compte à demander ni à gérer : qui a ce guide peut tester.
+  Comme ces mots de passe sont publics, ces deux comptes ne peuvent pas téléverser de fichiers
+  sur ce site. Si quelqu'un change l'un de ces mots de passe, `clever restart --alias
+  rescue-atlas-wp-test` le remet. Le compte `admin` a un mot de passe secret, hors de Git, pour
+  les personnes qui ont accès à l'organisation sur Clever Cloud :
+  `clever env --alias rescue-atlas-wp-test` (variable `RA_PASS_ADMIN`).
 - **Vérifier le contrat** : `RA_BASE=https://rescue-atlas-wp-test.cleverapps.io pnpm test:contract`.
 
 Comment c'est fait (guide officiel : https://www.clever.cloud/developers/guides/self-hosted/wordpress/) :
@@ -254,9 +255,9 @@ Puis les variables, avec `clever env set --alias rescue-atlas-wp-test <NOM> <val
 `CC_PHP_VERSION=8.3`, `CC_WEBROOT=/web`,
 `CC_PRE_RUN_HOOK=php setup/setup.php install && php setup/setup.php seed`,
 `RA_SITE_URL=https://rescue-atlas-wp-test.cleverapps.io`, les huit clés `WORDPRESS_AUTH_KEY`…
-`WORDPRESS_NONCE_SALT` (chacune `openssl rand -base64 48`) et les trois mots de passe
-`RA_PASS_ADMIN`, `RA_PASS_SAISIE`, `RA_PASS_VALIDATION` (16 caractères au moins, chacun
-`openssl rand -base64 15`). Enfin `pnpm deploy:clever`.
+`WORDPRESS_NONCE_SALT` (chacune `openssl rand -base64 48`), `RA_PASS_ADMIN` (secret,
+`openssl rand -base64 15`), et `RA_PASS_SAISIE`, `RA_PASS_VALIDATION` avec les mots de passe du
+tableau « Comptes de test ». Enfin `pnpm deploy:clever`.
 
 **Le détruire** (l'application, puis la base et tout ce qu'elle contient) :
 
