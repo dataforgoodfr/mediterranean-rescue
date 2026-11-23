@@ -5,8 +5,8 @@
     "file": "e499b291-4f64-81a8-8008-f039eb67d80e",
     "fileName": "Wireframes",
     "page": "e499b291-4f64-81a8-8008-f039eb67d80f",
-    "fileModifiedAt": "2026-11-20T11:54:13Z",
-    "readAt": "2026-11-22T10:50:00Z"
+    "fileModifiedAt": "2026-11-23T13:33:15Z",
+    "readAt": "2026-11-23T13:45:00Z"
   },
   "boards": [
     {
@@ -14,7 +14,7 @@
       "name": "Carte et chiffres",
       "penpotName": "Chiffres",
       "penpotId": "d6b0915d-3ba5-8046-8008-f03b0937d888",
-      "asset": "a82d9672-702f-400a-890d-2d7c31f82bac",
+      "asset": "a3a26f07-6c56-4e8e-b9c0-04eb7ed58b8b",
       "width": 421,
       "height": 744,
       "ecran": {
@@ -46,7 +46,7 @@
       "name": "Fiche d'une opération",
       "penpotName": "Sauvetage",
       "penpotId": "d6b0915d-3ba5-8046-8008-f046a14aae2d",
-      "asset": "f1c96720-076a-496c-b509-52c455958556",
+      "asset": "21019729-eecd-419c-86e8-d316a376fadc",
       "width": 421,
       "height": 744,
       "ecran": {
@@ -73,7 +73,7 @@
       "name": "Liste des opérations",
       "penpotName": "Liste",
       "penpotId": "8e275c6d-89d6-8085-8008-f951ca98d33a",
-      "asset": "3d3edbd2-4f36-4430-881d-122bc69eb1d6",
+      "asset": "f297a177-6689-45d3-a886-581abb032856",
       "width": 421,
       "height": 744,
       "ecran": {
@@ -97,7 +97,7 @@
       "name": "Accueil",
       "penpotName": "Accueil",
       "penpotId": "7d4efaab-5c1c-8045-8008-f052805d8e53",
-      "asset": "b1d3c6bc-3c90-441b-9417-5525b0df60e7",
+      "asset": "da5f959c-002d-44b8-afd3-4c2885e9f331",
       "width": 421,
       "height": 744,
       "ecran": {
@@ -111,7 +111,7 @@
       "name": "Carte sur ordinateur",
       "penpotName": "Map - Menu - white + shadow - infos ouvertes",
       "penpotId": "79f72ebf-2c05-8018-8008-f1f779cae07d",
-      "asset": "9ac37331-ee5d-4b89-b322-1c144511bfc5",
+      "asset": "646e5a38-ef86-4f65-b4b6-983384ba6d94",
       "width": 1080,
       "height": 1500,
       "ecran": {
@@ -143,7 +143,7 @@
       "name": "Archive sur ordinateur",
       "penpotName": "Archive - 1 filtre sélectionné - tri par date",
       "penpotId": "7edde369-ae2a-8061-8008-f30e65806bf0",
-      "asset": "841ad666-516e-4929-9d8b-277c7e6a8583",
+      "asset": "93c75645-ac65-47e7-8329-c361278a0e81",
       "width": 1080,
       "height": 1500,
       "ecran": {
