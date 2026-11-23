@@ -10,7 +10,14 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/design" element={<DevOnly><Design /></DevOnly>} />
+      <Route
+        path="/design"
+        element={
+          <DevOnly>
+            <Design />
+          </DevOnly>
+        }
+      />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

@@ -19,10 +19,7 @@ export async function getHealth(): Promise<Health> {
 }
 
 export type OperationPublic = components['schemas']['OperationPublic']
-export async function getLatestOperation(): Promise<Pick<
-  OperationPublic,
-  'date'
-> | null> {
+export async function getLatestOperation(): Promise<Pick<OperationPublic, 'date'> | null> {
   const response = await fetch('/api/operations')
   if (!response.ok) throw new Error(`API: ${response.status}`)
 

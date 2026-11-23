@@ -18,7 +18,5 @@ test('the home page shows the map of the central Mediterranean', () => {
 test('says so when the browser cannot draw the map', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
   renderWithProviders(<App />)
-  expect(
-    await screen.findByText(/Ce navigateur ne peut pas afficher la carte/),
-  ).toBeInTheDocument()
+  expect(await screen.findByText(/Ce navigateur ne peut pas afficher la carte/)).toBeInTheDocument()
 })

@@ -5,7 +5,7 @@ import type { Translations } from './keys.ts'
 export const en: Translations = {
   'home.title': 'Rescue Atlas',
   'home.intro':
-    'SOS MEDITERRANEE\'s rescues in the central Mediterranean. The operations will soon appear on the map.',
+    "SOS MEDITERRANEE's rescues in the central Mediterranean. The operations will soon appear on the map.",
   'home.apiStatus': 'API: {status}',
   'home.apiStatus.pending': 'waiting',
   'home.apiStatus.unreachable': 'unreachable',
@@ -29,6 +29,7 @@ export const en: Translations = {
   'design.logo.color': 'Navy blue, on a light background',
   'design.logo.white': 'White, on a dark background only',
   'design.icons': 'Icons ({count})',
-  'design.icons.usage': 'An icon takes the colour of the text around it. In the code, use its name.',
+  'design.icons.usage':
+    'An icon takes the colour of the text around it. In the code, use its name.',
   'notFound.title': 'Page not found',
 }

@@ -5,6 +5,6 @@ interface DevOnlyProps {
   children: ReactNode
 }
 
-export function DevOnly({ children } : DevOnlyProps) {
+export function DevOnly({ children }: DevOnlyProps) {
   return import.meta.env.DEV ? <>{children}</> : <NotFound />
 }

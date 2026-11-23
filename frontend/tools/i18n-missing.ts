@@ -4,6 +4,8 @@ import { LANGUAGES, missingKeys } from '../src/i18n/translate.ts'
 
 for (const language of LANGUAGES) {
   const missing = missingKeys(language)
-  console.log(`${language}: ${missing.length === 0 ? 'complete' : `${missing.length} to translate`}`)
+  console.log(
+    `${language}: ${missing.length === 0 ? 'complete' : `${missing.length} to translate`}`,
+  )
   for (const key of missing) console.log(`  - ${key}`)
 }
