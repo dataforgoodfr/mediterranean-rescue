@@ -12,7 +12,8 @@
     "start": "pnpm build && node scripts/server.mjs",
     "test": "pnpm build && node scripts/test.mjs",
     "test:contract": "node --test tests/contract.test.mjs",
-    "zip": "pnpm build && node scripts/zip.mjs"
+    "zip": "pnpm build && node scripts/zip.mjs",
+    "deploy:clever": "pnpm build && node scripts/clever-deploy.mjs"
   },
   "dependencies": {
     "maplibre-gl": "6.19.0"

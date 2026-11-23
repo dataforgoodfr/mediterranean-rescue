@@ -1,12 +1,15 @@
 <?php
 /**
  * Données FICTIVES du WordPress de test local. Jamais de vraies données de SOS MEDITERRANEE ici.
- * Lancé une fois au démarrage par dev/blueprint.json.
+ * Lancé une fois au démarrage par dev/blueprint.json, et par deploy/clever/setup.php sur le site de
+ * test commun (qui remplace ensuite les mots de passe des comptes).
  *
  * @package RescueAtlas\Admin
  */
 
-require_once '/wordpress/wp-load.php';
+if ( ! defined( 'ABSPATH' ) ) {
+	require_once '/wordpress/wp-load.php';
+}
 
 $rsatlas_add = static function ( string $type, string $title, array $meta, string $status = 'publish', string $slug = '' ): int {
 	$id = wp_insert_post(
@@ -131,7 +134,8 @@ update_post_meta( $rsatlas_term, 'language', 'fr' );
 
 update_option( 'rsatlas_status_message', 'FICTIF. The Ocean Viking is at sea. The latest operations will be published soon.' );
 
-// Comptes de test du site local, listés dans GUIDE.md. Jamais ailleurs que sur ce site jetable.
+// Comptes de test du site local, listés dans GUIDE.md. Sur le site de test commun, setup.php
+// remplace ces mots de passe par ceux des variables RA_PASS_* avant la première requête.
 wp_insert_user(
 	array(
 		'user_login'   => 'saisie',

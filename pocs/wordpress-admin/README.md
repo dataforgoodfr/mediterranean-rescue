@@ -61,7 +61,10 @@ par `pnpm zip`), puis l'activer.
 Limites, et ce qui n'est pas vérifié :
 
 - **Plugin Check**, l'outil officiel, ne tourne pas dans Playground : il tourne dans la CI.
-- L'installation par le zip sur un vrai hébergement n'a pas été essayée.
+- Le plugin tourne sur un vrai hébergement : le site de test commun,
+  https://rescue-atlas-wp-test.cleverapps.io (GUIDE.md, « Le site de test commun »), où les
+  tests du contrat passent. Il y est déployé avec WordPress, pas téléversé en zip : le
+  téléversement dans un WordPress existant reste à essayer.
 - Pas fait : les médias (#149 à #153), le lien avec les rotations déjà présentes sur le site de
   SOS, les langues avec Polylang (que leur site utilise), et les maquettes de Marie.
 - La liste des types de bateau est supposée. Les règles entre champs sont à relire avec SOS.

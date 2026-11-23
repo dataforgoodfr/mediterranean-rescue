@@ -197,6 +197,71 @@ dans le navigateur (avec quel compte).
 3. La personne qui administre le site téléverse le zip (Extensions, Ajouter, Téléverser) et
    l'active. Rien ne part sans sa relecture.
 
+## Le site de test commun
+
+Un WordPress que toute l'équipe peut ouvrir, avec le plugin et des données fictives seulement :
+**https://rescue-atlas-wp-test.cleverapps.io** (admin : `/wp-admin/`). Il tourne sur Clever
+Cloud, dans l'organisation « SOS MEDITERRANEE », à côté du staging. C'est un site de test : on
+peut tout y casser, rien n'y est réel.
+
+- **Ce qui tourne** : WordPress 7.1.4 en français (la version de SOS MEDITERRANEE), PHP 8.3, une
+  base MySQL, le plugin activé, les fiches `FICTIF` de `dev/seed.php`. Les moteurs de recherche
+  ne l'indexent pas. On ne peut ni installer ni mettre à jour une extension depuis l'admin : le
+  code ne change que par un nouveau déploiement.
+- **Les comptes** : `admin`, `saisie`, `validation`, comme en local, mais avec d'autres mots de
+  passe, puisque ce site est ouvert sur Internet. Ils ne sont pas dans Git : demande-les à un
+  tech lead. Avec l'accès à Clever Cloud : `clever env --alias rescue-atlas-wp-test`
+  (variables `RA_PASS_*`).
+- **Vérifier le contrat** : `RA_BASE=https://rescue-atlas-wp-test.cleverapps.io pnpm test:contract`.
+
+Comment c'est fait (guide officiel : https://www.clever.cloud/developers/guides/self-hosted/wordpress/) :
+
+| Fichier | Rôle |
+|---|---|
+| `scripts/clever-deploy.mjs` | Assemble le dossier déployé dans `.clever-deploy/` : WordPress en français (archive officielle, empreinte vérifiée), le plugin construit, les fichiers ci-dessous. Puis `clever deploy`. |
+| `deploy/clever/wp-config.php` | La configuration, lue dans les variables de Clever Cloud. Aucun secret dans le fichier. |
+| `deploy/clever/setup.php` | Lancé avant chaque démarrage (`CC_PRE_RUN_HOOK`) : installe WordPress, active le plugin, charge les données fictives une seule fois, règle les mots de passe. |
+| `deploy/clever/.htaccess` | Les adresses propres de WordPress (`/wp-json/…`). |
+
+**Mettre le site à jour** (accès à l'organisation sur Clever Cloud, et la CLI
+`clever` connectée : `clever login`) :
+
+```bash
+pnpm deploy:clever
+```
+
+Les fiches saisies sur le site restent d'un déploiement à l'autre. Pour repartir de zéro :
+le détruire, puis le recréer (ci-dessous).
+
+**Ce que ça coûte** : l'application PHP en taille `nano` (512 Mo), environ 0,0083 € de l'heure,
+soit 6 € par mois, facturée à la seconde (`clever stop --alias rescue-atlas-wp-test` l'arrête,
+`clever restart` la relance). La base MySQL `dev` est gratuite, limitée à 10 Mo et 5 connexions,
+sans sauvegarde : assez pour un site de test, jamais pour de vraies données.
+
+**Le recréer de zéro**, depuis un dossier vide hors Git (par exemple `.clever-deploy-cache/`) :
+
+```bash
+clever create --type php rescue-atlas-wp-test --org "SOS MEDITERRANEE" --region par --alias rescue-atlas-wp-test
+clever scale --alias rescue-atlas-wp-test --flavor nano
+clever addon create mysql-addon rescue-atlas-wp-test-db --plan dev --region par --org "SOS MEDITERRANEE" --link rescue-atlas-wp-test
+clever domain add rescue-atlas-wp-test.cleverapps.io --alias rescue-atlas-wp-test
+```
+
+Puis les variables, avec `clever env set --alias rescue-atlas-wp-test <NOM> <valeur>` :
+`CC_PHP_VERSION=8.3`, `CC_WEBROOT=/web`,
+`CC_PRE_RUN_HOOK=php setup/setup.php install && php setup/setup.php seed`,
+`RA_SITE_URL=https://rescue-atlas-wp-test.cleverapps.io`, les huit clés `WORDPRESS_AUTH_KEY`…
+`WORDPRESS_NONCE_SALT` (chacune `openssl rand -base64 48`) et les trois mots de passe
+`RA_PASS_ADMIN`, `RA_PASS_SAISIE`, `RA_PASS_VALIDATION` (16 caractères au moins, chacun
+`openssl rand -base64 15`). Enfin `pnpm deploy:clever`.
+
+**Le détruire** (l'application, puis la base et tout ce qu'elle contient) :
+
+```bash
+clever delete --alias rescue-atlas-wp-test
+clever addon delete rescue-atlas-wp-test-db --org "SOS MEDITERRANEE"
+```
+
 ## Pièges déjà rencontrés
 
 - **L'éditeur de blocs n'affiche pas les statuts personnalisés** (ticket Gutenberg #3144) : nos

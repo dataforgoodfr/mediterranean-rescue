@@ -4,3 +4,6 @@ vendor/
 plugin/rescue-atlas-admin/build/
 # Le zip à téléverser dans WordPress, fabriqué par `pnpm zip`.
 dist/
+# Le site de test commun : dossier assemblé et archive WordPress, par `pnpm deploy:clever`.
+.clever-deploy/
+.clever-deploy-cache/
