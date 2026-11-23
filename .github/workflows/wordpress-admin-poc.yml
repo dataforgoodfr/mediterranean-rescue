@@ -65,3 +65,10 @@ jobs:
       - uses: WordPress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
         with:
           build-dir: pocs/wordpress-admin/plugin/rescue-atlas-admin
+          # Deux règles qui ne valent que pour un plugin hébergé sur wordpress.org, ce qui n'est
+          # pas notre cas : l'en-tête Update URI (il protège justement un plugin hors
+          # wordpress.org d'un homonyme) et load_plugin_textdomain (sans lui, nos traductions
+          # livrées dans languages/ ne se chargent pas).
+          ignore-codes: |
+            plugin_updater_detected
+            PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound

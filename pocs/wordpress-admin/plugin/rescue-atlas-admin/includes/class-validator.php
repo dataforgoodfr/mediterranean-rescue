@@ -159,12 +159,13 @@ final class Validator {
 	 * @param int    $post_id  Fiche à exclure.
 	 */
 	private static function glossary_duplicate( string $slug, string $language, int $post_id ): bool {
+		// Deux résultats au plus : la fiche elle-même peut en faire partie, on l'écarte ensuite
+		// (plutôt que post__not_in, que Plugin Check déconseille pour les performances).
 		$found = get_posts(
 			array(
 				'post_type'      => 'rsatlas_glossary',
 				'post_status'    => array( 'publish', 'pending', 'draft', Post_Types::ARCHIVED ),
-				'post__not_in'   => array( $post_id ),
-				'posts_per_page' => 1,
+				'posts_per_page' => 2,
 				'fields'         => 'ids',
 				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- quelques centaines de termes au plus.
 				'meta_query'     => array(
@@ -179,6 +180,6 @@ final class Validator {
 				),
 			)
 		);
-		return array() !== $found;
+		return array() !== array_diff( array_map( 'intval', $found ), array( $post_id ) );
 	}
 }
