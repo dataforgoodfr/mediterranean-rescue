@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!-- Normes de code WordPress pour le plugin : `composer lint` (corriger : `composer fix`).
+     https://github.com/WordPress/WordPress-Coding-Standards -->
+<ruleset name="Rescue Atlas Admin">
+	<file>plugin/rescue-atlas-admin</file>
+	<exclude-pattern>plugin/rescue-atlas-admin/build/*</exclude-pattern>
+	<!-- Fichiers de traduction générés par `wp i18n make-php` (pnpm i18n) : on ne les écrit pas à la main. -->
+	<exclude-pattern>plugin/rescue-atlas-admin/languages/*</exclude-pattern>
+	<arg name="extensions" value="php"/>
+	<arg value="sp"/>
+
+	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Docs"/>
+	<rule ref="PHPCompatibilityWP"/>
+	<config name="testVersion" value="8.2-"/>
+	<config name="minimum_wp_version" value="7.0"/>
+
+	<!-- Préfixes obligatoires : tout ce que le plugin déclare commence par l'un d'eux. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="RescueAtlas\Admin"/>
+				<element value="rsatlas"/>
+			</property>
+		</properties>
+	</rule>
+	<!-- Les capacités créées par le plugin (includes/class-roles.php). -->
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="edit_rsatlas_records"/>
+				<element value="publish_rsatlas_records"/>
+				<element value="manage_rescue_atlas"/>
+			</property>
+		</properties>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="rescue-atlas-admin"/>
+			</property>
+		</properties>
+	</rule>
+	<!-- Noms de fichiers des classes : class-<nom>.php, comme le veut WordPress. -->
+	<rule ref="WordPress.Files.FileName">
+		<properties>
+			<property name="strict_class_file_names" value="true"/>
+		</properties>
+	</rule>
+</ruleset>

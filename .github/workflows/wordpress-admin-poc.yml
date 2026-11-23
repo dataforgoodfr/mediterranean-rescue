@@ -1,0 +1,67 @@
+# Le POC du plugin WordPress (pocs/wordpress-admin/) : les mêmes vérifications qu'en local
+# (GUIDE.md, « Avant d'ouvrir une pull request »), plus Plugin Check, l'outil officiel de
+# WordPress, qui ne tourne pas dans WordPress Playground et passe donc par ici.
+# Les actions sont figées sur un commit (le commentaire donne la version), comme dans ci.yml.
+name: WordPress admin POC
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'pocs/wordpress-admin/**'
+      - '.github/workflows/wordpress-admin-poc.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'pocs/wordpress-admin/**'
+      - '.github/workflows/wordpress-admin-poc.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: pocs/wordpress-admin
+
+jobs:
+  # Types, lint JavaScript, normes de code PHP, puis les tests sur un WordPress 7.1.4 neuf.
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Node et pnpm viennent de mise.toml, comme en local.
+      - uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          install_args: "node pnpm"
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: "8.3"
+          tools: composer
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint:js
+      - run: composer install --no-interaction --no-progress
+      - run: composer lint
+      - run: pnpm test
+
+  # Plugin Check sur le plugin construit (le dossier qu'on téléverse dans WordPress).
+  plugin-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          install_args: "node pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - uses: WordPress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
+        with:
+          build-dir: pocs/wordpress-admin/plugin/rescue-atlas-admin

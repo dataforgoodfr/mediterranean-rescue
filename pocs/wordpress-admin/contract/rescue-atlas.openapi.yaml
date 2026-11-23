@@ -1,0 +1,635 @@
+openapi: 3.1.0
+info:
+  title: Rescue Atlas, API WordPress de SOS MEDITERRANEE (contrat proposé)
+  version: 0.1.0
+  summary: Ce que Rescue Atlas lit dans le WordPress de SOS MEDITERRANEE.
+  description: |
+    Document de travail, non validé par SOS MEDITERRANEE. Proposition du 22 novembre 2026, alignée le
+    23 novembre sur la Data structure du 22 novembre (status, disembarkation_vessel).
+
+    Le back-office reste dans le WordPress de SOS. Rescue Atlas ne fait que lire : une tâche
+    planifiée interroge ces routes, ne relit que ce qui a changé (`modified_after`) et recopie les
+    données dans sa base. Le site public ne parle jamais à WordPress.
+
+    Règles communes :
+    - seuls les éléments publiés (`_status: published`) et archivés (`_status: archived`)
+      sortent, jamais un brouillon ; un élément archivé peut ne porter que sa clé, `_status` et
+      `_last_updated` ;
+    - aucune donnée personnelle : ni formulaire Kobo, ni nationalités, ni nom de témoin, ni compte
+      du back-office ;
+    - dates en ISO 8601 UTC, positions en degrés décimaux WGS 84, inconnu vaut `null` ;
+    - noms de champs : ceux du modèle de données du projet, le tiret remplacé par un tiret bas ;
+    - pagination de WordPress (`page`, `per_page` jusqu'à 100, en-têtes `X-WP-Total` et
+      `X-WP-TotalPages`).
+
+    Les champs marqués `x-question` attendent une décision produit (Q1, Q2). Tous les exemples
+    sont fictifs.
+  license:
+    name: MIT
+    identifier: MIT
+servers:
+  - url: https://{site}/wp-json/rescue-atlas/v1
+    description: Routes à créer dans le WordPress de SOS (proposition)
+    variables:
+      site:
+        default: wordpress.example
+        description: Domaine du WordPress, de production ou de test
+security:
+  - apiKey: []
+  - appPassword: []
+tags:
+  - name: carte
+    description: Points de la carte
+  - name: contenu
+    description: Médias, glossaire, message de rotation
+  - name: référentiels
+    description: Listes tenues dans le back-office
+  - name: journal de bord
+    description: Route publique qui existe déjà
+paths:
+  /map-operations:
+    get:
+      tags: [carte]
+      operationId: listMapOperations
+      summary: Sauvetages et transferts publiés ou archivés
+      parameters:
+        - $ref: '#/components/parameters/modifiedAfter'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+        - $ref: '#/components/parameters/orderby'
+        - $ref: '#/components/parameters/order'
+      responses:
+        '200':
+          description: Une page d'opérations
+          headers:
+            X-WP-Total: { $ref: '#/components/headers/total' }
+            X-WP-TotalPages: { $ref: '#/components/headers/totalPages' }
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/MapOperation' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/TooManyRequests' }
+  /map-operations/{operation_id}:
+    get:
+      tags: [carte]
+      operationId: getMapOperation
+      summary: Une opération
+      parameters:
+        - name: operation_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: L'opération
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MapOperation' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /map-other:
+    get:
+      tags: [carte]
+      operationId: listMapEvents
+      summary: Naufrages, morts et disparus, incidents
+      description: Table marquée « en cours » dans le modèle de données ; ses champs peuvent bouger.
+      parameters:
+        - $ref: '#/components/parameters/modifiedAfter'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+        - $ref: '#/components/parameters/orderby'
+        - $ref: '#/components/parameters/order'
+      responses:
+        '200':
+          description: Une page d'événements
+          headers:
+            X-WP-Total: { $ref: '#/components/headers/total' }
+            X-WP-TotalPages: { $ref: '#/components/headers/totalPages' }
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/MapEvent' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/TooManyRequests' }
+  /map-other/{event_id}:
+    get:
+      tags: [carte]
+      operationId: getMapEvent
+      summary: Un événement
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: L'événement
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MapEvent' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /media:
+    get:
+      tags: [contenu]
+      operationId: listMedia
+      summary: Photos, vidéos et sons publiés ou archivés
+      parameters:
+        - $ref: '#/components/parameters/modifiedAfter'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+        - $ref: '#/components/parameters/orderby'
+        - $ref: '#/components/parameters/order'
+      responses:
+        '200':
+          description: Une page de médias
+          headers:
+            X-WP-Total: { $ref: '#/components/headers/total' }
+            X-WP-TotalPages: { $ref: '#/components/headers/totalPages' }
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Media' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/TooManyRequests' }
+  /media/{media_id}:
+    get:
+      tags: [contenu]
+      operationId: getMedia
+      summary: Un média
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Le média
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Media' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /glossary:
+    get:
+      tags: [contenu]
+      operationId: listGlossary
+      summary: Entrées du glossaire publiées ou archivées
+      parameters:
+        - name: language
+          in: query
+          description: Code ISO 639-1. Sans ce paramètre, toutes les langues.
+          schema: { type: string, examples: [fr] }
+        - $ref: '#/components/parameters/modifiedAfter'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+        - $ref: '#/components/parameters/orderby'
+        - $ref: '#/components/parameters/order'
+      responses:
+        '200':
+          description: Une page d'entrées
+          headers:
+            X-WP-Total: { $ref: '#/components/headers/total' }
+            X-WP-TotalPages: { $ref: '#/components/headers/totalPages' }
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/GlossaryEntry' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/TooManyRequests' }
+  /web-log-book:
+    get:
+      tags: [contenu]
+      operationId: getWebLogBook
+      summary: Le message affiché pendant une rotation
+      description: |
+        Un seul objet. Sans position : SOS ne montre jamais en direct qu'un sauvetage est en cours.
+      responses:
+        '200':
+          description: Le message en cours
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WebLogBook' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /ports:
+    get:
+      tags: [référentiels]
+      operationId: listPorts
+      summary: Ports
+      parameters:
+        - $ref: '#/components/parameters/modifiedAfter'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+      responses:
+        '200':
+          description: Une page de ports
+          headers:
+            X-WP-Total: { $ref: '#/components/headers/total' }
+            X-WP-TotalPages: { $ref: '#/components/headers/totalPages' }
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Port' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /ships:
+    get:
+      tags: [référentiels]
+      operationId: listShips
+      summary: Navires
+      parameters:
+        - $ref: '#/components/parameters/modifiedAfter'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+      responses:
+        '200':
+          description: Une page de navires
+          headers:
+            X-WP-Total: { $ref: '#/components/headers/total' }
+            X-WP-TotalPages: { $ref: '#/components/headers/totalPages' }
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Ship' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /items:
+    get:
+      tags: [référentiels]
+      operationId: listItems
+      summary: Valeurs des listes affichées sur le site
+      description: Seulement les listes `boat-type`, `operation-type` et `event-type`.
+      parameters:
+        - name: list_id
+          in: query
+          schema: { type: string, examples: [boat-type] }
+        - $ref: '#/components/parameters/modifiedAfter'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+      responses:
+        '200':
+          description: Une page de valeurs
+          headers:
+            X-WP-Total: { $ref: '#/components/headers/total' }
+            X-WP-TotalPages: { $ref: '#/components/headers/totalPages' }
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Item' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /logs:
+    servers:
+      - url: https://www.sosmediterranee.org/wp-json/sos/v1
+        description: Route publique existante, sans clé
+    get:
+      tags: [journal de bord]
+      operationId: listLogs
+      summary: Entrées du journal de bord (existe déjà)
+      description: |
+        Route en place, publique. Nous la lisons telle quelle. Une demande : accepter
+        `modified_after`, et dire comment un log dépublié disparaît.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+        - name: operation
+          in: query
+          description: Identifiant de la rotation
+          schema: { type: integer }
+        - name: after
+          in: query
+          schema: { type: string, format: date-time }
+        - name: before
+          in: query
+          schema: { type: string, format: date-time }
+        - name: modified_after
+          in: query
+          description: Demandé, n'existe pas encore sur cette route.
+          schema: { type: string, format: date-time }
+          x-requested: true
+      responses:
+        '200':
+          description: Une page de logs, du plus récent au plus ancien
+          headers:
+            X-WP-Total: { $ref: '#/components/headers/total' }
+            X-WP-TotalPages: { $ref: '#/components/headers/totalPages' }
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Log' }
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Clé en lecture seule, une pour la production et une pour le site de test.
+    appPassword:
+      type: http
+      scheme: basic
+      description: Variante possible, un mot de passe d'application WordPress sur un compte en lecture seule.
+  parameters:
+    modifiedAfter:
+      name: modified_after
+      in: query
+      description: Ne renvoie que ce qui a changé après cette date (ISO 8601).
+      schema: { type: string, format: date-time, examples: ['2026-11-22T09:00:00Z'] }
+    page:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    perPage:
+      name: per_page
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 100 }
+    orderby:
+      name: orderby
+      in: query
+      schema: { type: string, enum: [modified], default: modified }
+    order:
+      name: order
+      in: query
+      schema: { type: string, enum: [asc, desc], default: asc }
+  headers:
+    total:
+      description: Nombre total d'éléments
+      schema: { type: integer }
+    totalPages:
+      description: Nombre total de pages
+      schema: { type: integer }
+  responses:
+    Unauthorized:
+      description: Clé absente ou fausse
+    NotFound:
+      description: Élément inconnu
+    TooManyRequests:
+      description: Trop de requêtes
+      headers:
+        Retry-After:
+          description: Secondes à attendre
+          schema: { type: integer }
+  schemas:
+    Status:
+      type: string
+      enum: [published, archived]
+      description: Un brouillon ne sort jamais.
+    LastUpdated:
+      type: string
+      format: date-time
+      description: Date de dernière modification, ISO 8601 UTC.
+    Latitude:
+      type: [number, 'null']
+      minimum: -90
+      maximum: 90
+    Longitude:
+      type: [number, 'null']
+      minimum: -180
+      maximum: 180
+    MapOperation:
+      type: object
+      description: Un sauvetage ou un transfert (MAP-OPERATIONS). Totaux seulement, jamais une ligne par personne.
+      required: [operation_id, _status, _last_updated]
+      properties:
+        operation_id:
+          type: string
+          description: Ajouté (le modèle de données n'a pas de clé pour cette table).
+        rotation_id:
+          type: [integer, 'null']
+          description: Ajouté, rotation du journal de bord.
+        operation_date: { type: string, format: date }
+        operation_type: { type: string, enum: [rescue, transfer] }
+        transfer_type: { type: [string, 'null'] }
+        latitude: { $ref: '#/components/schemas/Latitude' }
+        longitude: { $ref: '#/components/schemas/Longitude' }
+        nb_survivor: { type: [integer, 'null'], minimum: 0 }
+        male: { type: [integer, 'null'], minimum: 0 }
+        female: { type: [integer, 'null'], minimum: 0 }
+        under_18: { type: [integer, 'null'], minimum: 0 }
+        under_18_unacc: { type: [integer, 'null'], minimum: 0 }
+        under_5: { type: [integer, 'null'], minimum: 0 }
+        pregnant_women: { type: [integer, 'null'], minimum: 0 }
+        nb_nationalities:
+          type: [integer, 'null']
+          minimum: 0
+          description: Le nombre seulement, jamais la liste.
+        wind_force:
+          type: [integer, 'null']
+          minimum: 0
+          maximum: 12
+          description: Beaufort supposé, unité à confirmer.
+        wave_height:
+          type: [number, 'null']
+          minimum: 0
+          description: Mètres supposés, unité à confirmer.
+        boat_type:
+          type: [string, 'null']
+          description: item_slug de la liste boat-type.
+        port_disembarkation:
+          type: [string, 'null']
+          description: |
+            Question ouverte Q2 : texte libre, clé port_id (avec ship_id pour un navire), ou clé plus
+            texte de secours.
+          x-question: Q2
+        disembarkation_vessel:
+          type: [string, 'null']
+          description: Navire sur lequel les personnes sont débarquées en mer (disembarkation-vessel, Data structure du 22/11). Un port ou un navire, pas les deux.
+        testimony_src: { type: [string, 'null'], format: uri }
+        _status: { $ref: '#/components/schemas/Status' }
+        _last_updated: { $ref: '#/components/schemas/LastUpdated' }
+      examples:
+        - operation_id: op-2026-0042
+          rotation_id: 35142
+          operation_date: '2026-10-26'
+          operation_type: rescue
+          transfer_type: null
+          latitude: 35.3333
+          longitude: 14.8167
+          nb_survivor: 48
+          male: 31
+          female: 17
+          under_18: 12
+          under_18_unacc: 9
+          under_5: 2
+          pregnant_women: 1
+          nb_nationalities: 6
+          wind_force: 3
+          wave_height: 1.5
+          boat_type: rubber
+          port_disembarkation: port-salerno
+          testimony_src: null
+          _status: published
+          _last_updated: '2026-11-22T09:30:00Z'
+        - operation_id: op-2026-0017
+          _status: archived
+          _last_updated: '2026-11-22T10:05:00Z'
+    MapEvent:
+      type: object
+      description: Naufrage, morts et disparus, incident (MAP-OTHER). Sans nom de témoin.
+      required: [event_id, _status, _last_updated]
+      properties:
+        event_id:
+          type: string
+          description: Ajouté (pas de clé dans le modèle de données).
+        event_date: { type: string, format: date }
+        event_type: { type: string, enum: [shipwreck, dead-and-missing, incident] }
+        latitude: { $ref: '#/components/schemas/Latitude' }
+        longitude: { $ref: '#/components/schemas/Longitude' }
+        wind_force: { type: [integer, 'null'], minimum: 0, maximum: 12 }
+        wave_height: { type: [number, 'null'], minimum: 0 }
+        boat_type: { type: [string, 'null'] }
+        boat_involved: { type: [string, 'null'] }
+        death_nb_people: { type: [integer, 'null'], minimum: 0 }
+        shipwreck_nb: { type: [integer, 'null'], minimum: 0 }
+        inc_action: { type: [string, 'null'] }
+        testimony_src: { type: [string, 'null'], format: uri }
+        _status: { $ref: '#/components/schemas/Status' }
+        _last_updated: { $ref: '#/components/schemas/LastUpdated' }
+      examples:
+        - event_id: ev-2026-0003
+          event_date: '2026-09-14'
+          event_type: incident
+          latitude: 33.5833
+          longitude: 14.0833
+          inc_action: FICTIF. Tirs en l'air à proximité du navire.
+          _status: published
+          _last_updated: '2026-11-22T09:30:00Z'
+    MediaDescription:
+      type: object
+      required: [language, description]
+      properties:
+        language: { type: string, description: ISO 639-1 }
+        description: { type: string }
+    Media:
+      type: object
+      description: Photo, vidéo ou son (MEDIA et MEDIA-DESCRIPTION). Publié sans métadonnées EXIF de lieu ni de personne.
+      required: [media_id, _status, _last_updated]
+      properties:
+        media_id: { type: string }
+        media_type: { type: string, enum: [photo, video, audio] }
+        media_url: { type: string, format: uri }
+        operation_id:
+          type: [string, 'null']
+          description: |
+            Question ouverte Q1 : un seul identifiant (modèle actuel) ou une liste (hypothèse H1,
+            issue #150), et de quel type d'opération (rotation, entrée du journal, point de la carte).
+          x-question: Q1
+        descriptions:
+          type: array
+          description: L'anglais toujours présent.
+          items: { $ref: '#/components/schemas/MediaDescription' }
+        _status: { $ref: '#/components/schemas/Status' }
+        _last_updated: { $ref: '#/components/schemas/LastUpdated' }
+      examples:
+        - media_id: media-0007
+          media_type: photo
+          media_url: https://wordpress.example/wp-content/uploads/fictif-0007.jpg
+          operation_id: op-2026-0042
+          descriptions:
+            - { language: en, description: FICTIF. Rescue at dawn. }
+            - { language: fr, description: FICTIF. Sauvetage à l'aube. }
+          _status: published
+          _last_updated: '2026-11-22T09:30:00Z'
+    GlossaryEntry:
+      type: object
+      required: [term_slug, language, _status, _last_updated]
+      properties:
+        term_slug: { type: string }
+        language: { type: string, description: ISO 639-1 }
+        term: { type: string }
+        definition: { type: string, description: Markdown }
+        sources:
+          type: array
+          items: { type: string, format: uri }
+        letter: { type: string, minLength: 1, maxLength: 1 }
+        _status: { $ref: '#/components/schemas/Status' }
+        _last_updated: { $ref: '#/components/schemas/LastUpdated' }
+      examples:
+        - term_slug: place-of-safety
+          language: fr
+          term: Lieu sûr
+          definition: FICTIF. Lieu où une opération de sauvetage prend fin.
+          sources: []
+          letter: L
+          _status: published
+          _last_updated: '2026-11-22T09:30:00Z'
+    WebLogBook:
+      type: object
+      required: [status, _last_updated]
+      properties:
+        status:
+          type: [string, 'null']
+          description: Message affiché pendant une rotation (on-going-description, renommé status dans la Data structure du 22/11).
+        _last_updated: { $ref: '#/components/schemas/LastUpdated' }
+    Port:
+      type: object
+      required: [port_id, _status, _last_updated]
+      properties:
+        port_id: { type: string, examples: [port-salerno] }
+        name: { type: string }
+        country: { type: string, description: ISO 3166 alpha-2 }
+        latitude: { $ref: '#/components/schemas/Latitude' }
+        longitude: { $ref: '#/components/schemas/Longitude' }
+        is_place_of_safety: { type: boolean }
+        _status: { $ref: '#/components/schemas/Status' }
+        _last_updated: { $ref: '#/components/schemas/LastUpdated' }
+    Ship:
+      type: object
+      required: [ship_id, _status, _last_updated]
+      properties:
+        ship_id: { type: string }
+        name: { type: string }
+        imo: { type: [integer, 'null'] }
+        mmsi: { type: [integer, 'null'] }
+        flag: { type: [string, 'null'], description: ISO 3166 alpha-2 }
+        operator: { type: [string, 'null'] }
+        ship_type: { type: [string, 'null'], enum: [rescue vessel, patrol vessel, other, null] }
+        _status: { $ref: '#/components/schemas/Status' }
+        _last_updated: { $ref: '#/components/schemas/LastUpdated' }
+    Item:
+      type: object
+      required: [item_id, list_id, item_slug, _status, _last_updated]
+      properties:
+        item_id: { type: string }
+        list_id: { type: string, enum: [boat-type, operation-type, event-type] }
+        item_slug: { type: string, description: Valeur stable stockée dans les données (H2). }
+        label: { type: string, description: Libellé anglais }
+        labels:
+          type: object
+          description: Libellé par langue (ISO 639-1).
+          additionalProperties: { type: string }
+        position: { type: integer, minimum: 0 }
+        _status: { $ref: '#/components/schemas/Status' }
+        _last_updated: { $ref: '#/components/schemas/LastUpdated' }
+    Rotation:
+      type: object
+      description: La rotation telle que la route /logs la donne déjà (OPERATIONS dans le modèle de données).
+      properties:
+        id: { type: integer, description: rotation-id }
+        name: { type: string, description: rotation-name }
+        date_first: { type: string, description: rotation-start }
+        date_last: { type: string, description: rotation-end }
+        number_of_survivors: { type: [integer, 'null'], description: survival-number }
+        disembarkation:
+          type: [string, 'null']
+          description: disembarkation-port, voir la question Q2.
+          x-question: Q2
+    Log:
+      type: object
+      description: Une entrée du journal de bord (OPERATION-LOGS), champs lus aujourd'hui.
+      properties:
+        id: { type: integer, description: log-id }
+        date: { type: string, description: datetime, fuseau à confirmer }
+        title: { type: string, description: description, à confirmer }
+        content: { type: string, description: detailed-description, à confirmer }
+        latitude: { type: [number, string, 'null'] }
+        longitude: { type: [number, string, 'null'] }
+        tags:
+          description: list-glossary-words, à confirmer
+        operation: { $ref: '#/components/schemas/Rotation' }

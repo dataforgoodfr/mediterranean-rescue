@@ -1,0 +1,119 @@
+{
+    "translation-revision-date": "YEAR-MO-DA HO:MI+ZONE",
+    "generator": "WP-CLI\/2.12.0",
+    "source": "build\/operations.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "fr_FR",
+                "plural-forms": "nplurals=2; plural=(n > 1);"
+            },
+            "None": [
+                "Aucun"
+            ],
+            "Archive": [
+                "Archiver"
+            ],
+            "Map operations": [
+                "Op\u00e9rations de la carte"
+            ],
+            "Loading the operations\u2026": [
+                "Chargement des op\u00e9rations\u2026"
+            ],
+            "Transfer of %s": [
+                "Transfert du %s"
+            ],
+            "Rescue of %s": [
+                "Sauvetage du %s"
+            ],
+            "published": [
+                "publi\u00e9e"
+            ],
+            "in review": [
+                "en relecture"
+            ],
+            "draft": [
+                "brouillon"
+            ],
+            "archived": [
+                "archiv\u00e9e"
+            ],
+            "\u2190 All operations": [
+                "\u2190 Toutes les op\u00e9rations"
+            ],
+            "New operation": [
+                "Nouvelle op\u00e9ration"
+            ],
+            "Status:": [
+                "\u00c9tat :"
+            ],
+            "by %s": [
+                "par %s"
+            ],
+            "Not saved: %s": [
+                "Pas enregistr\u00e9e : %s"
+            ],
+            "Read only: this record is published or belongs to someone else.": [
+                "Lecture seule : cette fiche est publi\u00e9e ou appartient \u00e0 quelqu'un d'autre."
+            ],
+            "Publish": [
+                "Publier"
+            ],
+            "Send for review": [
+                "Envoyer en relecture"
+            ],
+            "Save": [
+                "Enregistrer"
+            ],
+            "number unknown": [
+                "nombre inconnu"
+            ],
+            "%d person": [
+                "%d personne",
+                "%d personnes"
+            ],
+            "disembarked in %s": [
+                "d\u00e9barqu\u00e9es \u00e0 %s"
+            ],
+            "transferred to %s": [
+                "transf\u00e9r\u00e9es sur le %s"
+            ],
+            "no position": [
+                "sans position"
+            ],
+            "No operation yet. Click \u201cAdd an operation\u201d, then on the map to place the first one.": [
+                "Aucune op\u00e9ration pour l'instant. Cliquez sur \u00ab Ajouter une op\u00e9ration \u00bb, puis sur la carte pour placer la premi\u00e8re."
+            ],
+            "no date": [
+                "sans date"
+            ],
+            "Map of the operations": [
+                "Carte des op\u00e9rations"
+            ],
+            "Click on the map to place the operation.": [
+                "Cliquez sur la carte pour placer l'op\u00e9ration."
+            ],
+            "The operations could not be loaded (%s).": [
+                "Les op\u00e9rations n'ont pas pu \u00eatre charg\u00e9es (%s)."
+            ],
+            "Try again": [
+                "R\u00e9essayer"
+            ],
+            "%1$d operation, %2$d published": [
+                "%1$d op\u00e9ration, %2$d publi\u00e9e(s)",
+                "%1$d op\u00e9rations, %2$d publi\u00e9e(s)"
+            ],
+            "Add an operation": [
+                "Ajouter une op\u00e9ration"
+            ],
+            "Operations": [
+                "Op\u00e9rations"
+            ],
+            "The screen could not start: missing data from WordPress.": [
+                ""
+            ]
+        }
+    }
+}

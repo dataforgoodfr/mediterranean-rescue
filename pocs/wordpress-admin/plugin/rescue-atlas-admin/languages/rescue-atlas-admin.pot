@@ -1,0 +1,719 @@
+# Copyright (C) 2026 Data for Good volunteers
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Rescue Atlas Admin 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/rescue-atlas-admin\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-23T09:40:16+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: rescue-atlas-admin\n"
+
+#. Plugin Name of the plugin
+#: rescue-atlas-admin.php
+msgid "Rescue Atlas Admin"
+msgstr ""
+
+#. Description of the plugin
+#: rescue-atlas-admin.php
+msgid "Back office for the Rescue Atlas map of SOS MEDITERRANEE: map operations, events, ports, ships and glossary, with checks before publication, roles and a read-only API for the map."
+msgstr ""
+
+#. Author of the plugin
+#: rescue-atlas-admin.php
+msgid "Data for Good volunteers"
+msgstr ""
+
+#. Author URI of the plugin
+#: rescue-atlas-admin.php
+msgid "https://github.com/dataforgoodfr/mediterranean-rescue"
+msgstr ""
+
+#: admin/class-classic-form.php:43
+msgid "Record"
+msgstr ""
+
+#: admin/class-classic-form.php:89
+#: build/operations.js:1
+msgid "None"
+msgstr ""
+
+#: admin/class-classic-form.php:193
+msgid "Record saved, but not published: please fix the errors."
+msgstr ""
+
+#: admin/class-classic-form.php:217
+msgid "Back to draft"
+msgstr ""
+
+#: admin/class-classic-form.php:217
+#: build/operations.js:1
+msgid "Archive"
+msgstr ""
+
+#: admin/class-classic-form.php:230
+msgid "You are not allowed to do this."
+msgstr ""
+
+#: admin/class-classic-form.php:251
+#: includes/class-post-types.php:50
+msgctxt "post status"
+msgid "Archived"
+msgstr ""
+
+#: admin/class-classic-form.php:268
+#: includes/class-fields.php:152
+#: includes/class-fields.php:214
+msgid "Date"
+msgstr ""
+
+#: admin/class-classic-form.php:269
+msgid "Type"
+msgstr ""
+
+#: admin/class-classic-form.php:270
+msgid "People"
+msgstr ""
+
+#: admin/class-classic-form.php:271
+#: includes/class-fields.php:195
+msgid "Disembarkation"
+msgstr ""
+
+#: admin/class-operations-screen.php:46
+#: includes/class-fields.php:69
+#: build/operations.js:6
+msgid "Map operations"
+msgstr ""
+
+#: admin/class-operations-screen.php:47
+msgid "Operations screen"
+msgstr ""
+
+#: admin/class-operations-screen.php:59
+#: build/operations.js:6
+msgid "Loading the operations…"
+msgstr ""
+
+#: admin/class-settings.php:33
+msgid "Rescue Atlas settings"
+msgstr ""
+
+#: admin/class-settings.php:33
+msgid "Settings"
+msgstr ""
+
+#: admin/class-settings.php:59
+msgid "Message during a rotation"
+msgstr ""
+
+#: admin/class-settings.php:60
+msgid "API read key"
+msgstr ""
+
+#: admin/class-settings.php:68
+msgid "Shown on the operations page while the ship is at sea. Never a position."
+msgstr ""
+
+#: admin/class-settings.php:76
+msgid "Empty: the read API is open (test site only). Otherwise the map sends it in the X-API-Key header."
+msgstr ""
+
+#: includes/class-fields.php:69
+msgid "Map operation"
+msgstr ""
+
+#: includes/class-fields.php:70
+msgid "Events"
+msgstr ""
+
+#: includes/class-fields.php:70
+msgid "Event"
+msgstr ""
+
+#: includes/class-fields.php:71
+msgid "Ports"
+msgstr ""
+
+#: includes/class-fields.php:71
+msgid "Port"
+msgstr ""
+
+#: includes/class-fields.php:72
+msgid "Ships"
+msgstr ""
+
+#: includes/class-fields.php:72
+msgid "Ship"
+msgstr ""
+
+#: includes/class-fields.php:73
+msgid "Glossary"
+msgstr ""
+
+#: includes/class-fields.php:73
+msgid "Glossary term"
+msgstr ""
+
+#: includes/class-fields.php:107
+msgid "Latitude"
+msgstr ""
+
+#: includes/class-fields.php:111
+msgid "Decimal degrees (WGS 84), for example 35.3333."
+msgstr ""
+
+#: includes/class-fields.php:114
+msgid "Longitude"
+msgstr ""
+
+#: includes/class-fields.php:122
+msgid "Wind force"
+msgstr ""
+
+#: includes/class-fields.php:126
+msgid "Beaufort scale (unit to be confirmed)."
+msgstr ""
+
+#: includes/class-fields.php:127
+msgid "Conditions"
+msgstr ""
+
+#: includes/class-fields.php:130
+msgid "Wave height"
+msgstr ""
+
+#: includes/class-fields.php:133
+msgid "In metres (unit to be confirmed)."
+msgstr ""
+
+#: includes/class-fields.php:136
+msgid "Type of boat in distress"
+msgstr ""
+
+#: includes/class-fields.php:155
+#: includes/class-fields.php:217
+msgid "Where and when"
+msgstr ""
+
+#: includes/class-fields.php:158
+msgid "Type of operation"
+msgstr ""
+
+#: includes/class-fields.php:162
+msgid "Rescue"
+msgstr ""
+
+#: includes/class-fields.php:163
+msgid "Transfer"
+msgstr ""
+
+#: includes/class-fields.php:167
+msgid "Type of transfer"
+msgstr ""
+
+#: includes/class-fields.php:169
+msgid "Only for a transfer."
+msgstr ""
+
+#: includes/class-fields.php:172
+msgid "Rotation"
+msgstr ""
+
+#: includes/class-fields.php:175
+msgid "Identifier of the rotation in the logbook."
+msgstr ""
+
+#: includes/class-fields.php:180
+msgid "People rescued"
+msgstr ""
+
+#: includes/class-fields.php:180
+msgid "People rescued (totals only)"
+msgstr ""
+
+#: includes/class-fields.php:181
+msgid "Men"
+msgstr ""
+
+#: includes/class-fields.php:182
+msgid "Women"
+msgstr ""
+
+#: includes/class-fields.php:183
+msgid "Minors"
+msgstr ""
+
+#: includes/class-fields.php:184
+msgid "Unaccompanied minors"
+msgstr ""
+
+#: includes/class-fields.php:185
+msgid "Children under 5"
+msgstr ""
+
+#: includes/class-fields.php:186
+msgid "Pregnant women"
+msgstr ""
+
+#: includes/class-fields.php:187
+msgid "Number of nationalities"
+msgstr ""
+
+#: includes/class-fields.php:187
+msgid "The number only, never the list."
+msgstr ""
+
+#: includes/class-fields.php:192
+msgid "Port of disembarkation"
+msgstr ""
+
+#: includes/class-fields.php:196
+msgid "A port from the list, or a ship below."
+msgstr ""
+
+#: includes/class-fields.php:199
+msgid "Ship of disembarkation"
+msgstr ""
+
+#: includes/class-fields.php:202
+msgid "When people are transferred to another ship."
+msgstr ""
+
+#: includes/class-fields.php:205
+#: includes/class-fields.php:246
+msgid "Testimony link"
+msgstr ""
+
+#: includes/class-fields.php:207
+msgid "Links"
+msgstr ""
+
+#: includes/class-fields.php:220
+msgid "Type of event"
+msgstr ""
+
+#: includes/class-fields.php:224
+msgid "Shipwreck"
+msgstr ""
+
+#: includes/class-fields.php:225
+#: includes/class-fields.php:238
+msgid "Dead and missing"
+msgstr ""
+
+#: includes/class-fields.php:226
+msgid "Incident"
+msgstr ""
+
+#: includes/class-fields.php:234
+msgid "Boat involved"
+msgstr ""
+
+#: includes/class-fields.php:236
+msgid "Outcome"
+msgstr ""
+
+#: includes/class-fields.php:239
+msgid "Shipwrecks"
+msgstr ""
+
+#: includes/class-fields.php:241
+msgid "What happened"
+msgstr ""
+
+#: includes/class-fields.php:243
+msgid "Never the name of a witness."
+msgstr ""
+
+#: includes/class-fields.php:254
+msgid "Country"
+msgstr ""
+
+#: includes/class-fields.php:258
+msgid "Two-letter ISO code, for example IT."
+msgstr ""
+
+#: includes/class-fields.php:261
+msgid "Place of safety"
+msgstr ""
+
+#: includes/class-fields.php:269
+msgid "IMO number"
+msgstr ""
+
+#: includes/class-fields.php:275
+msgid "MMSI"
+msgstr ""
+
+#: includes/class-fields.php:281
+msgid "Flag"
+msgstr ""
+
+#: includes/class-fields.php:284
+msgid "Two-letter ISO code."
+msgstr ""
+
+#: includes/class-fields.php:287
+msgid "Operator"
+msgstr ""
+
+#: includes/class-fields.php:291
+msgid "Type of ship"
+msgstr ""
+
+#: includes/class-fields.php:294
+msgid "Rescue vessel"
+msgstr ""
+
+#: includes/class-fields.php:295
+msgid "Patrol vessel"
+msgstr ""
+
+#: includes/class-fields.php:296
+#: includes/class-fields.php:337
+msgid "Other"
+msgstr ""
+
+#: includes/class-fields.php:302
+msgid "Term identifier"
+msgstr ""
+
+#: includes/class-fields.php:306
+msgid "The same in every language, for example place-of-safety."
+msgstr ""
+
+#: includes/class-fields.php:309
+msgid "Language"
+msgstr ""
+
+#: includes/class-fields.php:313
+msgid "English"
+msgstr ""
+
+#: includes/class-fields.php:314
+msgid "French"
+msgstr ""
+
+#: includes/class-fields.php:315
+msgid "Arabic"
+msgstr ""
+
+#: includes/class-fields.php:319
+msgid "Sources"
+msgstr ""
+
+#: includes/class-fields.php:321
+msgid "One web address per line."
+msgstr ""
+
+#: includes/class-fields.php:334
+msgid "Rubber boat"
+msgstr ""
+
+#: includes/class-fields.php:335
+msgid "Wooden boat"
+msgstr ""
+
+#: includes/class-fields.php:336
+msgid "Fiberglass boat"
+msgstr ""
+
+#. translators: %s: number of archived items.
+#: includes/class-post-types.php:57
+#, php-format
+msgid "Archived <span class=\"count\">(%s)</span>"
+msgid_plural "Archived <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: name of the content type, singular.
+#: includes/class-post-types.php:82
+#, php-format
+msgid "Add: %s"
+msgstr ""
+
+#. translators: %s: name of the content type, singular.
+#: includes/class-post-types.php:84
+#, php-format
+msgid "Edit: %s"
+msgstr ""
+
+#: includes/class-post-types.php:121
+msgid "Operation without a date"
+msgstr ""
+
+#. translators: %s: date of the transfer, YYYY-MM-DD.
+#. translators: %s: date of the transfer.
+#: includes/class-post-types.php:125
+#: build/operations.js:5
+#, php-format,js-format
+msgid "Transfer of %s"
+msgstr ""
+
+#. translators: %s: date of the rescue, YYYY-MM-DD.
+#. translators: %s: date of the rescue.
+#: includes/class-post-types.php:127
+#: build/operations.js:6
+#, php-format,js-format
+msgid "Rescue of %s"
+msgstr ""
+
+#. translators: %d: number of people rescued.
+#: includes/class-post-types.php:130
+#, php-format
+msgid "(%d person)"
+msgid_plural "(%d people)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-validator.php:63
+msgid "required"
+msgstr ""
+
+#: includes/class-validator.php:69
+msgid "whole number expected"
+msgstr ""
+
+#: includes/class-validator.php:73
+msgid "unknown item"
+msgstr ""
+
+#: includes/class-validator.php:79
+msgid "number expected"
+msgstr ""
+
+#: includes/class-validator.php:85
+msgid "date expected (YYYY-MM-DD)"
+msgstr ""
+
+#: includes/class-validator.php:88
+msgid "invalid web address"
+msgstr ""
+
+#: includes/class-validator.php:90
+msgid "value not in the list"
+msgstr ""
+
+#: includes/class-validator.php:96
+msgid "wrong format"
+msgstr ""
+
+#. translators: %s: smallest value allowed.
+#: includes/class-validator.php:102
+#, php-format
+msgid "at least %s"
+msgstr ""
+
+#. translators: %s: largest value allowed.
+#: includes/class-validator.php:106
+#, php-format
+msgid "at most %s"
+msgstr ""
+
+#: includes/class-validator.php:129
+msgid "Position: latitude and longitude go together."
+msgstr ""
+
+#: includes/class-validator.php:133
+msgid "The date is in the future."
+msgstr ""
+
+#: includes/class-validator.php:138
+msgid "Men plus women is more than the number of people rescued."
+msgstr ""
+
+#: includes/class-validator.php:140
+msgid "More minors than people rescued."
+msgstr ""
+
+#: includes/class-validator.php:141
+msgid "More unaccompanied minors than minors."
+msgstr ""
+
+#: includes/class-validator.php:142
+msgid "More children under 5 than minors."
+msgstr ""
+
+#: includes/class-validator.php:143
+msgid "More pregnant women than women."
+msgstr ""
+
+#: includes/class-validator.php:145
+msgid "Disembarkation: a port or a ship, not both."
+msgstr ""
+
+#: includes/class-validator.php:149
+msgid "This term already exists in this language."
+msgstr ""
+
+#: includes/rest/class-admin-controller.php:127
+msgid "Unknown operation."
+msgstr ""
+
+#: includes/rest/class-admin-controller.php:143
+msgid "Only the validation role can publish or archive."
+msgstr ""
+
+#: includes/rest/class-admin-controller.php:198
+msgid "Operation archived: the map will remove it."
+msgstr ""
+
+#: includes/rest/class-admin-controller.php:220
+msgid "Saved, but not published: please fix the errors."
+msgstr ""
+
+#: includes/rest/class-admin-controller.php:221
+msgid "Operation published: it will appear in the map API."
+msgstr ""
+
+#: includes/rest/class-admin-controller.php:222
+msgid "Sent for review."
+msgstr ""
+
+#: includes/rest/class-admin-controller.php:223
+msgid "Draft saved."
+msgstr ""
+
+#: includes/rest/class-public-controller.php:111
+msgid "Missing or wrong API key."
+msgstr ""
+
+#: includes/rest/class-public-controller.php:122
+msgid "Only items changed after this date (ISO 8601)."
+msgstr ""
+
+#: build/operations.js:1
+msgid "published"
+msgstr ""
+
+#: build/operations.js:1
+msgid "in review"
+msgstr ""
+
+#: build/operations.js:1
+msgid "draft"
+msgstr ""
+
+#: build/operations.js:1
+msgid "archived"
+msgstr ""
+
+#: build/operations.js:1
+msgid "← All operations"
+msgstr ""
+
+#: build/operations.js:1
+msgid "New operation"
+msgstr ""
+
+#: build/operations.js:1
+msgid "Status:"
+msgstr ""
+
+#. translators: %s: name of the author.
+#: build/operations.js:1
+#, js-format
+msgid "by %s"
+msgstr ""
+
+#. translators: %s: error message.
+#: build/operations.js:1
+#, js-format
+msgid "Not saved: %s"
+msgstr ""
+
+#: build/operations.js:1
+msgid "Read only: this record is published or belongs to someone else."
+msgstr ""
+
+#: build/operations.js:1
+msgid "Publish"
+msgstr ""
+
+#: build/operations.js:1
+msgid "Send for review"
+msgstr ""
+
+#: build/operations.js:1
+msgid "Save"
+msgstr ""
+
+#: build/operations.js:1
+msgid "number unknown"
+msgstr ""
+
+#. translators: %d: number of people rescued.
+#: build/operations.js:2
+#, js-format
+msgid "%d person"
+msgid_plural "%d people"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: name of the port.
+#: build/operations.js:3
+#, js-format
+msgid "disembarked in %s"
+msgstr ""
+
+#. translators: %s: name of the ship.
+#: build/operations.js:4
+#, js-format
+msgid "transferred to %s"
+msgstr ""
+
+#: build/operations.js:4
+msgid "no position"
+msgstr ""
+
+#: build/operations.js:4
+msgid "No operation yet. Click “Add an operation”, then on the map to place the first one."
+msgstr ""
+
+#: build/operations.js:4
+msgid "no date"
+msgstr ""
+
+#: build/operations.js:6
+msgid "Map of the operations"
+msgstr ""
+
+#: build/operations.js:6
+msgid "Click on the map to place the operation."
+msgstr ""
+
+#. translators: %s: error message.
+#: build/operations.js:6
+#, js-format
+msgid "The operations could not be loaded (%s)."
+msgstr ""
+
+#: build/operations.js:6
+msgid "Try again"
+msgstr ""
+
+#. translators: 1: number of operations, 2: number of published operations.
+#: build/operations.js:7
+#, js-format
+msgid "%1$d operation, %2$d published"
+msgid_plural "%1$d operations, %2$d published"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/operations.js:7
+msgid "Add an operation"
+msgstr ""
+
+#: build/operations.js:7
+msgid "Operations"
+msgstr ""
+
+#: build/operations.js:7
+msgid "The screen could not start: missing data from WordPress."
+msgstr ""
