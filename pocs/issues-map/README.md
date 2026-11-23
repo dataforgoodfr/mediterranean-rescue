@@ -32,7 +32,8 @@ Une petite page React, Vite et TypeScript (les versions de `frontend/`), en lect
 
 Les fichiers téléchargés vont dans `data/issues-map/` à la racine du dépôt, que Git ignore.
 
-`pnpm check` (lancé avant chaque build) vérifie que `maquettes.json` colle encore à GitHub : une
+`pnpm check` (lancé avant chaque build) fabrique d'abord l'instantané s'il manque, comme `pnpm dev`,
+puis vérifie que `maquettes.json` colle encore à GitHub : une
 issue posée qui n'existe plus, une planche ou une zone inconnue arrêtent le build ; une issue
 posée hors de son objectif s'affiche en avertissement.
 

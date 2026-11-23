@@ -9,7 +9,7 @@
     "dev": "node scripts/ensure-data.mjs && vite",
     "build": "node scripts/ensure-data.mjs && node scripts/check.ts && tsc -b && vite build && node scripts/artifact.mjs",
     "refresh": "pnpm snapshot && pnpm boards && pnpm build",
-    "check": "node scripts/check.ts"
+    "check": "node scripts/ensure-data.mjs && node scripts/check.ts"
   },
   "dependencies": {
     "react": "19.3.1",
