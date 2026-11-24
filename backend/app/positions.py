@@ -8,9 +8,9 @@ from dataclasses import dataclass
 class TextPosition:
     """Une position lue dans un texte, en degrés décimaux (WGS84).
 
-    Une moitié absente du texte reste à None. `ambiguous` est vrai quand la position ne peut
-    pas être prise telle quelle : lecture incertaine, moitié manquante, ou point hors de la
-    boîte Méditerranée. La valeur rendue est alors une lecture possible, pas la seule."""
+    Une moitié absente du texte reste à None. `ambiguous` est vrai quand la position n'est pas
+    sûre : lecture à double sens, moitié manquante, ou point hors de la boîte Méditerranée.
+    La valeur rendue est alors une lecture possible, pas la seule."""
 
     latitude: float | None
     longitude: float | None
