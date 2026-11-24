@@ -11,12 +11,12 @@ from app.positions import TextPosition, positions_in_text
             "34 20.8 N 011 50.5 E", 34 + 20.8 / 60, 11 + 50.5 / 60, id="since_2024_decimal_minutes"
         ),
         pytest.param(
-            "34 22 53 N 012 59 55 E",
-            34 + 22 / 60 + 53 / 3600,
-            12 + 59 / 60 + 55 / 3600,
+            "34 15 42 N 012 48 31 E",
+            34 + 15 / 60 + 42 / 3600,
+            12 + 48 / 60 + 31 / 3600,
             id="seconds_without_symbols",
         ),
-        pytest.param("34 26 N012 09 E", 34 + 26 / 60, 12 + 9 / 60, id="letter_stuck_to_longitude"),
+        pytest.param("34 11 N012 37 E", 34 + 11 / 60, 12 + 37 / 60, id="letter_stuck_to_longitude"),
         pytest.param("34 06N", 34.1, None, id="since_2024_letter_stuck"),
         pytest.param("34 06,5 N", 34 + 6.5 / 60, None, id="since_2024_decimal_comma"),
         pytest.param("33°12.4’N 013°05.2’E", 33 + 12.4 / 60, 13 + 5.2 / 60, id="older_apostrophe"),
