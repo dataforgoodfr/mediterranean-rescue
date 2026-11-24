@@ -1,4 +1,4 @@
-"""Reading positions written in free text."""
+"""La lecture des positions écrites dans un texte libre."""
 
 import re
 from dataclasses import dataclass
@@ -6,11 +6,11 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class TextPosition:
-    """A position read from a text, in decimal degrees (WGS84).
+    """Une position lue dans un texte, en degrés décimaux (WGS84).
 
-    A half missing from the text stays None. `ambiguous` is true when the position cannot be
-    trusted as is: an uncertain reading, a missing half, or a point outside the Mediterranean
-    box. The returned value is then one possible reading, not the only one."""
+    Une moitié absente du texte reste à None. `ambiguous` est vrai quand la position ne peut
+    pas être prise telle quelle : lecture incertaine, moitié manquante, ou point hors de la
+    boîte Méditerranée. La valeur rendue est alors une lecture possible, pas la seule."""
 
     latitude: float | None
     longitude: float | None
@@ -27,17 +27,18 @@ class _Half:
     end: int
 
 
-# The dictionary below accounts for french notation, ie. "O" -> "Ouest" -> "West"
+# « O » est l'Ouest de la notation française, l'équivalent de « W ».
 _SIGNS = {"N": 1, "S": -1, "E": 1, "W": -1, "O": -1}
 
-# The operating zone in the central Mediterranean. A position outside it is more likely a
-# misreading or a typo than a real one, so it is flagged rather than dropped.
+# La zone d'opération en Méditerranée centrale. Une position hors de cette boîte est plus
+# probablement une erreur de lecture ou de saisie qu'une vraie position. Elle est marquée
+# ambiguë, pas écartée.
 _MED_LATITUDES = (29.5, 40.0)
 _MED_LONGITUDES = (8.0, 23.0)
 
-# The hemisphere letter is mandatory. Without it, times or headings (COG 272°) would match.
-# Digits after the prime (33°12’4) read as 12.4 minutes or as 12 minutes 4 seconds. Such a
-# reading is flagged ambiguous.
+# La lettre d'hémisphère est obligatoire. Sans elle, on attraperait des heures ou des caps
+# (COG 272°). Des chiffres après le prime (33°12’4) se lisent 12,4 minutes ou 12 minutes
+# 4 secondes. Cette lecture est marquée ambiguë.
 _HALF = re.compile(
     r"""
     (?<![\d.,])
@@ -59,9 +60,9 @@ def _read_half(match: re.Match[str]) -> _Half | None:
     minutes_text = match["min"].replace(",", ".")
     extra = match["extra"]
 
-    # Digits after the prime are read as tenths of a minute: 12’4 gives 12.4. It is one of
-    # two possible readings, so the half is flagged ambiguous. If the minutes already have
-    # decimals (12.4’5), the extra digits are dropped.
+    # Les chiffres après le prime se lisent comme des dixièmes de minute : 12’4 donne 12,4.
+    # C'est l'une de deux lectures possibles, d'où le marquage ambigu. Si les minutes ont
+    # déjà des décimales (12.4’5), les chiffres en trop sont ignorés.
     if extra is not None and "." not in minutes_text:
         minutes_text = f"{minutes_text}.{extra}"
     minutes = float(minutes_text)
@@ -70,7 +71,8 @@ def _read_half(match: re.Match[str]) -> _Half | None:
     hemisphere = match["hem"]
     is_latitude = hemisphere in "NS"
 
-    # Out-of-range values mean the text is not a position. Skip it rather than raise.
+    # Une valeur hors limites signifie que le texte n'est pas une position. On l'écarte sans
+    # lever d'erreur.
     if minutes >= 60 or seconds >= 60 or degrees > (90 if is_latitude else 180):
         return None
 
@@ -91,11 +93,11 @@ def _in_mediterranean(latitude: float, longitude: float) -> bool:
 
 
 def positions_in_text(text: str) -> list[TextPosition]:
-    """Return every position found in the text, in order, with the excerpt that was read.
+    """Rend chaque position trouvée dans le texte, dans l'ordre, avec le morceau lu.
 
-    A latitude followed by a longitude, separated only by whitespace, forms one position. A
-    lone half is returned with the other one set to None. A text without a position returns
-    an empty list, never (0, 0)."""
+    Une latitude suivie d'une longitude, séparées par des espaces seulement, forment une
+    position. Une moitié seule est rendue avec l'autre à None. Un texte sans position rend
+    une liste vide, jamais (0, 0)."""
     halves = [half for match in _HALF.finditer(text) if (half := _read_half(match))]
     positions: list[TextPosition] = []
     i = 0
@@ -103,8 +105,9 @@ def positions_in_text(text: str) -> list[TextPosition]:
         first = halves[i]
         second = halves[i + 1] if i + 1 < len(halves) else None
 
-        # A latitude directly followed by a longitude, with only whitespace between them,
-        # forms one position. A text can hold several, like the start and end of a journey.
+        # Une latitude suivie directement d'une longitude, séparées par des espaces seulement,
+        # forment une position. Un texte peut en contenir plusieurs, comme le départ et
+        # l'arrivée d'un trajet.
         if (
             first.is_latitude
             and second is not None
@@ -124,9 +127,10 @@ def positions_in_text(text: str) -> list[TextPosition]:
             i += 2
             continue
 
-        # Any other half stands alone: a lone latitude, a lone longitude, or a pair in the
-        # wrong order or split by other words. The missing side stays None. A lone half
-        # cannot be placed in the Mediterranean box, so it is always ambiguous.
+        # Toute autre moitié reste seule : une latitude seule, une longitude seule, ou une
+        # paire dans le mauvais ordre ou coupée par d'autres mots. Le côté manquant reste à
+        # None. Une moitié seule ne peut pas être placée dans la boîte Méditerranée, elle est
+        # donc toujours ambiguë.
         positions.append(
             TextPosition(
                 latitude=first.value if first.is_latitude else None,
