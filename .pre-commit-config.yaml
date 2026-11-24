@@ -36,6 +36,12 @@ repos:
         entry: pnpm --dir frontend lint
         files: ^frontend/.*\.(ts|tsx|js|jsx)$
         pass_filenames: false
+      - id: oxfmt
+        name: oxfmt (frontend)
+        language: unsupported
+        entry: pnpm --dir frontend format
+        files: ^frontend/.*\.(json|ts|tsx|js|jsx)$
+        pass_filenames: false
       # Frontend : tsc, les types (mode strict). En CI, `pnpm build` le lance (SKIP=tsc).
       - id: tsc
         name: tsc (frontend)

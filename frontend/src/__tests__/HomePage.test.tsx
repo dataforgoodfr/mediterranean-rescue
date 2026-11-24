@@ -18,9 +18,7 @@ describe('latest operation date', () => {
   test('is shown when operations exist', async () => {
     mockApi([{ date: '2026-10-01' }, { date: '2026-11-03' }])
     renderWithProviders(<App />)
-    expect(
-      await screen.findByText('Dernière opération : 3 novembre 2026'),
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Dernière opération : 3 novembre 2026')).toBeInTheDocument()
   })
 
   test('is hidden when there is no operation', async () => {
@@ -31,10 +29,7 @@ describe('latest operation date', () => {
   })
 
   test('is hidden when the API is unreachable', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockRejectedValue(new TypeError('Failed to fetch')),
-    )
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')))
 
     renderWithProviders(<App />)
 

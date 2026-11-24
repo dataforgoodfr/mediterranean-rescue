@@ -1,10 +1,13 @@
-import {getLatestOperation} from '@/api'
+import { getLatestOperation } from '@/api'
 import { expect, test, vi, describe } from 'vitest'
 
 const mockFetch = (body: unknown, status = 200) => {
-  vi.stubGlobal('fetch', vi.fn().mockImplementation(async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockImplementation(async () => {
       return Response.json(body, { status })
-    }))
+    }),
+  )
 }
 
 describe('getLatestOperation', () => {

@@ -8,5 +8,8 @@ const urls = import.meta.glob<string>('../assets/icons/*.svg', {
 })
 
 export const icons: Record<string, string> = Object.fromEntries(
-  Object.entries(urls).map(([path, url]) => [path.slice(path.lastIndexOf('/') + 1, -'.svg'.length), url]),
+  Object.entries(urls).map(([path, url]) => [
+    path.slice(path.lastIndexOf('/') + 1, -'.svg'.length),
+    url,
+  ]),
 )
