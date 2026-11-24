@@ -30,7 +30,26 @@ def test_reads_each_form(text: str, latitude: float | None, longitude: float | N
     assert position.latitude == pytest.approx(latitude)
     assert position.longitude == pytest.approx(longitude)
     assert position.text == text
-    assert position.ambiguous is False
+
+
+@pytest.mark.parametrize(
+    ("text", "ambiguous"),
+    [
+        pytest.param("34 06 N 011 43 E", False, id="inside_the_box"),
+        pytest.param("29 30 N 008 00 E", False, id="south_west_corner"),
+        pytest.param("40 00 N 023 00 E", False, id="north_east_corner"),
+        pytest.param("41 00 N 011 00 E", True, id="too_far_north"),
+        pytest.param("34 00 N 024 00 E", True, id="too_far_east"),
+        pytest.param("35 30 S 002 15 O", True, id="other_hemispheres"),
+        pytest.param("34 06 N", True, id="latitude_alone"),
+        pytest.param("011 43 E", True, id="longitude_alone"),
+    ],
+)
+def test_flags_positions_outside_the_mediterranean_or_incomplete(
+    text: str, ambiguous: bool
+) -> None:
+    [position] = positions_in_text(text)
+    assert position.ambiguous is ambiguous
 
 
 def test_keeps_only_the_position_from_a_sentence() -> None:

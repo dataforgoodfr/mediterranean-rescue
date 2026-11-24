@@ -8,8 +8,9 @@ from dataclasses import dataclass
 class TextPosition:
     """A position read from a text, in decimal degrees (WGS84).
 
-    A half missing from the text stays None. `ambiguous` is true when the reading is not
-    certain. The returned value is then one possible reading, not the only one."""
+    A half missing from the text stays None. `ambiguous` is true when the position cannot be
+    trusted as is: an uncertain reading, a missing half, or a point outside the Mediterranean
+    box. The returned value is then one possible reading, not the only one."""
 
     latitude: float | None
     longitude: float | None
@@ -28,6 +29,11 @@ class _Half:
 
 # The dictionary below accounts for french notation, ie. "O" -> "Ouest" -> "West"
 _SIGNS = {"N": 1, "S": -1, "E": 1, "W": -1, "O": -1}
+
+# The operating zone in the central Mediterranean. A position outside it is more likely a
+# misreading or a typo than a real one, so it is flagged rather than dropped.
+_MED_LATITUDES = (29.5, 40.0)
+_MED_LONGITUDES = (8.0, 23.0)
 
 # The hemisphere letter is mandatory. Without it, times or headings (COG 272°) would match.
 # Digits after the prime (33°12’4) read as 12.4 minutes or as 12 minutes 4 seconds. Such a
@@ -77,6 +83,13 @@ def _read_half(match: re.Match[str]) -> _Half | None:
     )
 
 
+def _in_mediterranean(latitude: float, longitude: float) -> bool:
+    return (
+        _MED_LATITUDES[0] <= latitude <= _MED_LATITUDES[1]
+        and _MED_LONGITUDES[0] <= longitude <= _MED_LONGITUDES[1]
+    )
+
+
 def positions_in_text(text: str) -> list[TextPosition]:
     """Return every position found in the text, in order, with the excerpt that was read.
 
@@ -103,20 +116,23 @@ def positions_in_text(text: str) -> list[TextPosition]:
                     latitude=first.value,
                     longitude=second.value,
                     text=text[first.start : second.end],
-                    ambiguous=first.ambiguous or second.ambiguous,
+                    ambiguous=first.ambiguous
+                    or second.ambiguous
+                    or not _in_mediterranean(first.value, second.value),
                 )
             )
             i += 2
             continue
 
         # Any other half stands alone: a lone latitude, a lone longitude, or a pair in the
-        # wrong order or split by other words. The missing side stays None.
+        # wrong order or split by other words. The missing side stays None. A lone half
+        # cannot be placed in the Mediterranean box, so it is always ambiguous.
         positions.append(
             TextPosition(
                 latitude=first.value if first.is_latitude else None,
                 longitude=None if first.is_latitude else first.value,
                 text=text[first.start : first.end],
-                ambiguous=first.ambiguous,
+                ambiguous=True,
             )
         )
         i += 1
