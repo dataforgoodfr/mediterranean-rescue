@@ -108,7 +108,7 @@
 
 .ra-map__marker-button--selected .ra-map__marker-dot {
   box-shadow:
-    0 0 0 var(--border-marker) var(--color-primary),
+    0 0 0 var(--ring-marker-selected) var(--color-primary),
     var(--shadow-marker);
 }
 
