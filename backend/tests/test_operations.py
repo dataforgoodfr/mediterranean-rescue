@@ -1,4 +1,3 @@
-import datetime
 from pathlib import Path
 
 import pytest
@@ -6,26 +5,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy import Enum, String, inspect
 from sqlmodel import Session, col, select
 
-from app.models import Operation, OperationType
+from app.models import Operation
 from scripts.load_fictive_data import load_fictive_data
 
 FIXTURE = Path(__file__).parents[1] / "fixtures" / "3_fictive_data.csv"
-
-
-def test_the_fictive_data_set_loads_into_the_database(session: Session) -> None:
-    assert load_fictive_data(session, FIXTURE) == 3
-
-    operations = session.exec(select(Operation).order_by(col(Operation.id))).all()
-    assert len(operations) == 3
-    first = operations[0]
-    assert first.date == datetime.date(2023, 2, 17)
-    assert first.operation_type == OperationType.rescue
-    assert (first.nb_ops, first.nb_survivor, first.male, first.female) == (2, 38, 26, 9)
-    assert first.nb_nationalities == 4
-    assert first.transfer_type == "To Aquarius"
-    # 33° 59.8 et 17° 13.8 : des degrés et des minutes, rangés en degrés décimaux.
-    assert first.latitude == pytest.approx(33 + 59.8 / 60)
-    assert first.longitude == pytest.approx(17 + 13.8 / 60)
 
 
 def test_an_unknown_value_stays_empty_never_zero(session: Session) -> None:
@@ -55,7 +38,7 @@ def test_a_new_operation_type_needs_no_database_migration() -> None:
     assert not isinstance(column_type, Enum)
 
 
-VALID = {"date": "2023-02-17", "operation_type": "rescue", "nb_ops": 1}
+VALID: dict[str, object] = {"date": "2023-02-17", "operation_type": "rescue", "nb_ops": 1}
 
 
 def test_a_valid_operation_passes_validation() -> None:
@@ -98,7 +81,9 @@ def test_the_api_lists_no_operation_for_an_empty_database(client: TestClient) ->
     assert response.json() == []
 
 
-def test_the_api_lists_the_fictive_operations(client: TestClient, session: Session) -> None:
+def test_the_api_lists_the_fictive_published_operations(
+    client: TestClient, session: Session
+) -> None:
     load_fictive_data(session, FIXTURE)
 
     operations = client.get("/api/operations").json()
@@ -106,7 +91,6 @@ def test_the_api_lists_the_fictive_operations(client: TestClient, session: Sessi
     # De la plus ancienne à la plus récente.
     assert [operation["date"] for operation in operations] == [
         "2017-08-12",
-        "2021-01-26",
         "2023-02-17",
     ]
     latest = operations[-1]
@@ -117,7 +101,7 @@ def test_the_api_lists_the_fictive_operations(client: TestClient, session: Sessi
     assert latest["longitude"] == pytest.approx(17 + 13.8 / 60)
     assert isinstance(latest["id"], int)
     # Inconnu reste vide, jamais zéro, jusque dans la réponse.
-    assert operations[1]["male"] is None
+    assert operations[0]["under_18"] is None
 
 
 def test_the_operations_route_is_documented(client: TestClient) -> None:

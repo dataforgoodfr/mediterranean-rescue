@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 from app.db import engine
 from app.migrate import upgrade_database
-from app.routers import operations
+from app.routers import backoffice, operations
 
 
 @asynccontextmanager
@@ -43,3 +43,4 @@ def health() -> Health:
 
 # Chaque domaine a ses routes dans app/routers/ : https://fastapi.tiangolo.com/tutorial/bigger-applications/
 app.include_router(operations.router)
+app.include_router(backoffice.router)

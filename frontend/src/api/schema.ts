@@ -4,6 +4,26 @@
  */
 
 export interface paths {
+    "/api/backoffice/operations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Operations
+         * @description Liste les opérations, de la plus ancienne à la plus récente.
+         */
+        get: operations["list_operations_api_backoffice_operations_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -33,8 +53,7 @@ export interface paths {
         };
         /**
          * List Operations
-         * @description Every operation, oldest first. Positions are in decimal degrees (WGS 84), north and east
-         *     positive.
+         * @description Liste les opérations publiées, de la plus ancienne à la plus récente.
          */
         get: operations["list_operations_api_operations_get"];
         put?: never;
@@ -49,6 +68,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /** Health */
         Health: {
             /**
@@ -56,6 +80,65 @@ export interface components {
              * @constant
              */
             status: "ok";
+        };
+        /**
+         * OperationBackoffice
+         * @description Une opération telle que traitée par le backoffice, elle a
+         *     potentiellement des champs manquants.
+         */
+        OperationBackoffice: {
+            /** Boat Type */
+            boat_type?: string | null;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Female */
+            female?: number | null;
+            /** Id */
+            id: number;
+            /** Image Src */
+            image_src?: string | null;
+            /** Latitude */
+            latitude?: number | null;
+            /** Longitude */
+            longitude?: number | null;
+            /** Male */
+            male?: number | null;
+            /** Missing Fields */
+            missing_fields?: string[] | null;
+            /** Nb Nationalities */
+            nb_nationalities?: number | null;
+            /** Nb Ops */
+            nb_ops: number;
+            /** Nb Survivor */
+            nb_survivor?: number | null;
+            operation_type: components["schemas"]["OperationType"];
+            /** Port Disembarkation */
+            port_disembarkation?: string | null;
+            /** Pregnant Women */
+            pregnant_women?: number | null;
+            /** @default to_verify */
+            state: components["schemas"]["OperationState"];
+            /** Testimony Name */
+            testimony_name?: string | null;
+            /** Testimony Src */
+            testimony_src?: string | null;
+            /** Transfer Type */
+            transfer_type?: string | null;
+            /** Under 18 */
+            under_18?: number | null;
+            /** Under 18 Unacc */
+            under_18_unacc?: number | null;
+            /** Under 5 */
+            under_5?: number | null;
+            /** Video Src */
+            video_src?: string | null;
+            /** Wave Height */
+            wave_height?: number | null;
+            /** Wind Force */
+            wind_force?: number | null;
         };
         /**
          * OperationPublic
@@ -92,6 +175,8 @@ export interface components {
             port_disembarkation?: string | null;
             /** Pregnant Women */
             pregnant_women?: number | null;
+            /** @default to_verify */
+            state: components["schemas"]["OperationState"];
             /** Testimony Name */
             testimony_name?: string | null;
             /** Testimony Src */
@@ -112,12 +197,30 @@ export interface components {
             wind_force?: number | null;
         };
         /**
+         * OperationState
+         * @enum {string}
+         */
+        OperationState: "to_verify" | "verified" | "published";
+        /**
          * OperationType
          * @description Les types d'opération. Ils sont rangés comme du texte dans la base : un nouveau type
          *     (l'évacuation médicale, par exemple) n'est qu'une ligne de plus ici, sans migration.
          * @enum {string}
          */
         OperationType: "rescue" | "transfer";
+        /** ValidationError */
+        ValidationError: {
+            /** Context */
+            ctx?: Record<string, never>;
+            /** Input */
+            input?: unknown;
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -127,6 +230,37 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    list_operations_api_backoffice_operations_get: {
+        parameters: {
+            query?: {
+                state?: components["schemas"]["OperationState"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperationBackoffice"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     health_api_health_get: {
         parameters: {
             query?: never;

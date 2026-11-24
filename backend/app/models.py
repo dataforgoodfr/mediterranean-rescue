@@ -9,6 +9,12 @@ from sqlalchemy import String
 from sqlmodel import Field, SQLModel
 
 
+class OperationState(StrEnum):
+    to_verify = "to_verify"
+    verified = "verified"
+    published = "published"
+
+
 class OperationType(StrEnum):
     """Les types d'opération. Ils sont rangés comme du texte dans la base : un nouveau type
     (l'évacuation médicale, par exemple) n'est qu'une ligne de plus ici, sans migration."""
@@ -47,6 +53,8 @@ class OperationBase(SQLModel):
     testimony_name: str | None = None
     testimony_src: str | None = None
 
+    state: OperationState = Field(sa_type=String, default=OperationState.to_verify)
+
     # Un modèle de table ne se valide pas à la construction (Operation(...)) : passer par
     # Operation.model_validate(...) pour que ces règles s'appliquent (tests/test_operations.py).
     @model_validator(mode="after")
@@ -68,4 +76,13 @@ class Operation(OperationBase, table=True):
 class OperationPublic(OperationBase):
     """Une opération telle que l'API la renvoie : rangée dans la base, elle a toujours un id."""
 
+    """ the ID """
     id: int
+
+
+class OperationBackoffice(OperationBase):
+    """Une opération telle que traitée par le backoffice, elle a
+    potentiellement des champs manquants."""
+
+    id: int
+    missing_fields: list[str] | None = None

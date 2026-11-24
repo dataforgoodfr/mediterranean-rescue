@@ -32,6 +32,7 @@ def to_operation(row: OperationModel) -> Operation:
     return Operation.model_validate(
         dict(
             date=datetime.strptime(row.date, "%d/%m/%Y").date(),
+            state=row.state,
             operation_type=OperationType(row.type_ops.lower()),
             nb_ops=row.nb_ops,
             nb_survivor=row.nb_survivor,

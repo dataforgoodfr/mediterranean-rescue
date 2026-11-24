@@ -2,12 +2,22 @@
 
 from collections.abc import Sequence
 
+from pydantic import BaseModel
 from sqlmodel import Session, col, select
 
-from app.models import Operation
+from app.models import Operation, OperationState
 
 
-def list_operations(session: Session) -> Sequence[Operation]:
-    """Toutes les opérations, de la plus ancienne à la plus récente (puis par id, pour un ordre
-    stable entre deux opérations du même jour)."""
-    return session.exec(select(Operation).order_by(col(Operation.date), col(Operation.id))).all()
+class OperationFilters(BaseModel):
+    state: OperationState | None = None
+
+
+def list_operations(session: Session, filters: OperationFilters) -> Sequence[Operation]:
+    """Les opérations à vérifier, éventuellement filtrées par état,
+    triée de la plus ancienne à la plus récente
+    (puis par id, pour un ordre stable entre deux opérations du même jour)."""
+    stmt = select(Operation)
+    if filters.state is not None:
+        stmt = stmt.where(Operation.state == filters.state)
+
+    return session.exec(stmt.order_by(col(Operation.date), col(Operation.id))).all()

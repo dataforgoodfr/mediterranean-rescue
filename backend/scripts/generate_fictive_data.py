@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 class OperationModel(BaseModel):
     # Date stockée au format "dd/mm/yyyy"
     date: str
+    state: Literal["to_verify", "verified", "published"]
     type_ops: Literal["Rescue", "Transfer"]
     nb_ops: int = Field(ge=1)
     nb_survivor: int | None = None
@@ -117,6 +118,7 @@ def generate_fictive_data(seed: str, nb_lines: int) -> list[OperationModel]:
         nb_nationalities = random.randint(0, 27)
         op = OperationModel(
             date=generate_random_date().strftime("%d/%m/%Y"),
+            state=random.choice(["published", "to_verify"]),
             type_ops=random.choice(["Rescue", "Transfer"]),
             nb_ops=random.randint(1, 7),
             nb_survivor=nb_survivor,
