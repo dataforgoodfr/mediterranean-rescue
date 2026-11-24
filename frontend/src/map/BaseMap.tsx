@@ -3,6 +3,7 @@ import { GPUInitializationError, setWorkerUrl } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import { useTranslation } from '../i18n'
 import { CENTRAL_MEDITERRANEAN, MEDITERRANEAN } from './bounds'
 
@@ -14,9 +15,9 @@ setWorkerUrl(workerUrl)
 // les opérations et les zones posées dessus se lisent. https://openfreemap.org/quick_start/
 const BASE_MAP_STYLE = 'https://tiles.openfreemap.org/styles/positron'
 
-// Le fond de carte MapLibre. Les couches (opérations, ports, zones) viendront comme enfants
+// Le fond de carte MapLibre. Les couches (opérations, ports, zones) viennent comme enfants
 // de <Map>. https://visgl.github.io/react-maplibre/docs/api-reference/map
-export default function BaseMap() {
+export default function BaseMap({ children }: { children?: ReactNode }) {
   const t = useTranslation()
   // MapLibre dessine avec WebGL2. Sans lui (vieux navigateur, accélération coupée), il lève
   // GPUInitializationError : on le dit avec une phrase plutôt que de laisser un cadre vide.
@@ -46,6 +47,7 @@ export default function BaseMap() {
       }}
     >
       <NavigationControl showCompass={false} />
+      {children}
     </Map>
   )
 }

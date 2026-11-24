@@ -30,6 +30,13 @@
   --focus: 3px solid var(--color-primary);
   --touch-target: 2.75rem; /* 44 px : la taille minimale d'une cible au doigt (WCAG 2.5.5) */
 
+  /* Ombres et voile des fenêtres */
+  --color-overlay: color-mix(in srgb, var(--color-primary) 45%, transparent);
+  --shadow-marker: drop-shadow(0 1px 2px rgb(0 0 0 / 35%));
+  --glow-marker: drop-shadow(0 0 0.35rem var(--color-secondary));
+  --shadow-dialog: 0 8px 24px rgb(0 0 0 / 25%);
+  --size-marker: 1.5rem; /* 24 px : le picto du point d'une opération */
+
   /* Logo : 10 mm de haut au minimum dans la charte, soit environ 38 px à l'écran */
   --logo-min-height: 2.375rem;
 

@@ -53,3 +53,112 @@
   text-align: center;
   color: var(--color-primary);
 }
+
+/* Le point d'une opération sur la carte : le picto SOS de la charte, orange, posé par sa pointe.
+   La cible fait 24 px à la souris et 44 px au doigt (--touch-target), comme les boutons de
+   MapLibre ; le picto garde sa taille. La fiche ouverte passe le point en bleu marine. */
+.ra-map__marker-button {
+  display: grid;
+  place-items: end center;
+  inline-size: var(--size-marker);
+  block-size: var(--size-marker);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--color-secondary);
+  cursor: pointer;
+  filter: var(--shadow-marker);
+  transform-origin: bottom center;
+  transition:
+    transform 120ms ease,
+    color 120ms ease,
+    filter 120ms ease;
+}
+
+@media (pointer: coarse) {
+  .ra-map__marker-button {
+    inline-size: var(--touch-target);
+    block-size: var(--touch-target);
+  }
+}
+
+.ra-map__marker-button:hover,
+.ra-map__marker-button:focus-visible {
+  transform: scale(1.12);
+}
+
+.ra-map__marker-button:focus-visible {
+  outline: var(--focus);
+  outline-offset: 3px;
+}
+
+.ra-map__marker-button--selected {
+  color: var(--color-primary);
+  filter: var(--glow-marker) var(--shadow-marker);
+  transform: scale(1.12);
+}
+
+.ra-map__marker-button--selected:focus-visible {
+  outline-color: var(--color-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ra-map__marker-button {
+    transition: none;
+  }
+}
+
+/* Fenêtre modale de la fiche d'une opération. */
+.ra-modal__overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-2);
+  background: var(--color-overlay);
+  z-index: 1000;
+}
+
+.ra-modal__dialog {
+  inline-size: min(24rem, 100%);
+  max-block-size: calc(100svh - 2 * var(--space-2));
+  padding: var(--space-3);
+  overflow: auto;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  box-shadow: var(--shadow-dialog);
+}
+
+.ra-modal__dialog h2 {
+  margin: 0 0 var(--space-2);
+  color: var(--color-primary);
+}
+
+.ra-modal__dialog dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+}
+
+.ra-modal__dialog dt {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.ra-modal__dialog dd {
+  margin: 0;
+}
+
+.ra-modal__close {
+  min-block-size: var(--touch-target);
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: var(--color-background);
+  font: inherit;
+  cursor: pointer;
+}

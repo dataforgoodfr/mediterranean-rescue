@@ -1,7 +1,18 @@
 import { screen } from '@testing-library/react'
-import { expect, test, vi, describe } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import App from '../App'
 import { renderWithProviders } from '../test-utils'
+
+const operation = (id: number, date: string) => ({
+  id,
+  date,
+  nb_ops: 1,
+  operation_type: 'rescue',
+  latitude: 34,
+  longitude: 15,
+  port_disembarkation: 'La Valette',
+  nb_survivor: 10,
+})
 
 const mockApi = (operations: unknown) => {
   vi.stubGlobal(
@@ -16,7 +27,7 @@ const mockApi = (operations: unknown) => {
 
 describe('latest operation date', () => {
   test('is shown when operations exist', async () => {
-    mockApi([{ date: '2026-10-01' }, { date: '2026-11-03' }])
+    mockApi([operation(1, '2026-10-01'), operation(2, '2026-11-03')])
     renderWithProviders(<App />)
     expect(await screen.findByText('Dernière opération : 3 novembre 2026')).toBeInTheDocument()
   })

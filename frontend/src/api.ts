@@ -19,18 +19,44 @@ export async function getHealth(): Promise<Health> {
 }
 
 export type OperationPublic = components['schemas']['OperationPublic']
-export async function getLatestOperation(): Promise<Pick<OperationPublic, 'date'> | null> {
+
+// Ce que la carte et sa fiche lisent d'une opération. Le reste du schéma n'est pas validé ici :
+// un champ que l'écran ne lit pas ne peut pas le casser. Quand la fiche lira d'autres champs,
+// il suffira de les ajouter à ce Pick.
+export type MapOperation = Pick<
+  OperationPublic,
+  'id' | 'date' | 'latitude' | 'longitude' | 'port_disembarkation' | 'nb_survivor'
+>
+
+export async function getOperations(): Promise<MapOperation[]> {
   const response = await fetch('/api/operations')
   if (!response.ok) throw new Error(`API: ${response.status}`)
 
   const body: unknown = await response.json()
   if (!isArray(body)) throw new Error('API: unexpected response')
 
-  const latest: unknown = body[body.length - 1]
+  return body.map((item) => {
+    const operation = parseOperation(item)
+    if (operation === null) throw new Error('API: invalid operation')
+    return operation
+  })
+}
 
-  if (latest === undefined) return null
-  if (!isRecord(latest) || !isDateString(latest.date)) {
-    throw new Error('API: invalid operation')
+function parseOperation(raw: unknown): MapOperation | null {
+  if (!isRecord(raw)) return null
+  const { id, date, latitude, longitude, port_disembarkation, nb_survivor } = raw
+  if (typeof id !== 'number' || !isDateString(date)) return null
+  if (latitude !== undefined && latitude !== null && typeof latitude !== 'number') return null
+  if (longitude !== undefined && longitude !== null && typeof longitude !== 'number') return null
+  if (
+    port_disembarkation !== undefined &&
+    port_disembarkation !== null &&
+    typeof port_disembarkation !== 'string'
+  ) {
+    return null
   }
-  return { date: latest.date }
+  if (nb_survivor !== undefined && nb_survivor !== null && typeof nb_survivor !== 'number')
+    return null
+
+  return { id, date, latitude, longitude, port_disembarkation, nb_survivor }
 }

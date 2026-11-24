@@ -29,6 +29,15 @@ export const keys = {
   'design.icons': 'Le titre de la partie sur les pictos ; {count} est leur nombre',
   'design.icons.usage': 'Comment utiliser un picto : sa couleur et son nom dans le code',
   'notFound.title': 'La phrase de la page introuvable',
+  'operation.markerLabel':
+    "Le nom du point d'une opération sur la carte ; {date} est le jour et {port} le port de débarquement",
+  'operation.ficheTitle': "Le titre de la fiche d'une opération ; {date} est le jour",
+  'operation.date': "L'étiquette du jour de l'opération",
+  'operation.position': "L'étiquette de la position",
+  'operation.port': "L'étiquette du port de débarquement",
+  'operation.peopleRescued': "L'étiquette du nombre de personnes secourues",
+  'operation.unknown': 'La valeur affichée quand une information est inconnue',
+  'operation.close': 'Le bouton qui ferme la fiche',
 }
 
 export type MessageKey = keyof typeof keys
