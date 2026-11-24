@@ -45,11 +45,10 @@ def test_the_api_lists_filtered_fictive_operations(client: TestClient, session: 
 
     operations = client.get("/api/backoffice/operations?state=to_verify").json()
 
-    # De la plus ancienne à la plus récente.
-    assert [operation["date"] for operation in operations] == [
-        "2021-01-26",
-    ]
     assert all(operation["state"] == "to_verify" for operation in operations)
+    assert len(operations) == 1
+    latest = operations[0]
+    assert latest["date"] == "2021-01-26"
 
 
 def test_the_operations_routes_are_documented(client: TestClient) -> None:
