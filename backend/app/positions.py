@@ -34,14 +34,15 @@ _SIGNS = {"N": 1, "S": -1, "E": 1, "W": -1, "O": -1}
 # reading is flagged ambiguous.
 _HALF = re.compile(
     r"""
-    (?<![\w.,])
+    (?<![\d.,])
     (?P<deg>\d{1,3})
     (?:\s*°\s*|\s+)
     (?P<min>\d{1,2}(?:[.,]\d+)?)
+    (?:\s+(?P<sec>\d{1,2}(?:[.,]\d+)?))?
     (?:\s*['’′](?P<extra>\d+)?)?
     \s*
     (?P<hem>[NSEWO])
-    \b
+    (?![^\W\d_])
     """,
     re.VERBOSE,
 )
@@ -58,16 +59,17 @@ def _read_half(match: re.Match[str]) -> _Half | None:
     if extra is not None and "." not in minutes_text:
         minutes_text = f"{minutes_text}.{extra}"
     minutes = float(minutes_text)
+    seconds = float(match["sec"].replace(",", ".")) if match["sec"] else 0.0
 
     hemisphere = match["hem"]
     is_latitude = hemisphere in "NS"
 
     # Out-of-range values mean the text is not a position. Skip it rather than raise.
-    if minutes >= 60 or degrees > (90 if is_latitude else 180):
+    if minutes >= 60 or seconds >= 60 or degrees > (90 if is_latitude else 180):
         return None
 
     return _Half(
-        value=_SIGNS[hemisphere] * (degrees + minutes / 60),
+        value=_SIGNS[hemisphere] * (degrees + minutes / 60 + seconds / 3600),
         is_latitude=is_latitude,
         ambiguous=extra is not None,
         start=match.start(),
