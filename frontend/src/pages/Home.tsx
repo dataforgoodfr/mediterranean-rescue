@@ -30,7 +30,6 @@ export function Home() {
     <main>
       <Logo />
       <h1>{t('home.title')}</h1>
-      <p>{t('home.intro')}</p>
       <MediterraneanMap operations={operationsQuery.data ?? []} />
       {latestOperationDate && (
         <p>

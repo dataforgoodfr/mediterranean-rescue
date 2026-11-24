@@ -13,7 +13,12 @@ type OperationMarkerProps = {
 
 // Un point sur la carte pour une opération. C'est un bouton natif : le clic, Entrée et Espace
 // l'activent sans code supplémentaire. La pastille est centrée sur la position exacte.
-export function OperationMarker({ operation, language, selected, onSelect }: OperationMarkerProps) {
+export function OperationMarker({
+  operation,
+  language,
+  selected,
+  onSelect,
+}: OperationMarkerProps) {
   const t = useTranslation()
   const latitude = operation.latitude
   const longitude = operation.longitude
