@@ -1,6 +1,5 @@
 import { Marker } from '@vis.gl/react-maplibre'
 import type { MapOperation } from '@/api'
-import { Icon } from '@/design'
 import type { Language } from '@/i18n/translate'
 import { useTranslation } from '@/i18n'
 import { formatLongDate } from '@/utils/formatLongDate'
@@ -13,8 +12,7 @@ type OperationMarkerProps = {
 }
 
 // Un point sur la carte pour une opération. C'est un bouton natif : le clic, Entrée et Espace
-// l'activent sans code supplémentaire. Le picto SOS est ancré par sa pointe, qui désigne la
-// position exacte.
+// l'activent sans code supplémentaire. La pastille est centrée sur la position exacte.
 export function OperationMarker({ operation, language, selected, onSelect }: OperationMarkerProps) {
   const t = useTranslation()
   const latitude = operation.latitude
@@ -31,7 +29,7 @@ export function OperationMarker({ operation, language, selected, onSelect }: Ope
     : 'ra-map__marker-button'
 
   return (
-    <Marker longitude={longitude} latitude={latitude} anchor="bottom">
+    <Marker longitude={longitude} latitude={latitude} anchor="center">
       <button
         type="button"
         className={className}
@@ -42,7 +40,7 @@ export function OperationMarker({ operation, language, selected, onSelect }: Ope
           port,
         })}
       >
-        <Icon name="sos-marker" size="var(--size-marker)" />
+        <span className="ra-map__marker-dot" aria-hidden="true" />
       </button>
     </Marker>
   )

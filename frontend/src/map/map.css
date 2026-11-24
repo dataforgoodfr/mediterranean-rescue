@@ -54,26 +54,21 @@
   color: var(--color-primary);
 }
 
-/* Le point d'une opération sur la carte : le picto SOS de la charte, orange, posé par sa pointe.
-   La cible fait 24 px à la souris et 44 px au doigt (--touch-target), comme les boutons de
-   MapLibre ; le picto garde sa taille. La fiche ouverte passe le point en bleu marine. */
+/* Le point d'une opération sur la carte : une pastille ronde orange, cerclée de blanc pour se
+   détacher du fond. Le bouton garde une cible de 24 px à la souris et 44 px au doigt
+   (--touch-target) ; la pastille visible fait 12 px. La fiche ouverte ajoute un anneau bleu
+   marine, pour ne pas signaler la sélection par la couleur seule. */
 .ra-map__marker-button {
   display: grid;
-  place-items: end center;
+  place-items: center;
   inline-size: var(--size-marker);
   block-size: var(--size-marker);
   padding: 0;
   border: none;
-  border-radius: var(--radius);
+  border-radius: 50%;
   background: none;
-  color: var(--color-secondary);
   cursor: pointer;
-  filter: var(--shadow-marker);
-  transform-origin: bottom center;
-  transition:
-    transform 120ms ease,
-    color 120ms ease,
-    filter 120ms ease;
+  transition: transform 120ms ease;
 }
 
 @media (pointer: coarse) {
@@ -85,7 +80,7 @@
 
 .ra-map__marker-button:hover,
 .ra-map__marker-button:focus-visible {
-  transform: scale(1.12);
+  transform: scale(1.15);
 }
 
 .ra-map__marker-button:focus-visible {
@@ -94,13 +89,27 @@
 }
 
 .ra-map__marker-button--selected {
-  color: var(--color-primary);
-  filter: var(--glow-marker) var(--shadow-marker);
-  transform: scale(1.12);
+  transform: scale(1.15);
 }
 
 .ra-map__marker-button--selected:focus-visible {
   outline-color: var(--color-secondary);
+}
+
+.ra-map__marker-dot {
+  box-sizing: border-box;
+  inline-size: var(--size-marker-dot);
+  block-size: var(--size-marker-dot);
+  border: var(--border-marker) solid var(--color-background);
+  border-radius: 50%;
+  background: var(--color-secondary);
+  box-shadow: var(--shadow-marker);
+}
+
+.ra-map__marker-button--selected .ra-map__marker-dot {
+  box-shadow:
+    0 0 0 var(--border-marker) var(--color-primary),
+    var(--shadow-marker);
 }
 
 @media (prefers-reduced-motion: reduce) {
