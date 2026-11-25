@@ -13,6 +13,9 @@ from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
+# Forcer le mode développement pour les tests,
+# avant les imports pour que ce soit pris en compte pour les endpoints en cours de dev.
+os.environ["DEV"] = "true"
 from app.db import engine as app_engine
 from app.db import get_session
 from app.main import app

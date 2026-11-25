@@ -3,13 +3,10 @@
 from sqlmodel import Session
 
 from app.crud import operations as crud
-from app.dtos import backoffice as dtos
 from app.models import OperationBackoffice
 
 
-def list_operations(
-    session: Session, filters: dtos.BackofficeOperationsFilters
-) -> list[OperationBackoffice]:
+def list_operations(session: Session, filters: crud.OperationFilters) -> list[OperationBackoffice]:
     """Liste les opérations du backoffice selon les filtres donnés,
     et renseigne les champs manquants."""
     operations = [
@@ -28,6 +25,6 @@ def list_operations(
                 continue
             if getattr(operation, field) is None:
                 missing.append(field)
-        operation.missing_fields = missing if missing else None
+        operation.missing_fields = missing
 
     return operations

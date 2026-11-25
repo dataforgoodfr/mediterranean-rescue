@@ -76,7 +76,6 @@ class Operation(OperationBase, table=True):
 class OperationPublic(OperationBase):
     """Une opération telle que l'API la renvoie : rangée dans la base, elle a toujours un id."""
 
-    """ the ID """
     id: int
 
 

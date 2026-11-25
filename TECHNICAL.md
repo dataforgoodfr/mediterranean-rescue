@@ -47,6 +47,11 @@ Pourquoi ces choix :
   ([#21](https://github.com/dataforgoodfr/mediterranean-rescue/issues/21)).
 - **Docker** lance tout le projet avec une seule commande, quelle que soit la machine.
 
+En front comme en back, la variable d'environnement `DEV=true`, activée par défaut en test et dans docker,
+permet de signaler un environnement de dev, ce qui active certains warnings (non souhaités en production)
+et des fonctionnalités en cours de développement (pas prêtes à être poussées en production).
+Cette valeur peut-être modifiée dans les `.env` du front et du back.
+
 ## Lancer le projet avec Docker
 
 Il faut seulement [Git](https://git-scm.com/downloads) et
