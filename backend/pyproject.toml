@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "L'API de Rescue Atlas : les opérations de sauvetage de SOS MEDITERRANEE"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.20.1",
     "fastapi[standard]>=0.162.0",
     "psycopg[binary]>=3.3.8",
     "pydantic-settings>=2.16.2",
@@ -55,7 +56,7 @@ select = ["E", "F", "I", "B", "UP"]
 strict = true
 disallow_any_explicit = true
 warn_unreachable = true
-files = ["app", "tests"]
+files = ["app", "migrations", "tests"]
 # Les tests importent leurs modules d'aide depuis la racine du backend, comme pytest (pythonpath).
 explicit_package_bases = true
 # Le plugin de pydantic, pour les modèles de SQLModel et les réglages :
@@ -66,3 +67,11 @@ plugins = ["pydantic.mypy"]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
+
+# Les migrations de la base (Alembic), dans migrations/ : TECHNICAL.md, « Les migrations ».
+# https://alembic.sqlalchemy.org/en/latest/tutorial.html#using-pyproject-toml-for-configuration
+[tool.alembic]
+script_location = "%(here)s/migrations"
+# Le nom du fichier commence par le numéro de la migration (--rev-id 0002), pour les lire dans l'ordre.
+file_template = "%%(rev)s_%%(slug)s"
+prepend_sys_path = ["."]

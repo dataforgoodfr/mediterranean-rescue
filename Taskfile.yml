@@ -71,6 +71,25 @@ tasks:
       - cd backend && uv run python -m app.openapi_schema
       - cd frontend && pnpm api:types
 
+  db:migrate:
+    desc: Met la base de DATABASE_URL à jour avec les migrations (l'API le fait aussi au démarrage)
+    dir: backend
+    cmds:
+      - uv run python -m app.migrate
+
+  db:revision:
+    desc: 'Écrit une migration depuis les modèles, avec le numéro suivant : task db:revision -- "add the state of an operation"'
+    dir: backend
+    preconditions:
+      - sh: test -n "{{.CLI_ARGS}}"
+        msg: 'Donne le sujet de la migration : task db:revision -- "add the state of an operation"'
+    cmds:
+      # Le numéro suit le dernier fichier de migrations/versions/ (0001 donne 0002).
+      - |
+        last=$(ls migrations/versions | grep -E '^[0-9]{4}_' | sort | tail -n 1 | cut -c 1-4)
+        next=$(printf '%04d' $((10#${last:-0} + 1)))
+        uv run alembic revision --autogenerate --rev-id "$next" -m {{.CLI_ARGS}}
+
   data:fictive:
     desc: "Charge le jeu fictif dans la base, une seule fois : relancée, la tâche l'ajoute une deuxième fois"
     dir: backend

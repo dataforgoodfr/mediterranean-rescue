@@ -13,7 +13,8 @@ from pathlib import Path
 from sqlmodel import Session
 
 from app.db import engine
-from app.models import Operation, OperationType, create_tables
+from app.migrate import upgrade_database
+from app.models import Operation, OperationType
 from scripts.generate_fictive_data import OperationModel
 
 
@@ -75,6 +76,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Charge un jeu fictif dans la base.")
     parser.add_argument("path", type=Path, help="le CSV, par exemple fixtures/3_fictive_data.csv")
     args = parser.parse_args()
-    create_tables(engine)
+    upgrade_database(engine)
     with Session(engine) as session:
         print(f"{load_fictive_data(session, args.path)} opérations chargées")

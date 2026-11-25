@@ -5,7 +5,7 @@ from enum import StrEnum
 from typing import Self
 
 from pydantic import model_validator
-from sqlalchemy import Engine, String
+from sqlalchemy import String
 from sqlmodel import Field, SQLModel
 
 
@@ -69,8 +69,3 @@ class OperationPublic(OperationBase):
     """Une opération telle que l'API la renvoie : rangée dans la base, elle a toujours un id."""
 
     id: int
-
-
-def create_tables(engine: Engine) -> None:
-    """Crée les tables qui manquent, sans toucher à celles qui existent."""
-    SQLModel.metadata.create_all(engine)

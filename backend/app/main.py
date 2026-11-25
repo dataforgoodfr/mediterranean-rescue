@@ -8,14 +8,15 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from app.db import engine
-from app.models import create_tables
+from app.migrate import upgrade_database
 from app.routers import operations
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    # Les tables sont créées au démarrage : https://fastapi.tiangolo.com/advanced/events/#lifespan
-    create_tables(engine)
+    # La base est mise à jour au démarrage (app/migrate.py) :
+    # https://fastapi.tiangolo.com/advanced/events/#lifespan
+    upgrade_database(engine)
     yield
 
 

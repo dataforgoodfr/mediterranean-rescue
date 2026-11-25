@@ -107,7 +107,7 @@ docker compose -f docker-compose.dev.yaml up -d db   # la base seule, ou ton pro
 cd backend && uv run fastapi dev                     # http://127.0.0.1:8000/api/docs
 ```
 
-Les tables se créent au démarrage de l'API. Pour remplir la base avec le jeu fictif (à faire une
+La base se met à jour au démarrage de l'API (« Les migrations de la base », plus bas). Pour remplir la base avec le jeu fictif (à faire une
 seule fois : relancée, la tâche ajoute les mêmes opérations une deuxième fois) :
 
 ```sh
@@ -123,6 +123,30 @@ cd frontend && pnpm dev                              # http://localhost:5173
 `task setup` installe aussi les contrôles avant commit. Ils vérifient aussi le frontend : même si
 tu ne touches qu'au backend, pnpm sert dès que l'API change, car le hook `types-api` vérifie alors
 que `frontend/src/api/schema.ts` suit `backend/openapi.json` (`task api` le régénère).
+
+## Les migrations de la base
+
+Le schéma de la base suit les modèles de `backend/app/models.py`, par des migrations
+[Alembic](https://alembic.sqlalchemy.org/) rangées dans `backend/migrations/versions/`, une par
+changement. L'API les applique à son démarrage, en local comme sur Clever Cloud : une base
+existante passe à jour sans être recréée, ses données restent. Après un changement de modèle,
+depuis la racine :
+
+```sh
+# 1. Écrire la migration, en comparant les modèles à la base (lancée et à jour), avec le numéro
+#    suivant. Relis le fichier écrit dans backend/migrations/versions/ avant de le committer.
+task db:revision -- "add the state of an operation"
+# 2. L'appliquer à la base de DATABASE_URL (le démarrage de l'API le fait aussi)
+task db:migrate
+```
+
+Sans Task, dans `backend/` : `uv run alembic revision --autogenerate --rev-id 0002 -m "..."`,
+puis `uv run python -m app.migrate`.
+
+`uv run alembic check` dit s'il reste un changement de modèle sans migration. Une base créée
+avant Alembic est marquée à la première migration, puis mise à jour (`backend/app/migrate.py`).
+Les tests créent leurs tables directement depuis les modèles ; `tests/test_migrations.py` vérifie
+que les migrations arrivent au même schéma.
 
 ## Vérifier avant de pousser
 
@@ -277,6 +301,7 @@ return <h2>{t('map.legend')}</h2>
 | `frontend/src/api/schema.ts` | Les types TypeScript de l'API, générés depuis ce schéma (`pnpm api:types`) |
 | `frontend/tools/api-types/` | Le générateur de ces types, avec son TypeScript 6 |
 | `backend/app/` | L'API : `main.py` (les routes), `db.py` (la base), `config.py` (les réglages) |
+| `backend/migrations/` | Les migrations de la base (Alembic), une par changement de modèle |
 | `backend/tests/` | Les tests du backend ; `conftest.py` fournit la base des tests |
 | `frontend/src/` | L'app React : `App.tsx` (les pages), `pages/`, `api.ts` (les appels à l'API) |
 | `frontend/src/i18n/` | Les langues : les clés des textes, une traduction par langue, `useTranslation` |
