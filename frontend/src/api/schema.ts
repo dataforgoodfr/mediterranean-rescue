@@ -106,8 +106,11 @@ export interface components {
             longitude?: number | null;
             /** Male */
             male?: number | null;
-            /** Missing Fields */
-            missing_fields?: string[] | null;
+            /**
+             * Missing Fields
+             * @default []
+             */
+            missing_fields: string[];
             /** Nb Nationalities */
             nb_nationalities?: number | null;
             /** Nb Ops */

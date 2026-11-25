@@ -84,4 +84,4 @@ class OperationBackoffice(OperationBase):
     potentiellement des champs manquants."""
 
     id: int
-    missing_fields: list[str] | None = None
+    missing_fields: list[str] = []

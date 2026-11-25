@@ -107,18 +107,12 @@
             "title": "Male"
           },
           "missing_fields": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Missing Fields"
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Fields",
+            "type": "array"
           },
           "nb_nationalities": {
             "anyOf": [

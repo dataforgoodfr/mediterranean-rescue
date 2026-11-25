@@ -1,6 +1,9 @@
 # Les commandes du projet, à lancer depuis la racine. `task --list` les décrit.
 # La CI lance les mêmes tâches (.github/workflows/ci.yml). Doc : https://taskfile.dev
-version: '3'
+version: "3"
+
+env:
+  DEV: "true"
 
 tasks:
   setup:
