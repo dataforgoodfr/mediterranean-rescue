@@ -1,4 +1,4 @@
-"""La lecture des positions écrites dans un texte libre."""
+"""La lecture des positions : texte libre et ancienne carte."""
 
 import re
 from dataclasses import dataclass
@@ -142,3 +142,21 @@ def positions_in_text(text: str) -> list[TextPosition]:
         i += 1
 
     return positions
+
+
+# Une cellule de l'ancienne carte : des degrés, le signe degré, des minutes avec ou sans
+# décimales. Pas de lettre d'hémisphère : tout y est nord et est.
+_DEGREES_MINUTES = re.compile(r"(?P<deg>\d{1,3})\s*°\s*(?P<min>\d{1,2}(?:\.\d+)?)")
+
+
+def degrees_minutes_to_decimal(text: str) -> float | None:
+    """Convertit une position de l'ancienne carte (33° 12.4) en degrés décimaux.
+
+    Un texte vide ou illisible rend None, jamais 0. Des minutes à 60 ou plus aussi."""
+    match = _DEGREES_MINUTES.fullmatch(text.strip())
+    if match is None:
+        return None
+    minutes = float(match["min"])
+    if minutes >= 60:
+        return None
+    return int(match["deg"]) + minutes / 60

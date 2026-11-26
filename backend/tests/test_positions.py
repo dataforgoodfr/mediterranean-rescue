@@ -1,6 +1,6 @@
 import pytest
 
-from app.positions import TextPosition, positions_in_text
+from app.positions import TextPosition, degrees_minutes_to_decimal, positions_in_text
 
 
 @pytest.mark.parametrize(
@@ -83,3 +83,40 @@ def test_reads_several_positions_in_order() -> None:
 )
 def test_text_without_position_gives_nothing(text: str) -> None:
     assert positions_in_text(text) == list[TextPosition]()
+
+
+@pytest.mark.parametrize(
+    ("text", "decimal"),
+    [
+        pytest.param("33° 12.4", 33 + 12.4 / 60, id="decimal_minutes"),
+        pytest.param("33° 5.2", 33 + 5.2 / 60, id="one_digit_minutes"),
+        pytest.param("33° 35.00", 33 + 35 / 60, id="two_decimals"),
+        pytest.param("33° 15", 33.25, id="whole_minutes"),
+        pytest.param("33°12.4", 33 + 12.4 / 60, id="without_spaces"),
+        pytest.param(" 33 ° 12.4 ", 33 + 12.4 / 60, id="extra_spaces"),
+    ],
+)
+def test_converts_each_old_map_form(text: str, decimal: float) -> None:
+    assert degrees_minutes_to_decimal(text) == pytest.approx(decimal)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        pytest.param("", id="empty"),
+        pytest.param("   ", id="blank"),
+        pytest.param("abc", id="unreadable"),
+        pytest.param("33 12.4", id="no_degree_sign"),
+        pytest.param("33°", id="no_minutes"),
+    ],
+)
+def test_unreadable_text_gives_none(text: str) -> None:
+    assert degrees_minutes_to_decimal(text) is None
+
+
+@pytest.mark.parametrize(
+    "text",
+    [pytest.param("33° 60", id="sixty"), pytest.param("33° 75.5", id="above_sixty")],
+)
+def test_minutes_from_sixty_give_none(text: str) -> None:
+    assert degrees_minutes_to_decimal(text) is None
