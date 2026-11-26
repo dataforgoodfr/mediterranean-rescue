@@ -22,10 +22,7 @@ test('replaces the values in the text', () => {
 })
 
 test('Arabic switches the page to right to left', async () => {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn().mockResolvedValue(Response.json({ status: 'ok' })),
-  )
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
   expect(direction('ar')).toBe('rtl')
   renderWithProviders(<App />, { language: 'ar' })
   expect(await screen.findByText('API: ok')).toBeInTheDocument()
@@ -34,10 +31,7 @@ test('Arabic switches the page to right to left', async () => {
 })
 
 test('the home page exists in English', async () => {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn().mockResolvedValue(Response.json({ status: 'ok' })),
-  )
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
   renderWithProviders(<App />, { language: 'en' })
   expect(screen.getByText('Rescue Atlas')).toBeInTheDocument()
 })
