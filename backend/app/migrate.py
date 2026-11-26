@@ -25,7 +25,7 @@ def alembic_config() -> Config:
     return Config(toml_file=str(PYPROJECT))
 
 
-def upgrade_database(engine: Engine) -> None:
+def upgrade_database(engine: Engine, revision: str = "head") -> None:
     """Applique les migrations qui manquent, dans une seule transaction."""
     config = alembic_config()
     with engine.begin() as connection:
@@ -33,7 +33,7 @@ def upgrade_database(engine: Engine) -> None:
         tables = inspect(connection)
         if not tables.has_table("alembic_version") and tables.has_table(INITIAL_TABLE):
             command.stamp(config, INITIAL_REVISION)
-        command.upgrade(config, "head")
+        command.upgrade(config, revision)
 
 
 if __name__ == "__main__":
