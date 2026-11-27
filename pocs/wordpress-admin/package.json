@@ -1,0 +1,35 @@
+{
+  "name": "rescue-atlas-wordpress-admin",
+  "private": true,
+  "version": "0.1.0",
+  "description": "POC : le back-office de Rescue Atlas en plugin WordPress. Mode d'emploi : GUIDE.md.",
+  "scripts": {
+    "build": "wp-scripts build",
+    "watch": "wp-scripts start",
+    "typecheck": "tsc --noEmit",
+    "lint:js": "wp-scripts lint-js src",
+    "i18n": "node scripts/i18n.mjs",
+    "start": "pnpm build && node scripts/server.mjs",
+    "test": "pnpm build && node scripts/test.mjs",
+    "test:contract": "node --test tests/contract.test.mjs",
+    "zip": "pnpm build && node scripts/zip.mjs",
+    "deploy:clever": "pnpm build && node scripts/clever-deploy.mjs"
+  },
+  "dependencies": {
+    "maplibre-gl": "6.19.0"
+  },
+  "devDependencies": {
+    "@types/geojson": "7946.0.16",
+    "@types/react": "18.3.12",
+    "@wordpress/api-fetch": "7.40.1",
+    "@wordpress/dom-ready": "4.40.1",
+    "@wordpress/element": "6.40.1",
+    "@wordpress/i18n": "6.13.1",
+    "@wordpress/scripts": "31.5.1",
+    "@wp-playground/cli": "3.1.65",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "typescript": "5.9.3",
+    "yaml": "2.9.1"
+  }
+}

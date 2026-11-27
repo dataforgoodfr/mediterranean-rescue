@@ -1,0 +1,354 @@
+/* Écran Opérations : les jetons de Rescue Atlas (frontend/src/design/tokens.css), préfixés pour
+   ne rien changer au reste de l'admin. Toute valeur passe par une variable. */
+.rsatlas-app {
+	--rsatlas-color-primary: #1a2747;
+	--rsatlas-color-secondary: #f03e1b;
+	--rsatlas-color-secondary-text: #c53215;
+	--rsatlas-color-text: #3c3c3b;
+	--rsatlas-color-surface: #e3e2e9;
+	--rsatlas-color-ground: #eeedf2;
+	--rsatlas-color-background: #fff;
+	--rsatlas-color-muted: #6b6a75;
+	--rsatlas-color-archived: #8f8e9b;
+	--rsatlas-color-border: #8f8e9b;
+	--rsatlas-color-error: #b3261e;
+	--rsatlas-color-error-ground: #fbebeb;
+	--rsatlas-font-family: "Raleway", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--rsatlas-space-1: 0.5rem;
+	--rsatlas-space-2: 1rem;
+	--rsatlas-space-3: 2rem;
+	--rsatlas-radius: 0.25rem;
+	--rsatlas-focus: 3px solid var(--rsatlas-color-primary);
+	--rsatlas-touch-target: 2.75rem;
+	--rsatlas-shadow: 0 1px 2px rgb(26 39 71 / 8%), 0 8px 24px rgb(26 39 71 / 12%);
+
+	color: var(--rsatlas-color-text);
+	font-family: var(--rsatlas-font-family);
+	font-size: 1rem;
+	line-height: 1.45;
+}
+
+/* La page de l'écran : pleine largeur, sans pied de page WordPress. */
+.rsatlas-screen #wpcontent {
+	padding-left: 0;
+}
+
+.rsatlas-screen #wpfooter {
+	display: none;
+}
+
+.rsatlas-screen #wpbody-content {
+	padding-bottom: 0;
+}
+
+.rsatlas-app *,
+.rsatlas-app *::before,
+.rsatlas-app *::after {
+	box-sizing: border-box;
+}
+
+.rsatlas-app :focus-visible {
+	outline: var(--rsatlas-focus);
+	outline-offset: 2px;
+}
+
+.rsatlas-shell {
+	display: grid;
+	grid-template-rows: auto 1fr;
+	height: calc(100vh - 32px);
+	background: var(--rsatlas-color-ground);
+}
+
+.rsatlas-head {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--rsatlas-space-2);
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--rsatlas-space-2) var(--rsatlas-space-3);
+	background: var(--rsatlas-color-primary);
+	color: #fff;
+}
+
+.rsatlas-head h1 {
+	margin: 0;
+	padding: 0;
+	color: #fff;
+	font-size: 1.5rem;
+	font-weight: 800;
+	line-height: 1.2;
+}
+
+.rsatlas-head p {
+	margin: 0.125rem 0 0;
+	color: #d9dbe6;
+}
+
+.rsatlas-body {
+	display: grid;
+	grid-template-columns: minmax(20rem, 26rem) 1fr;
+	min-height: 0;
+}
+
+.rsatlas-side {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	background: var(--rsatlas-color-background);
+	box-shadow: var(--rsatlas-shadow);
+}
+
+.rsatlas-side__scroll {
+	flex: 1;
+	overflow-y: auto;
+	padding: var(--rsatlas-space-2);
+}
+
+.rsatlas-map {
+	position: relative;
+	min-height: 0;
+}
+
+.rsatlas-map__canvas {
+	position: absolute;
+	inset: 0;
+}
+
+.rsatlas-map__hint {
+	position: absolute;
+	z-index: 2;
+	top: var(--rsatlas-space-2);
+	left: 50%;
+	max-width: calc(100% - 2 * var(--rsatlas-space-2));
+	margin: 0;
+	padding: var(--rsatlas-space-1) var(--rsatlas-space-2);
+	border-radius: var(--rsatlas-radius);
+	background: var(--rsatlas-color-primary);
+	box-shadow: var(--rsatlas-shadow);
+	color: #fff;
+	transform: translateX(-50%);
+}
+
+.rsatlas-button {
+	min-height: var(--rsatlas-touch-target);
+	padding: 0 var(--rsatlas-space-2);
+	border: 2px solid var(--rsatlas-color-primary);
+	border-radius: var(--rsatlas-radius);
+	background: var(--rsatlas-color-background);
+	color: var(--rsatlas-color-primary);
+	font: 700 1rem/1 var(--rsatlas-font-family);
+	cursor: pointer;
+}
+
+.rsatlas-button:hover {
+	background: var(--rsatlas-color-surface);
+}
+
+.rsatlas-button--primary {
+	background: var(--rsatlas-color-primary);
+	color: #fff;
+}
+
+.rsatlas-button--primary:hover {
+	background: #2c3b66;
+}
+
+.rsatlas-button--on-dark {
+	border-color: #fff;
+}
+
+.rsatlas-button[disabled] {
+	cursor: progress;
+	opacity: 0.6;
+}
+
+.rsatlas-link {
+	min-height: var(--rsatlas-touch-target);
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--rsatlas-color-primary);
+	font: 700 1rem var(--rsatlas-font-family);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.rsatlas-list {
+	display: grid;
+	gap: var(--rsatlas-space-1);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* Le filet de gauche porte la couleur de l'état (style en ligne, depuis status.ts). */
+.rsatlas-item {
+	display: block;
+	width: 100%;
+	min-height: var(--rsatlas-touch-target);
+	padding: 0.75rem var(--rsatlas-space-2);
+	border: 1px solid var(--rsatlas-color-border);
+	border-left-width: 4px;
+	border-radius: var(--rsatlas-radius);
+	background: var(--rsatlas-color-ground);
+	color: var(--rsatlas-color-text);
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+
+.rsatlas-item:hover {
+	background: var(--rsatlas-color-surface);
+}
+
+.rsatlas-item__title {
+	display: block;
+	color: var(--rsatlas-color-primary);
+	font-weight: 800;
+}
+
+.rsatlas-item__meta {
+	display: block;
+	margin-top: 0.125rem;
+}
+
+.rsatlas-item__status {
+	font-weight: 700;
+}
+
+.rsatlas-state {
+	margin: var(--rsatlas-space-2);
+}
+
+.rsatlas-state--error {
+	color: var(--rsatlas-color-error);
+}
+
+.rsatlas-form {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.rsatlas-form h2 {
+	margin: 0 0 var(--rsatlas-space-1);
+	color: var(--rsatlas-color-primary);
+	font-size: 1.25rem;
+	font-weight: 800;
+}
+
+.rsatlas-form h3 {
+	margin: var(--rsatlas-space-2) 0 var(--rsatlas-space-1);
+	padding-top: var(--rsatlas-space-1);
+	border-top: 1px solid var(--rsatlas-color-surface);
+	color: var(--rsatlas-color-primary);
+	font-size: 1rem;
+	font-weight: 800;
+}
+
+.rsatlas-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+	gap: var(--rsatlas-space-1) var(--rsatlas-space-2);
+}
+
+.rsatlas-field {
+	display: grid;
+	align-content: start;
+	gap: 0.25rem;
+}
+
+.rsatlas-field--wide {
+	grid-column: 1 / -1;
+}
+
+.rsatlas-field label {
+	color: var(--rsatlas-color-primary);
+	font-weight: 700;
+}
+
+/* 16 px dans les champs : pas de zoom forcé sur téléphone. */
+.rsatlas-field input,
+.rsatlas-field select {
+	width: 100%;
+	max-width: none;
+	min-height: var(--rsatlas-touch-target);
+	padding: 0 0.625rem;
+	border: 1px solid var(--rsatlas-color-border);
+	border-radius: var(--rsatlas-radius);
+	background: var(--rsatlas-color-background);
+	color: var(--rsatlas-color-text);
+	font: 500 1rem var(--rsatlas-font-family);
+}
+
+.rsatlas-field [aria-invalid="true"] {
+	border: 2px solid var(--rsatlas-color-error);
+}
+
+.rsatlas-help {
+	margin: 0;
+	color: var(--rsatlas-color-muted);
+	font-size: 0.875rem;
+}
+
+.rsatlas-error {
+	margin: 0;
+	color: var(--rsatlas-color-error);
+	font-size: 0.875rem;
+	font-weight: 700;
+}
+
+.rsatlas-alert {
+	margin: 0 0 var(--rsatlas-space-2);
+	padding: var(--rsatlas-space-1) var(--rsatlas-space-2);
+	border-left: 4px solid var(--rsatlas-color-error);
+	background: var(--rsatlas-color-error-ground);
+}
+
+.rsatlas-alert--ok {
+	border-left-color: var(--rsatlas-color-primary);
+	background: var(--rsatlas-color-surface);
+}
+
+.rsatlas-alert ul {
+	margin: 0.25rem 0 0 1.25rem;
+	list-style: disc;
+}
+
+.rsatlas-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--rsatlas-space-1);
+	padding: var(--rsatlas-space-2);
+	border-top: 1px solid var(--rsatlas-color-surface);
+	background: var(--rsatlas-color-background);
+}
+
+/* Téléphone et petite tablette : la carte en haut, la liste ou la fiche dessous. */
+@media (max-width: 782px) {
+
+	.rsatlas-shell {
+		height: auto;
+		min-height: calc(100vh - 46px);
+	}
+
+	.rsatlas-head {
+		padding: var(--rsatlas-space-2);
+	}
+
+	.rsatlas-body {
+		grid-template-columns: 1fr;
+		grid-template-rows: 45vh auto;
+	}
+
+	.rsatlas-map {
+		order: -1;
+	}
+
+	.rsatlas-side__scroll {
+		overflow: visible;
+	}
+}

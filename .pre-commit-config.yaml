@@ -11,6 +11,9 @@ repos:
     hooks:
       - id: check-merge-conflict # un marqueur <<<<<<< oublié
       - id: check-added-large-files # un gros fichier, souvent une donnée réelle
+        # Sauf le lockfile du POC WordPress : l'outillage officiel (@wordpress/scripts) en fait
+        # un fichier de 550 Ko. Ce n'est pas une donnée, et la CI l'installe tel quel.
+        exclude: ^pocs/wordpress-admin/pnpm-lock\.yaml$
       - id: check-yaml
         args: [--allow-multiple-documents] # le pnpm-lock.yaml de pnpm 12 en a deux
       - id: check-json

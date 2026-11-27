@@ -1,0 +1,18 @@
+{
+    "name": "dataforgoodfr/rescue-atlas-wordpress-admin",
+    "description": "Outils de contrôle du plugin (normes de code WordPress). Le plugin lui-même n'a aucune dépendance Composer.",
+    "license": "GPL-2.0-or-later",
+    "require-dev": {
+        "wp-coding-standards/wpcs": "3.4.1",
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "lint": "phpcs",
+        "fix": "phpcbf"
+    }
+}

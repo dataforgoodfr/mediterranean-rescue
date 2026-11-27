@@ -1,0 +1,8 @@
+# pnpm 12 demande de dire, paquet par paquet, quels scripts d'installation peuvent tourner.
+# Aucun n'est nécessaire ici : verrou de fichiers facultatif de Playground, surveillance de
+# fichiers facultative, et bannière de core-js.
+allowBuilds:
+  "@parcel/watcher": false
+  core-js: false
+  core-js-pure: false
+  fs-ext-extra-prebuilt: false
