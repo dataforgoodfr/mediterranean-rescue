@@ -1,8 +1,8 @@
-import { Map, NavigationControl, type ErrorEvent } from '@vis.gl/react-maplibre'
+import { Map, NavigationControl, useMap, type ErrorEvent } from '@vis.gl/react-maplibre'
 import { GPUInitializationError, setWorkerUrl } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from '../i18n'
 import { CENTRAL_MEDITERRANEAN, MEDITERRANEAN } from './bounds'
@@ -15,9 +15,43 @@ setWorkerUrl(workerUrl)
 // les opérations et les zones posées dessus se lisent. https://openfreemap.org/quick_start/
 const BASE_MAP_STYLE = 'https://tiles.openfreemap.org/styles/positron'
 
+// Le zoom d'arrivée sur une opération : assez proche pour voir la côte, assez large pour la
+// situer en Méditerranée.
+const FOCUS_ZOOM = 7
+
+type MapFocus = { latitude: number; longitude: number }
+
+// Déplace la carte vers l'opération ouverte. Le mouvement se coupe si le navigateur demande
+// moins d'animation (préférence d'accessibilité).
+function FocusOnOperation({ focus }: { focus: MapFocus }) {
+  const map = useMap()
+
+  useEffect(() => {
+    const instance = map.current
+    if (!instance) return
+
+    const center: [number, number] = [focus.longitude, focus.latitude]
+    const zoom = Math.max(instance.getZoom(), FOCUS_ZOOM)
+    const reducedMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reducedMotion) instance.jumpTo({ center, zoom })
+    else instance.flyTo({ center, zoom, duration: 800 })
+  }, [map, focus.latitude, focus.longitude])
+
+  return null
+}
+
 // Le fond de carte MapLibre. Les couches (opérations, ports, zones) viennent comme enfants
 // de <Map>. https://visgl.github.io/react-maplibre/docs/api-reference/map
-export default function BaseMap({ children }: { children?: ReactNode }) {
+export default function BaseMap({
+  children,
+  focus,
+}: {
+  children?: ReactNode
+  focus?: MapFocus | null
+}) {
   const t = useTranslation()
   // MapLibre dessine avec WebGL2. Sans lui (vieux navigateur, accélération coupée), il lève
   // GPUInitializationError : on le dit avec une phrase plutôt que de laisser un cadre vide.
@@ -47,6 +81,7 @@ export default function BaseMap({ children }: { children?: ReactNode }) {
       }}
     >
       <NavigationControl showCompass={false} />
+      {focus && <FocusOnOperation focus={focus} />}
       {children}
     </Map>
   )

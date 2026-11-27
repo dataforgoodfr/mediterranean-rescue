@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useState } from 'react'
+import { lazy, Suspense } from 'react'
 import type { MapOperation } from '@/api'
 import { useLanguage, useTranslation } from '../i18n'
 import './map.css'
@@ -12,37 +12,47 @@ const BaseMap = lazy(() => import('./BaseMap'))
 
 type MediterraneanMapProps = {
   operations?: MapOperation[]
+  selectedId: number | null
+  onSelect: (id: number) => void
+  onClose: () => void
 }
 
-// La carte de la page d'accueil, avec son nom pour les lecteurs d'écran.
-export function MediterraneanMap({ operations = [] }: MediterraneanMapProps) {
+// La carte de la page d'accueil, avec son nom pour les lecteurs d'écran. La sélection vient de
+// la page, qui la lit dans l'adresse : la carte ne garde pas d'état à elle.
+export function MediterraneanMap({
+  operations = [],
+  selectedId,
+  onSelect,
+  onClose,
+}: MediterraneanMapProps) {
   const t = useTranslation()
   const language = useLanguage()
-  const [selectedId, setSelectedId] = useState<number | null>(null)
-
-  // La fiche écoute cette fonction : elle doit garder la même identité, sinon son effet se
-  // relance à chaque rendu de la carte et reprend le focus.
-  const closeSheet = useCallback(() => setSelectedId(null), [])
 
   const selected =
     selectedId === null ? undefined : operations.find((operation) => operation.id === selectedId)
+  const focus =
+    selected !== undefined &&
+    typeof selected.latitude === 'number' &&
+    typeof selected.longitude === 'number'
+      ? { latitude: selected.latitude, longitude: selected.longitude }
+      : null
 
   return (
     <section className="ra-map" aria-label={t('map.label')}>
       <Suspense>
-        <BaseMap>
+        <BaseMap focus={focus}>
           {operations.map((operation) => (
             <OperationMarker
               key={operation.id}
               operation={operation}
               language={language}
               selected={operation.id === selectedId}
-              onSelect={setSelectedId}
+              onSelect={onSelect}
             />
           ))}
         </BaseMap>
       </Suspense>
-      {selected && <OperationSheet operation={selected} language={language} onClose={closeSheet} />}
+      {selected && <OperationSheet operation={selected} language={language} onClose={onClose} />}
     </section>
   )
 }

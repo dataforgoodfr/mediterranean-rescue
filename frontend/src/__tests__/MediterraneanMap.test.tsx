@@ -1,5 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
 import { expect, test, vi } from 'vitest'
 import type { MapOperation } from '@/api'
@@ -42,13 +43,27 @@ const operations: MapOperation[] = [
   },
 ]
 
+// La carte est contrôlée par la page : ce petit composant tient la sélection pour les tests.
+function MapWithSelection({ operations }: { operations: MapOperation[] }) {
+  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const close = useCallback(() => setSelectedId(null), [])
+  return (
+    <MediterraneanMap
+      operations={operations}
+      selectedId={selectedId}
+      onSelect={setSelectedId}
+      onClose={close}
+    />
+  )
+}
+
 test('shows one point per operation that has a position', async () => {
-  renderWithProviders(<MediterraneanMap operations={operations} />)
+  renderWithProviders(<MapWithSelection operations={operations} />)
   expect(await screen.findAllByRole('button')).toHaveLength(2)
 })
 
 test('opens the sheet on click with the date, position, port and survivors', async () => {
-  renderWithProviders(<MediterraneanMap operations={operations} />)
+  renderWithProviders(<MapWithSelection operations={operations} />)
   fireEvent.click(
     await screen.findByRole('button', {
       name: 'Opération du 3 novembre 2026, port : La Valette',
@@ -64,7 +79,7 @@ test('opens the sheet on click with the date, position, port and survivors', asy
 
 test('opens the sheet with Enter', async () => {
   const user = userEvent.setup()
-  renderWithProviders(<MediterraneanMap operations={operations} />)
+  renderWithProviders(<MapWithSelection operations={operations} />)
   const marker = await screen.findByRole('button', { name: /3 novembre 2026/ })
   marker.focus()
   await user.keyboard('{Enter}')
@@ -72,7 +87,7 @@ test('opens the sheet with Enter', async () => {
 })
 
 test('shows "inconnu" when the port and the number are unknown', async () => {
-  renderWithProviders(<MediterraneanMap operations={operations} />)
+  renderWithProviders(<MapWithSelection operations={operations} />)
   fireEvent.click(await screen.findByRole('button', { name: /4 novembre 2026/ }))
 
   const dialog = screen.getByRole('dialog')
@@ -80,7 +95,7 @@ test('shows "inconnu" when the port and the number are unknown', async () => {
 })
 
 test('Escape closes the sheet and gives focus back to the point', async () => {
-  renderWithProviders(<MediterraneanMap operations={operations} />)
+  renderWithProviders(<MapWithSelection operations={operations} />)
   const marker = await screen.findByRole('button', { name: /3 novembre 2026/ })
   marker.focus()
   fireEvent.click(marker)
@@ -92,7 +107,7 @@ test('Escape closes the sheet and gives focus back to the point', async () => {
 })
 
 test('keeps Tab inside the sheet', async () => {
-  renderWithProviders(<MediterraneanMap operations={operations} />)
+  renderWithProviders(<MapWithSelection operations={operations} />)
   fireEvent.click(await screen.findByRole('button', { name: /3 novembre 2026/ }))
 
   const close = screen.getByRole('button', { name: 'Fermer' })

@@ -37,5 +37,6 @@ export const fr: Translations = {
   'operation.port': 'Port',
   'operation.peopleRescued': 'Personnes secourues',
   'operation.unknown': 'inconnu',
+  'operation.notFound': "Ce lien mène à une opération qui n'existe pas ou n'est plus disponible.",
   'operation.close': 'Fermer',
 }

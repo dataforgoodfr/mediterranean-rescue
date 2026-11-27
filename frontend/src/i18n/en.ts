@@ -39,5 +39,7 @@ export const en: Translations = {
   'operation.port': 'Port',
   'operation.peopleRescued': 'People rescued',
   'operation.unknown': 'unknown',
+  'operation.notFound':
+    'This link points to an operation that does not exist or is no longer available.',
   'operation.close': 'Close',
 }
