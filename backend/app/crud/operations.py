@@ -13,8 +13,8 @@ class OperationFilters(BaseModel):
 
 
 def list_operations(session: Session, filters: OperationFilters) -> Sequence[Operation]:
-    """Les opérations à vérifier, éventuellement filtrées par état,
-    triée de la plus ancienne à la plus récente
+    """Les opérations, éventuellement filtrées par état,
+    triées de la plus ancienne à la plus récente
     (puis par id, pour un ordre stable entre deux opérations du même jour)."""
     stmt = select(Operation)
     if filters.state is not None:

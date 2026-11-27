@@ -11,9 +11,7 @@ def list_operations(session: Session, filters: crud.OperationFilters) -> list[Op
     et renseigne les champs manquants."""
     operations = [
         OperationBackoffice.model_validate(operation)
-        for operation in crud.list_operations(
-            session, crud.OperationFilters(**filters.model_dump())
-        )
+        for operation in crud.list_operations(session, filters)
     ]
 
     omitted_missing_fields = ["missing_fields"]
