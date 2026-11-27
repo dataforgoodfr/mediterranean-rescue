@@ -1,5 +1,5 @@
 import { Marker } from '@vis.gl/react-maplibre'
-import type { MapOperation } from '@/api'
+import type { MapOperation } from '@/api/types'
 import type { Language } from '@/i18n/translate'
 import { useTranslation } from '@/i18n'
 import { formatLongDate } from '@/utils/formatLongDate'

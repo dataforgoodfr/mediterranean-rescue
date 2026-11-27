@@ -2,7 +2,7 @@ import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactNode } from 'react'
 import { expect, test, vi } from 'vitest'
-import type { MapOperation } from '@/api'
+import type { MapOperation } from '@/api/types'
 import { MediterraneanMap } from '../map/MediterraneanMap'
 import { renderWithProviders } from '../test-utils'
 
