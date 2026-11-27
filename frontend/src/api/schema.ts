@@ -178,8 +178,6 @@ export interface components {
             port_disembarkation?: string | null;
             /** Pregnant Women */
             pregnant_women?: number | null;
-            /** @default to_verify */
-            state: components["schemas"]["OperationState"];
             /** Testimony Name */
             testimony_name?: string | null;
             /** Testimony Src */

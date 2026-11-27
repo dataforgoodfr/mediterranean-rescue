@@ -53,8 +53,6 @@ class OperationBase(SQLModel):
     testimony_name: str | None = None
     testimony_src: str | None = None
 
-    state: OperationState = Field(sa_type=String, default=OperationState.to_verify)
-
     # Un modèle de table ne se valide pas à la construction (Operation(...)) : passer par
     # Operation.model_validate(...) pour que ces règles s'appliquent (tests/test_operations.py).
     @model_validator(mode="after")
@@ -72,6 +70,8 @@ class OperationBase(SQLModel):
 class Operation(OperationBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
+    state: OperationState = Field(sa_type=String, default=OperationState.to_verify)
+
 
 class OperationPublic(OperationBase):
     """Une opération telle que l'API la renvoie : rangée dans la base, elle a toujours un id."""
@@ -85,3 +85,4 @@ class OperationBackoffice(OperationBase):
 
     id: int
     missing_fields: list[str] = []
+    state: OperationState = Field(sa_type=String, default=OperationState.to_verify)

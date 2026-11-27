@@ -411,10 +411,6 @@
             ],
             "title": "Pregnant Women"
           },
-          "state": {
-            "$ref": "#/components/schemas/OperationState",
-            "default": "to_verify"
-          },
           "testimony_name": {
             "anyOf": [
               {
