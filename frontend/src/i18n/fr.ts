@@ -19,10 +19,8 @@ export const fr: Translations = {
   'design.intro':
     'Les couleurs, le logo et les pictos de la charte de SOS MEDITERRANEE, prêts à reprendre.',
   'design.colors': 'Couleurs',
-  'design.colors.primary':
-    'Bleu marine : texte fort, titres longs, fonds sombres, logo',
-  'design.colors.secondary':
-    'Orange : titres, accents, pictos. Pas pour le texte courant',
+  'design.colors.primary': 'Bleu marine : texte fort, titres longs, fonds sombres, logo',
+  'design.colors.secondary': 'Orange : titres, accents, pictos. Pas pour le texte courant',
   'design.colors.text': 'Gris : texte courant, intertitres',
   'design.colors.surface': 'Bleu clair : fonds de blocs',
   'design.logo': 'Logo',
