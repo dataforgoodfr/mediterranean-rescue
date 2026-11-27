@@ -4,7 +4,8 @@
 export const keys = {
   'home.title': "Le titre de la page d'accueil, le nom du projet",
   'home.intro': 'La phrase sous le titre : ce que montre la carte',
-  'home.apiStatus': "L'état de l'API ; {status} est remplacé par l'un des trois textes suivants",
+  'home.apiStatus':
+    "L'état de l'API ; {status} est remplacé par l'un des trois textes suivants",
   'home.apiStatus.pending': "L'API n'a pas encore répondu",
   'home.apiStatus.unreachable': "L'API ne répond pas ou renvoie une erreur",
   'home.apiStatus.ok': "L'API répond",
@@ -13,7 +14,8 @@ export const keys = {
   'map.label': "Le nom de la carte, lu par les lecteurs d'écran",
   'map.zoomIn': 'Le bouton zoom (+) de la carte',
   'map.zoomOut': 'Le bouton dézoom (-) de la carte',
-  'map.attribution': 'Le bouton qui affiche ou cache les mentions légales des données affichées',
+  'map.attribution':
+    'Le bouton qui affiche ou cache les mentions légales des données affichées',
   'map.unavailable':
     'Le message affiché à la place de la carte quand le navigateur ne peut pas la dessiner',
   'design.title': 'Le titre de la page du design system (/design)',
@@ -26,18 +28,24 @@ export const keys = {
   'design.logo': 'Le titre de la partie sur le logo',
   'design.logo.color': 'La légende du logo bleu marine',
   'design.logo.white': 'La légende du logo blanc',
-  'design.icons': 'Le titre de la partie sur les pictos ; {count} est leur nombre',
-  'design.icons.usage': 'Comment utiliser un picto : sa couleur et son nom dans le code',
+  'design.icons':
+    'Le titre de la partie sur les pictos ; {count} est leur nombre',
+  'design.icons.usage':
+    'Comment utiliser un picto : sa couleur et son nom dans le code',
   'notFound.title': 'La phrase de la page introuvable',
   'operation.markerLabel':
     "Le nom du point d'une opération sur la carte ; {date} est le jour et {port} le port de débarquement",
-  'operation.ficheTitle': "Le titre de la fiche d'une opération ; {date} est le jour",
+  'operation.ficheTitle':
+    "Le titre de la fiche d'une opération ; {date} est le jour",
   'operation.date': "L'étiquette du jour de l'opération",
   'operation.position': "L'étiquette de la position",
   'operation.port': "L'étiquette du port de débarquement",
   'operation.peopleRescued': "L'étiquette du nombre de personnes secourues",
   'operation.unknown': 'La valeur affichée quand une information est inconnue',
   'operation.close': 'Le bouton qui ferme la fiche',
+  'language.name':
+    'Le nom de la langue, écrit dans cette langue (English, Français…) : il sert au menu des langues',
+  'language.choose': "Le nom du menu des langues, lu par les lecteurs d'écran",
 }
 
 export type MessageKey = keyof typeof keys

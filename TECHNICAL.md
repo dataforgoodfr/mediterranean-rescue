@@ -288,13 +288,16 @@ const t = useTranslation()
 return <h2>{t('map.legend')}</h2>
 ```
 
-- La langue vient du navigateur (`detectLanguage(navigator.languages)` dans `main.tsx`).
-  `LanguageProvider` la reporte sur `<html lang dir>` : l'arabe passe la page en `dir="rtl"`.
+- La langue vient de l'adresse (`?lang=ar`), sinon du navigateur
+  (`detectLanguage(navigator.languages)` dans `main.tsx`) : c'est `LanguageFromUrl`. Le menu des
+  langues de l'accueil (`LanguageSwitcher`) écrit `?lang`. `LanguageProvider` reporte la langue
+  sur `<html lang dir>` : l'arabe passe la page en `dir="rtl"`.
 - Un texte peut porter des valeurs : `'API : {status}'`, puis `t('home.apiStatus', { status })`.
 - Une clé absente d'une langue s'affiche en anglais, puis en français, puis `[la.cle]` : un oubli
   se voit sans casser l'app. `pnpm i18n:missing` liste ce qui manque, langue par langue.
 - Dans les tests, `renderWithProviders` affiche en français ;
-  `renderWithProviders(<App />, { language: 'en' })` pour une autre langue.
+  `renderWithProviders(<App />, { language: 'en' })` pour une autre langue, ou
+  `{ route: '/?lang=ar' }` pour passer par l'adresse.
 - **Une langue de plus** (italien, allemand…) : un fichier comme `fr.ts` (par exemple `it.ts`),
   puis une entrée dans `translations` et une dans `LANGUAGES` (`frontend/src/i18n/translate.ts`).
   Une langue qui s'écrit de droite à gauche s'ajoute aussi à `RIGHT_TO_LEFT`.

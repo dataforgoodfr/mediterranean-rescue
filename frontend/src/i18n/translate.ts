@@ -27,6 +27,11 @@ export function detectLanguage(preferred: readonly string[]): Language {
   return 'en'
 }
 
+// Vrai si le texte est le code d'une langue de l'app (« ar »), par exemple lu dans `?lang=`.
+export function isLanguage(value: string): value is Language {
+  return LANGUAGES.some((language) => language === value)
+}
+
 export function direction(language: Language): 'ltr' | 'rtl' {
   return RIGHT_TO_LEFT.includes(language) ? 'rtl' : 'ltr'
 }

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getHealth, getOperations } from '../api'
 import { Icon, Logo } from '../design'
 import { MediterraneanMap } from '../map/MediterraneanMap'
+import { LanguageSwitcher } from '@/design/components/LanguageSwitcher/LanguageSwitcher'
 import { useTranslation, useLanguage } from '../i18n'
 import { formatLongDate } from '@/utils/formatLongDate'
 
@@ -28,6 +29,7 @@ export function Home() {
     : null
   return (
     <main>
+      <LanguageSwitcher />
       <Logo />
       <h1>{t('home.title')}</h1>
       <MediterraneanMap operations={operationsQuery.data ?? []} />

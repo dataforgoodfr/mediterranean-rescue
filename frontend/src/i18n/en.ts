@@ -21,8 +21,10 @@ export const en: Translations = {
   'design.intro':
     'The colours, logo and icons of the SOS MEDITERRANEE brand guidelines, ready to reuse.',
   'design.colors': 'Colours',
-  'design.colors.primary': 'Navy blue: strong text, long titles, dark backgrounds, logo',
-  'design.colors.secondary': 'Orange: titles, accents, icons. Not for body text',
+  'design.colors.primary':
+    'Navy blue: strong text, long titles, dark backgrounds, logo',
+  'design.colors.secondary':
+    'Orange: titles, accents, icons. Not for body text',
   'design.colors.text': 'Grey: body text, subheadings',
   'design.colors.surface': 'Light blue: block backgrounds',
   'design.logo': 'Logo',
@@ -40,4 +42,6 @@ export const en: Translations = {
   'operation.peopleRescued': 'People rescued',
   'operation.unknown': 'unknown',
   'operation.close': 'Close',
+  'language.name': 'English',
+  'language.choose': 'Language',
 }

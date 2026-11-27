@@ -2,10 +2,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { MemoryRouter } from 'react-router'
-import { LanguageProvider, type Language } from './i18n'
+import { LanguageFromUrl, type Language } from './i18n'
 
-// Affiche un composant avec ce que l'app lui fournit : la langue (le français par défaut dans
-// les tests), le cache de l'API et le routeur.
+// Affiche un composant avec ce que l'app lui fournit : le routeur, la langue (celle de `?lang=`
+// dans `route`, sinon `language`, le français par défaut dans les tests) et le cache de l'API.
 // Un cache neuf par test, sans nouvelle tentative, sinon un test d'erreur attend trois essais.
 // https://tanstack.com/query/latest/docs/framework/react/guides/testing
 export function renderWithProviders(
@@ -14,10 +14,10 @@ export function renderWithProviders(
 ) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   return render(
-    <LanguageProvider language={language}>
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>
-      </QueryClientProvider>
-    </LanguageProvider>,
+    <MemoryRouter initialEntries={[route]}>
+      <LanguageFromUrl fallback={language}>
+        <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+      </LanguageFromUrl>
+    </MemoryRouter>,
   )
 }
