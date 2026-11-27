@@ -10,6 +10,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      {/* Un lien vers une opération ouvre la même carte, avec sa fiche. */}
+      <Route path="/operations/:id" element={<Home />} />
       <Route
         path="/design"
         element={

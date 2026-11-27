@@ -37,6 +37,8 @@ export const keys = {
   'operation.port': "L'étiquette du port de débarquement",
   'operation.peopleRescued': "L'étiquette du nombre de personnes secourues",
   'operation.unknown': 'La valeur affichée quand une information est inconnue',
+  'operation.notFound':
+    "Le message affiché quand un lien mène à une opération qui n'existe pas ou n'existe plus",
   'operation.close': 'Le bouton qui ferme la fiche',
 }
 
