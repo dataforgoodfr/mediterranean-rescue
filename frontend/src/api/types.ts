@@ -1,7 +1,6 @@
 // Les types de l'API ne s'écrivent pas directement ici à la main : ils viennent de src/api/schema.ts, généré
 // depuis le schéma OpenAPI du backend (`pnpm api:types`, TECHNICAL.md). Si l'API change, ces
-// types changent, et tsc montre chaque endroit du front à reprendre. Ce qui arrive du réseau est
-// de type `unknown` et se vérifie avant d'être utilisé (parse.ts) : jamais de `as`.
+// types changent, et tsc montre chaque endroit du front à reprendre.
 // Ce fichier peut en revanche définir des types dérivés ou simplifiés à partir de ceux du schéma.
 import type { components } from './schema'
 
