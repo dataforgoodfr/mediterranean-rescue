@@ -1,23 +1,25 @@
 import { screen } from '@testing-library/react'
-import { expect, test, vi } from 'vitest'
+import { expect, test } from 'vitest'
 import App from '../App'
-import { renderWithProviders } from '../test-utils'
+import { mockServer, renderWithProviders } from '../test-utils'
+import { http } from 'msw'
 
 test('shows the API status when the backend answers', async () => {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
+  mockServer.use(http.get('/api/health', () => Response.json({ status: 'ok' })))
+
   renderWithProviders(<App />)
   expect(screen.getByRole('heading', { name: 'Rescue Atlas' })).toBeInTheDocument()
   expect(await screen.findByText('API : ok')).toBeInTheDocument()
 })
 
 test('says the backend is unreachable', async () => {
-  vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network')))
+  mockServer.use(http.get('/api/health', () => Response.error()))
   renderWithProviders(<App />)
   expect(await screen.findByText('API : injoignable')).toBeInTheDocument()
 })
 
 test('counts a backend error as unreachable', async () => {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 500 })))
+  mockServer.use(http.get('/api/health', () => new Response(null, { status: 500 })))
   renderWithProviders(<App />)
   expect(await screen.findByText('API : injoignable')).toBeInTheDocument()
 })
