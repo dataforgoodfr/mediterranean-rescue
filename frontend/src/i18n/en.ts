@@ -32,4 +32,12 @@ export const en: Translations = {
   'design.icons.usage':
     'An icon takes the colour of the text around it. In the code, use its name.',
   'notFound.title': 'Page not found',
+  'operation.markerLabel': 'Operation on {date}, port: {port}',
+  'operation.ficheTitle': 'Operation on {date}',
+  'operation.date': 'Date',
+  'operation.position': 'Position',
+  'operation.port': 'Port',
+  'operation.peopleRescued': 'People rescued',
+  'operation.unknown': 'unknown',
+  'operation.close': 'Close',
 }

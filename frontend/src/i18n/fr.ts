@@ -30,4 +30,12 @@ export const fr: Translations = {
   'design.icons.usage':
     'Un picto prend la couleur du texte autour de lui. Dans le code, utilise son nom.',
   'notFound.title': 'Page introuvable',
+  'operation.markerLabel': 'Opération du {date}, port : {port}',
+  'operation.ficheTitle': 'Opération du {date}',
+  'operation.date': 'Date',
+  'operation.position': 'Position',
+  'operation.port': 'Port',
+  'operation.peopleRescued': 'Personnes secourues',
+  'operation.unknown': 'inconnu',
+  'operation.close': 'Fermer',
 }

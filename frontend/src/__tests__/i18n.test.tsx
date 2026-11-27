@@ -33,9 +33,5 @@ test('Arabic switches the page to right to left', async () => {
 test('the home page exists in English', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
   renderWithProviders(<App />, { language: 'en' })
-  expect(
-    screen.getByText(
-      "SOS MEDITERRANEE's rescues in the central Mediterranean. The operations will soon appear on the map.",
-    ),
-  ).toBeInTheDocument()
+  expect(screen.getByText('Rescue Atlas')).toBeInTheDocument()
 })

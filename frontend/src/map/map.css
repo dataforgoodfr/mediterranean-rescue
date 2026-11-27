@@ -53,3 +53,121 @@
   text-align: center;
   color: var(--color-primary);
 }
+
+/* Le point d'une opération sur la carte : une pastille ronde orange, cerclée de blanc pour se
+   détacher du fond. Le bouton garde une cible de 24 px à la souris et 44 px au doigt
+   (--touch-target) ; la pastille visible fait 12 px. La fiche ouverte ajoute un anneau bleu
+   marine, pour ne pas signaler la sélection par la couleur seule. */
+.ra-map__marker-button {
+  display: grid;
+  place-items: center;
+  inline-size: var(--size-marker);
+  block-size: var(--size-marker);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+@media (pointer: coarse) {
+  .ra-map__marker-button {
+    inline-size: var(--touch-target);
+    block-size: var(--touch-target);
+  }
+}
+
+.ra-map__marker-button:hover,
+.ra-map__marker-button:focus-visible {
+  transform: scale(1.15);
+}
+
+.ra-map__marker-button:focus-visible {
+  outline: var(--focus);
+  outline-offset: 3px;
+}
+
+.ra-map__marker-button--selected {
+  transform: scale(1.15);
+}
+
+.ra-map__marker-button--selected:focus-visible {
+  outline-color: var(--color-secondary);
+}
+
+.ra-map__marker-dot {
+  box-sizing: border-box;
+  inline-size: var(--size-marker-dot);
+  block-size: var(--size-marker-dot);
+  border: var(--border-marker) solid var(--color-background);
+  border-radius: 50%;
+  background: var(--color-secondary);
+  box-shadow: var(--shadow-marker);
+}
+
+.ra-map__marker-button--selected .ra-map__marker-dot {
+  box-shadow:
+    0 0 0 var(--ring-marker-selected) var(--color-primary),
+    var(--shadow-marker);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ra-map__marker-button {
+    transition: none;
+  }
+}
+
+/* Fenêtre modale de la fiche d'une opération. */
+.ra-modal__overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-2);
+  background: var(--color-overlay);
+  z-index: 1000;
+}
+
+.ra-modal__dialog {
+  inline-size: min(24rem, 100%);
+  max-block-size: calc(100svh - 2 * var(--space-2));
+  padding: var(--space-3);
+  overflow: auto;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  box-shadow: var(--shadow-dialog);
+}
+
+.ra-modal__dialog h2 {
+  margin: 0 0 var(--space-2);
+  color: var(--color-primary);
+}
+
+.ra-modal__dialog dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+}
+
+.ra-modal__dialog dt {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.ra-modal__dialog dd {
+  margin: 0;
+}
+
+.ra-modal__close {
+  min-block-size: var(--touch-target);
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: var(--color-background);
+  font: inherit;
+  cursor: pointer;
+}

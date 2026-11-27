@@ -30,6 +30,15 @@
   --focus: 3px solid var(--color-primary);
   --touch-target: 2.75rem; /* 44 px : la taille minimale d'une cible au doigt (WCAG 2.5.5) */
 
+  /* Ombres et voile des fenêtres */
+  --color-overlay: color-mix(in srgb, var(--color-primary) 45%, transparent);
+  --shadow-marker: 0 1px 3px rgb(0 0 0 / 35%);
+  --shadow-dialog: 0 8px 24px rgb(0 0 0 / 25%);
+  --size-marker: 1.5rem; /* 24 px : la cible du point d'une opération à la souris */
+  --size-marker-dot: 0.75rem; /* 12 px : la pastille visible */
+  --border-marker: 1px; /* le liseré blanc autour de la pastille */
+  --ring-marker-selected: 2px; /* l'anneau bleu marine de la pastille ouverte */
+
   /* Logo : 10 mm de haut au minimum dans la charte, soit environ 38 px à l'écran */
   --logo-min-height: 2.375rem;
 

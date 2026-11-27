@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { getHealth, getLatestOperation } from '../api'
+import { getHealth, getOperations } from '../api'
 import { Icon, Logo } from '../design'
 import { MediterraneanMap } from '../map/MediterraneanMap'
 import { useTranslation, useLanguage } from '../i18n'
@@ -10,9 +10,9 @@ export function Home() {
   const t = useTranslation()
   const language = useLanguage()
   const health = useQuery({ queryKey: ['health'], queryFn: getHealth })
-  const latestOperationQuery = useQuery({
-    queryKey: ['latestOperation'],
-    queryFn: getLatestOperation,
+  const operationsQuery = useQuery({
+    queryKey: ['operations'],
+    queryFn: getOperations,
   })
 
   const status = health.isPending
@@ -21,15 +21,16 @@ export function Home() {
       ? t('home.apiStatus.unreachable')
       : t('home.apiStatus.ok')
 
-  const latestOperationDate = latestOperationQuery.data
-    ? formatLongDate(latestOperationQuery.data.date, language)
+  // La route renvoie les opérations de la plus ancienne à la plus récente.
+  const latestOperation = operationsQuery.data?.at(-1)
+  const latestOperationDate = latestOperation
+    ? formatLongDate(latestOperation.date, language)
     : null
   return (
     <main>
       <Logo />
       <h1>{t('home.title')}</h1>
-      <p>{t('home.intro')}</p>
-      <MediterraneanMap />
+      <MediterraneanMap operations={operationsQuery.data ?? []} />
       {latestOperationDate && (
         <p>
           {t('home.lastOperationDate', {
