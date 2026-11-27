@@ -484,28 +484,78 @@ def analyze_temporal(data: pd.DataFrame, output_dir: Path) -> None:
     plt.close(fig)
 
 
-def analyze_duplicates(gdf: gpd.GeoDataFrame, output_path: Path) -> None:
-    """Signale les doublons potentiels sans supprimer de ligne."""
+def analyze_shared_positions(
+    gdf: gpd.GeoDataFrame,
+    output_path: Path,
+) -> None:
+    """Identifie les positions partagées et les doublons potentiels."""
 
     data = pd.DataFrame(gdf.drop(columns="geometry"))
 
     keys = (
         data[["latitude", "longitude"]]
         .round(8)
-        .assign(date=data["date"], type_ops=data["type_ops"])
+        .assign(
+            date=data["date"],
+            type_ops=data["type_ops"],
+            nb_survivor=data["nb_survivor"],
+        )
     )
 
+    spatial_keys = ["latitude", "longitude"]
+    temporal_keys = [*spatial_keys, "date"]
+    operation_keys = [*temporal_keys, "type_ops"]
+    duplicate_keys = [*operation_keys, "nb_survivor"]
+
+    # Identification des positions partagées
     for flag, columns, label in (
-        ("same_position", ["latitude", "longitude"], "position"),
-        ("same_position_date", ["latitude", "longitude", "date"], "position and date"),
-        ("same_position_date_type", list(keys.columns), "position, date and type"),
+        ("same_position", spatial_keys, "position"),
+        ("same_position_date", temporal_keys, "position and date"),
+        (
+            "same_position_date_type",
+            operation_keys,
+            "position, date and type",
+        ),
     ):
         data[flag] = keys.duplicated(subset=columns, keep=False)
         print(f"Records sharing the same {label}: {data[flag].sum()}")
 
-    data.loc[data["same_position"]].to_csv(output_path, index=False)
+    # Un effectif inconnu ne permet pas de confirmer une égalité
+    complete = keys[duplicate_keys].notna().all(axis=1)
 
-    print(f"Potential duplicates saved to: {output_path}")
+    data["potential_duplicate"] = False
+    data.loc[complete, "potential_duplicate"] = keys.loc[complete].duplicated(
+        subset=duplicate_keys,
+        keep=False,
+    )
+
+    print(f"Potential duplicate records: {data['potential_duplicate'].sum()}")
+
+    # Nombre de dates distinctes pour chaque position
+    data["distinct_dates"] = keys.groupby(spatial_keys)["date"].transform("nunique")
+
+    data["same_position_different_dates"] = data["distinct_dates"].gt(1)
+
+    shared = data.loc[data["same_position"]].copy()
+
+    report(
+        "POSITIONS SHARED ACROSS DIFFERENT DATES",
+        f"Records: {data['same_position_different_dates'].sum()}",
+    )
+
+    repeated = shared.loc[shared["same_position_different_dates"]].sort_values(
+        ["latitude", "longitude", "date"]
+    )
+
+    print(
+        repeated[["record_id", "date", "type_ops", "distinct_dates"]].to_string(
+            index=False
+        )
+    )
+
+    shared.to_csv(output_path, index=False)
+
+    print(f"Shared positions saved to: {output_path}")
 
 
 def main() -> None:
@@ -539,9 +589,9 @@ def main() -> None:
 
     analyze_temporal(cleaned, OUTPUT_DIR)
 
-    report("POTENTIAL DUPLICATES")
+    report("SHARED POSITIONS")
 
-    analyze_duplicates(gdf, OUTPUT_DIR / "potential_duplicates.csv")
+    analyze_shared_positions(gdf, OUTPUT_DIR / "shared_positions.csv")
 
     print(f"\nAll results saved to: {OUTPUT_DIR}")
 
