@@ -190,7 +190,7 @@ est en retard sur `openapi.json`. pre-commit lance les deux quand un fichier de 
 schéma change, et la CI aussi. Le front utilise ces types dans `src/api.ts` : quand l'API ajoute,
 retire ou change un champ, tsc montre chaque endroit du front à reprendre.
 
-Le générateur, [openapi-typescript](https://openapi-ts.dev/), vit dans `frontend/tools/api-types/`,
+Le générateur, [openapi-typesafe](https://openapi-ts.dev/), vit dans `frontend/tools/api-types/`,
 avec son propre TypeScript 6 : TypeScript 7, celui du frontend, n'a plus l'API JavaScript dont
 il a besoin. On le ramènera dans `frontend/` quand il saura lire TypeScript 7.
 
