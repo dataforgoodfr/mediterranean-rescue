@@ -11,6 +11,5 @@ router = APIRouter()
 
 @router.get("/api/operations")
 def list_operations(session: SessionDep) -> list[OperationPublic]:
-    """Every operation, oldest first. Positions are in decimal degrees (WGS 84), north and east
-    positive."""
+    """Liste les opérations publiées, de la plus ancienne à la plus récente."""
     return service.list_operations(session)

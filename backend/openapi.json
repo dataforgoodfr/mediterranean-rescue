@@ -1,6 +1,19 @@
 {
   "components": {
     "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
       "Health": {
         "properties": {
           "status": {
@@ -13,6 +26,259 @@
           "status"
         ],
         "title": "Health",
+        "type": "object"
+      },
+      "OperationBackoffice": {
+        "description": "Une opération telle que traitée par le backoffice, elle a\npotentiellement des champs manquants.",
+        "properties": {
+          "boat_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Boat Type"
+          },
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "female": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Female"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "image_src": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Src"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
+          "male": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Male"
+          },
+          "missing_fields": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Fields",
+            "type": "array"
+          },
+          "nb_nationalities": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nb Nationalities"
+          },
+          "nb_ops": {
+            "minimum": 1.0,
+            "title": "Nb Ops",
+            "type": "integer"
+          },
+          "nb_survivor": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nb Survivor"
+          },
+          "operation_type": {
+            "$ref": "#/components/schemas/OperationType"
+          },
+          "port_disembarkation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Port Disembarkation"
+          },
+          "pregnant_women": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pregnant Women"
+          },
+          "state": {
+            "$ref": "#/components/schemas/OperationState",
+            "default": "to_verify"
+          },
+          "testimony_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testimony Name"
+          },
+          "testimony_src": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Testimony Src"
+          },
+          "transfer_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transfer Type"
+          },
+          "under_18": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Under 18"
+          },
+          "under_18_unacc": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Under 18 Unacc"
+          },
+          "under_5": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Under 5"
+          },
+          "video_src": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Video Src"
+          },
+          "wave_height": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wave Height"
+          },
+          "wind_force": {
+            "anyOf": [
+              {
+                "maximum": 12.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wind Force"
+          }
+        },
+        "required": [
+          "date",
+          "operation_type",
+          "nb_ops",
+          "id"
+        ],
+        "title": "OperationBackoffice",
         "type": "object"
       },
       "OperationPublic": {
@@ -256,6 +522,15 @@
         "title": "OperationPublic",
         "type": "object"
       },
+      "OperationState": {
+        "enum": [
+          "to_verify",
+          "verified",
+          "published"
+        ],
+        "title": "OperationState",
+        "type": "string"
+      },
       "OperationType": {
         "description": "Les types d'opération. Ils sont rangés comme du texte dans la base : un nouveau type\n(l'évacuation médicale, par exemple) n'est qu'une ligne de plus ici, sans migration.",
         "enum": [
@@ -264,6 +539,46 @@
         ],
         "title": "OperationType",
         "type": "string"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
       }
     }
   },
@@ -273,6 +588,57 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/backoffice/operations": {
+      "get": {
+        "description": "Liste les opérations, de la plus ancienne à la plus récente.",
+        "operationId": "list_operations_api_backoffice_operations_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/OperationState"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "State"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OperationBackoffice"
+                  },
+                  "title": "Response List Operations Api Backoffice Operations Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Operations"
+      }
+    },
     "/api/health": {
       "get": {
         "description": "Answers while the server runs, without touching the database.",
@@ -294,7 +660,7 @@
     },
     "/api/operations": {
       "get": {
-        "description": "Every operation, oldest first. Positions are in decimal degrees (WGS 84), north and east\npositive.",
+        "description": "Liste les opérations publiées, de la plus ancienne à la plus récente.",
         "operationId": "list_operations_api_operations_get",
         "responses": {
           "200": {

@@ -1,4 +1,4 @@
-date,type_ops,nb_ops,nb_survivor,male,female,under_18,under_18_unacc,under_5,pregnant_women,latitude,longitude,wind_force,wave_height,boat_type,nb_nationalities,type_nationalities,transfer_type,port_disembarkation,image_src,video_srv,testimony_name,testimony_src,fictif
-17/02/2023,Rescue,2,38,26,9,30,2,17,8,33° 59.8,17° 13.8,,,Rubber Boat,4,a;m;c;wn,To Aquarius,,,video_29.mp4,Testimony 44,testimony_69.txt,FICTIF
-12/08/2017,Rescue,1,46,6,18,,,,,35° 5.7,15° 43.3,,,Rubber Boat,24,o;f;t;l;bj;q;v;ym;e;y;r;b;v;pr;xv;j;z;r;u;zu;uk;po;e;wa,To Aquarius,La Valette,image_54.jpg,video_21.mp4,,testimony_33.txt,FICTIF
-26/01/2021,Rescue,3,71,,,,,,,33° 53.1,19° 58.4,,,Rubber Boat,22,kt;p;b;r;aj;qv;dj;ej;xw;cb;g;tv;t;w;ek;z;vp;k;dn;x;gn;iy,,Marseille,image_32.jpg,,,testimony_69.txt,FICTIF
+date,state,type_ops,nb_ops,nb_survivor,male,female,under_18,under_18_unacc,under_5,pregnant_women,latitude,longitude,wind_force,wave_height,boat_type,nb_nationalities,type_nationalities,transfer_type,port_disembarkation,image_src,video_srv,testimony_name,testimony_src,fictif
+17/02/2023,published,Rescue,2,38,26,9,30,2,17,8,33° 59.8,17° 13.8,,,Rubber Boat,4,a;m;c;wn,To Aquarius,,,video_29.mp4,Testimony 44,testimony_69.txt,FICTIF
+12/08/2017,published,Rescue,1,46,6,18,,,,,35° 5.7,15° 43.3,,,Rubber Boat,24,o;f;t;l;bj;q;v;ym;e;y;r;b;v;pr;xv;j;z;r;u;zu;uk;po;e;wa,To Aquarius,La Valette,image_54.jpg,video_21.mp4,,testimony_33.txt,FICTIF
+26/01/2021,to_verify,Rescue,3,71,,,,,,,33° 53.1,19° 58.4,,,Rubber Boat,22,kt;p;b;r;aj;qv;dj;ej;xw;cb;g;tv;t;w;ek;z;vp;k;dn;x;gn;iy,,Marseille,image_32.jpg,,,testimony_69.txt,FICTIF

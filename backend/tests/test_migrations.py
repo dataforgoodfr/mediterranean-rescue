@@ -5,19 +5,18 @@ Elles tournent sur un SQLite en mémoire, même dans la CI : chaque test a besoi
 que la base Postgres partagée des autres tests ne donne pas.
 """
 
-import datetime
 from collections.abc import Iterator
 
 import pytest
 from alembic.autogenerate import compare_metadata
 from alembic.runtime.migration import MigrationContext
 from alembic.script import ScriptDirectory
-from sqlalchemy import Engine
+from sqlalchemy import Engine, text
 from sqlmodel import Session, SQLModel, create_engine, select
 from sqlmodel.pool import StaticPool
 
-from app.migrate import alembic_config, upgrade_database
-from app.models import Operation, OperationType
+from app.migrate import INITIAL_REVISION, alembic_config, upgrade_database
+from app.models import Operation
 
 
 @pytest.fixture(name="empty_engine")
@@ -54,12 +53,19 @@ def test_migrations_build_the_models_schema_on_an_empty_database(empty_engine: E
 def test_a_database_created_before_alembic_is_upgraded_and_keeps_its_data(
     empty_engine: Engine,
 ) -> None:
-    SQLModel.metadata.create_all(empty_engine)
-    with Session(empty_engine) as session:
-        session.add(
-            Operation(date=datetime.date(2026, 1, 2), operation_type=OperationType.rescue, nb_ops=1)
+    # On crée la base jusqu'à la première migration, comme si elle existait avant Alembic.
+    upgrade_database(empty_engine, INITIAL_REVISION)
+    with empty_engine.connect() as connection:
+        # on drop la table Alembic pour simuler une base créée avant Alembic
+        connection.execute(text("DROP TABLE alembic_version"))
+        # on insère manuellement pour correspondre au modèle de la révision initiale
+        connection.execute(
+            text(
+                "INSERT INTO operation (date, operation_type, nb_ops) "
+                "VALUES ('2026-01-02', 'rescue', 1)"
+            )
         )
-        session.commit()
+        connection.commit()
 
     upgrade_database(empty_engine)
 

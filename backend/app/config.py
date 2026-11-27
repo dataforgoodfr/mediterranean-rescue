@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     # La base Postgres de `docker compose -f docker-compose.dev.yaml up -d db`, sur le port 5432.
     # Un autre port (DB_PORT) ? Mets la même URL avec ce port dans backend/.env.
     database_url: str = "postgresql+psycopg://rescue:rescue@localhost:5432/rescue_atlas"
+    # Mode développement : active certaines fonctionnalités pas encore prêtes pour la production.
+    dev: bool = False
 
     @field_validator("database_url")
     @classmethod

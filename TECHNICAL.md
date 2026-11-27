@@ -47,6 +47,11 @@ Pourquoi ces choix :
   ([#21](https://github.com/dataforgoodfr/mediterranean-rescue/issues/21)).
 - **Docker** lance tout le projet avec une seule commande, quelle que soit la machine.
 
+La variable d'environnement `DEV=true`, activée par défaut en test et dans docker pour le back, et via vite pour le front,
+permet de signaler un environnement de dev, ce qui active certains warnings (non souhaités en production)
+et des fonctionnalités en cours de développement (pas prêtes à être poussées en production).
+Cette valeur peut-être modifiée dans les `.env` du front et du back.
+
 ## Lancer le projet avec Docker
 
 Il faut seulement [Git](https://git-scm.com/downloads) et
@@ -218,22 +223,23 @@ attend : on ne le suppose pas avec `as` ou `cast`, on le vérifie. En TypeScript
 en `unknown`, puis chaque champ se teste ; une fois testé, TypeScript connaît son type.
 
 ```ts
-import { isRecord, parseJson } from './parse'
+import { isRecord, parseJson } from "./parse";
 
-type Port = { name: string; latitude: number; longitude: number }
+type Port = { name: string; latitude: number; longitude: number };
 
 export function parsePort(text: string): Port | null {
-  const raw = parseJson(text) // unknown : on ne sait encore rien
-  if (!isRecord(raw)) return null
-  const { name, latitude, longitude } = raw // chacun est unknown
-  if (typeof name !== 'string' || typeof latitude !== 'number' || typeof longitude !== 'number') return null
-  return { name, latitude, longitude } // ici, TypeScript sait que les types sont justes
+  const raw = parseJson(text); // unknown : on ne sait encore rien
+  if (!isRecord(raw)) return null;
+  const { name, latitude, longitude } = raw; // chacun est unknown
+  if (typeof name !== "string" || typeof latitude !== "number" || typeof longitude !== "number")
+    return null;
+  return { name, latitude, longitude }; // ici, TypeScript sait que les types sont justes
 }
 
 // Une case d'un tableau peut être vide (noUncheckedIndexedAccess) : on le traite.
 export function firstPortName(ports: Port[]): string {
-  const first = ports[0]
-  return first ? first.name : 'no port'
+  const first = ports[0];
+  return first ? first.name : "no port";
 }
 ```
 
@@ -295,22 +301,22 @@ return <h2>{t('map.legend')}</h2>
 
 ## Où est quoi
 
-| Chemin | Rôle |
-|---|---|
-| `backend/openapi.json` | Le schéma OpenAPI de l'API, généré (`python -m app.openapi_schema`) |
-| `frontend/src/api/schema.ts` | Les types TypeScript de l'API, générés depuis ce schéma (`pnpm api:types`) |
-| `frontend/tools/api-types/` | Le générateur de ces types, avec son TypeScript 6 |
-| `backend/app/` | L'API : `main.py` (les routes), `db.py` (la base), `config.py` (les réglages) |
-| `backend/migrations/` | Les migrations de la base (Alembic), une par changement de modèle |
-| `backend/tests/` | Les tests du backend ; `conftest.py` fournit la base des tests |
-| `frontend/src/` | L'app React : `App.tsx` (les pages), `pages/`, `api.ts` (les appels à l'API) |
-| `frontend/src/i18n/` | Les langues : les clés des textes, une traduction par langue, `useTranslation` |
-| `frontend/src/design/` | Le design system : couleurs et tailles en variables, `Logo`, `Icon` ([docs/design-system.md](docs/design-system.md)) |
-| `frontend/src/assets/` | Le logo, les 53 pictos, la police Raleway et sa licence (SIL OFL) |
-| `docker-compose.dev.yaml` | Tout le projet pour développer, avec rechargement automatique |
-| `data/` | Les données locales, jamais committées |
-| `docs/` | Les données de la carte actuelle ([docs/donnees.md](docs/donnees.md)), le design system, la progression des bénévoles, le glossaire |
-| `.github/` | CI, modèles d'issue et de pull request |
+| Chemin                       | Rôle                                                                                                                                |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `backend/openapi.json`       | Le schéma OpenAPI de l'API, généré (`python -m app.openapi_schema`)                                                                 |
+| `frontend/src/api/schema.ts` | Les types TypeScript de l'API, générés depuis ce schéma (`pnpm api:types`)                                                          |
+| `frontend/tools/api-types/`  | Le générateur de ces types, avec son TypeScript 6                                                                                   |
+| `backend/app/`               | L'API : `main.py` (les routes), `db.py` (la base), `config.py` (les réglages)                                                       |
+| `backend/migrations/`        | Les migrations de la base (Alembic), une par changement de modèle                                                                   |
+| `backend/tests/`             | Les tests du backend ; `conftest.py` fournit la base des tests                                                                      |
+| `frontend/src/`              | L'app React : `App.tsx` (les pages), `pages/`, `api.ts` (les appels à l'API)                                                        |
+| `frontend/src/i18n/`         | Les langues : les clés des textes, une traduction par langue, `useTranslation`                                                      |
+| `frontend/src/design/`       | Le design system : couleurs et tailles en variables, `Logo`, `Icon` ([docs/design-system.md](docs/design-system.md))                |
+| `frontend/src/assets/`       | Le logo, les 53 pictos, la police Raleway et sa licence (SIL OFL)                                                                   |
+| `docker-compose.dev.yaml`    | Tout le projet pour développer, avec rechargement automatique                                                                       |
+| `data/`                      | Les données locales, jamais committées                                                                                              |
+| `docs/`                      | Les données de la carte actuelle ([docs/donnees.md](docs/donnees.md)), le design system, la progression des bénévoles, le glossaire |
+| `.github/`                   | CI, modèles d'issue et de pull request                                                                                              |
 
 **Code en anglais** : noms de fichiers et de dossiers, composants, fonctions, variables, types,
 clés de traduction, jetons CSS, scripts et noms des tests. **Commentaires et documentation en
