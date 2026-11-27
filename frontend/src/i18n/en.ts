@@ -40,4 +40,6 @@ export const en: Translations = {
   'operation.peopleRescued': 'People rescued',
   'operation.unknown': 'unknown',
   'operation.close': 'Close',
+  'language.name': 'English',
+  'language.choose': 'Language',
 }

@@ -1,0 +1,34 @@
+/* Le menu des langues : des liens côte à côte, qui passent à la ligne sur un petit écran. Les
+   propriétés logiques (inline, block) suivent le sens de lecture : en arabe, le menu part de la
+   droite. https://developer.mozilla.org/fr/docs/Web/CSS/CSS_logical_properties_and_values */
+.ra-language-switcher {
+  margin-bottom: 1rem;
+}
+
+.ra-language-switcher ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ra-language-switcher ul li:not(:last-child) {
+  border-right: 1px solid var(--color-primary);
+}
+.ra-language-switcher a {
+  padding: 0 var(--space-1);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.ra-language-switcher a:focus-visible {
+  outline: var(--focus);
+}
+
+/* La langue active : en gras et sans soulignement, pour ne pas la signaler par la couleur seule. */
+.ra-language-switcher a[aria-current='true'] {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color-secondary);
+}

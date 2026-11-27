@@ -38,4 +38,6 @@ export const fr: Translations = {
   'operation.peopleRescued': 'Personnes secourues',
   'operation.unknown': 'inconnu',
   'operation.close': 'Fermer',
+  'language.name': 'Français',
+  'language.choose': 'Langue',
 }

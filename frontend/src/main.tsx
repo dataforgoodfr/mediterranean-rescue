@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import './index.css'
 import App from './App.tsx'
-import { detectLanguage, LanguageProvider } from './i18n'
+import { detectLanguage, LanguageFromUrl } from './i18n'
 
 // Le cache des appels à l'API, partagé par toute l'app. https://tanstack.com/query/latest
 const queryClient = new QueryClient()
@@ -15,12 +15,13 @@ if (!rootElement) throw new Error('index.html: #root element not found')
 
 createRoot(rootElement).render(
   <StrictMode>
-    <LanguageProvider language={detectLanguage(navigator.languages)}>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
+    <BrowserRouter>
+      {/* La langue de `?lang=`, sinon celle du navigateur. */}
+      <LanguageFromUrl fallback={detectLanguage(navigator.languages)}>
+        <QueryClientProvider client={queryClient}>
           <App />
-        </BrowserRouter>
-      </QueryClientProvider>
-    </LanguageProvider>
+        </QueryClientProvider>
+      </LanguageFromUrl>
+    </BrowserRouter>
   </StrictMode>,
 )

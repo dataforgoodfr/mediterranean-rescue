@@ -38,6 +38,9 @@ export const keys = {
   'operation.peopleRescued': "L'étiquette du nombre de personnes secourues",
   'operation.unknown': 'La valeur affichée quand une information est inconnue',
   'operation.close': 'Le bouton qui ferme la fiche',
+  'language.name':
+    'Le nom de la langue, écrit dans cette langue (English, Français…) : il sert au menu des langues',
+  'language.choose': "Le nom du menu des langues, lu par les lecteurs d'écran",
 }
 
 export type MessageKey = keyof typeof keys
