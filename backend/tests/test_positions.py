@@ -23,6 +23,25 @@ from app.positions import TextPosition, degrees_minutes_to_decimal, positions_in
         pytest.param("33°12.4′N 013°05.2′E", 33 + 12.4 / 60, 13 + 5.2 / 60, id="older_prime"),
         pytest.param("35 30 S 002 15 O", -35.5, -2.25, id="south_west_in_french"),
         pytest.param("011 43 E", None, 11 + 43 / 60, id="longitude_alone"),
+        # Coordonnées FICTIVES (lettre avant les chiffres, issue #167)
+        pytest.param(
+            "N 32 18,4 / E 014 22,6",
+            32 + 18.4 / 60,
+            14 + 22.6 / 60,
+            id="letter_before_slash_decimal_comma",
+        ),
+        pytest.param(
+            "N 36 41 512, E 16 19 834",
+            36 + 41.512 / 60,
+            16 + 19.834 / 60,
+            id="letter_before_thousandths_of_minute",
+        ),
+        pytest.param(
+            "N33 14 42 85, E015 27 19",
+            33 + 14 / 60 + 42.85 / 3600,
+            15 + 27 / 60 + 19 / 3600,
+            id="letter_before_four_groups_uncertain",
+        ),
     ],
 )
 def test_reads_each_form(text: str, latitude: float | None, longitude: float | None) -> None:
@@ -63,6 +82,20 @@ def test_flags_an_ambiguous_reading() -> None:
     assert position.ambiguous is True
 
 
+@pytest.mark.parametrize(
+    ("text", "ambiguous"),
+    [
+        # Coordonnées FICTIVES (issue #167)
+        pytest.param("N 32 18,4 / E 014 22,6", False, id="letter_before_clear"),
+        pytest.param("N 36 41 512, E 16 19 834", True, id="letter_before_thousandths_ambiguous"),
+        pytest.param("N33 14 42 85, E015 27 19", True, id="letter_before_four_groups_ambiguous"),
+    ],
+)
+def test_flags_uncertain_letter_before_readings(text: str, ambiguous: bool) -> None:
+    [position] = positions_in_text(text)
+    assert position.ambiguous is ambiguous
+
+
 def test_reads_several_positions_in_order() -> None:
     positions = positions_in_text("De 34 06 N 011 43 E à 33°12.4’N 013°05.2’E.")
     assert [p.text for p in positions] == ["34 06 N 011 43 E", "33°12.4’N 013°05.2’E"]
@@ -79,6 +112,7 @@ def test_reads_several_positions_in_order() -> None:
         pytest.param("34 75 N", id="minutes_out_of_range"),
         pytest.param("34 22 75 N", id="seconds_out_of_range"),
         pytest.param("34 06 Nord", id="letter_inside_a_word"),
+        pytest.param("Nord 34 06", id="word_before_digits"),
     ],
 )
 def test_text_without_position_gives_nothing(text: str) -> None:
