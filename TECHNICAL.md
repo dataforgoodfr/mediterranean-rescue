@@ -17,11 +17,11 @@ par une issue.
 
 Les conventions, pour que le code se ressemble :
 
-- **Un appel à l'API** : une fonction dans `frontend/src/api.ts`, utilisée par `useQuery` (ou
-  `useMutation`), jamais `fetch` dans un `useEffect`.
+- **Un appel à l'API** : le client typé de `frontend/src/api/client.ts`, utilisé avec
+  `$api.useQuery` (ou `$api.useMutation`), jamais `fetch` dans un `useEffect`.
 - **Une page** : un fichier dans `frontend/src/pages/` et une ligne dans `frontend/src/App.tsx`.
   Elle reste utilisable sur un écran de 360 px de large ([design system](docs/design-system.md)).
-- **Les imports du frontend** peuvent partir de `src/` avec `@/` : `import { getHealth } from '@/api'`.
+- **Les imports du frontend** peuvent partir de `src/` avec `@/` : `import { $api } from '@/api/client'`.
 - **Pas de `any`** en TypeScript : le build refuse le `any` implicite, le lint le `any` écrit.
   `unknown` à la place, puis on vérifie le type.
 - **Les tests du frontend** affichent un composant avec `renderWithProviders` (`frontend/src/test-utils.tsx`),
@@ -171,9 +171,9 @@ mise à jour des dépendances.
 
 ## Le contrat entre l'API et le frontend
 
-Les types de l'API ne s'écrivent qu'une fois, dans le backend (les modèles pydantic de
-`backend/app/`). Le frontend tire les siens du schéma OpenAPI, comme le conseille FastAPI
-(https://fastapi.tiangolo.com/advanced/generate-clients/) :
+Les types de l'API ne s'écrivent qu'une fois, dans le backend (les modèles Pydantic et les
+annotations des routes de `backend/app/`). Le frontend tire les siens du schéma OpenAPI, comme
+le conseille FastAPI (https://fastapi.tiangolo.com/advanced/generate-clients/) :
 
 ```sh
 task api   # fait les deux étapes ci-dessous, depuis la racine
@@ -187,7 +187,9 @@ pnpm api:types
 Les deux fichiers sont versionnés et ne se retouchent jamais à la main. Un test du backend
 échoue si `openapi.json` est en retard sur l'API, et `pnpm api:check` échoue si `schema.ts`
 est en retard sur `openapi.json`. pre-commit lance les deux quand un fichier de l'API ou du
-schéma change, et la CI aussi. Le front utilise ces types dans `src/api.ts` : quand l'API ajoute,
+schéma change, et la CI aussi. `schema.ts` fournit les types au client de
+`src/api/client.ts` (`$api` et TanStack Query) : le frontend fait confiance à ce contrat typé
+et n'ajoute pas de validation à l'exécution pour les réponses de l'API. Quand l'API ajoute,
 retire ou change un champ, tsc montre chaque endroit du front à reprendre.
 
 Le générateur, [openapi-typescript](https://openapi-ts.dev/), vit dans `frontend/tools/api-types/`,
@@ -211,24 +213,28 @@ type qui ne correspond pas se corrige, même si ça prend du temps ; il ne se fa
   Une exception à une règle se déclare dans `frontend/.oxlintrc.json` (`overrides`), où elle se
   relit.
 
-Ce qui arrive de l'extérieur (une réponse de l'API, un fichier) est de type `unknown` en
-TypeScript et `object` en Python, puis se vérifie champ par champ (`frontend/src/parse.ts`). Pour
-une variable CSS passée dans `style`, on l'ajoute au type de React
+Les réponses de l'API suivent le contrat OpenAPI généré depuis le backend et utilisent les
+types du client ; elles ne sont donc pas traitées comme des valeurs `unknown`. Les autres
+données externes, comme le contenu d'un fichier ou d'un formulaire, restent de type `unknown`
+en TypeScript et `object` en Python, puis se vérifient champ par champ. Pour une variable CSS
+passée dans `style`, on l'ajoute au type de React
 (`frontend/src/design/css-variables.d.ts`) au lieu de forcer le type.
 
-### Typer une donnée qui vient de l'extérieur
+### Typer une donnée externe, hors API
 
-Une réponse de l'API, un fichier ou un champ de formulaire ne sont pas encore du type qu'on
-attend : on ne le suppose pas avec `as` ou `cast`, on le vérifie. En TypeScript, la valeur entre
-en `unknown`, puis chaque champ se teste ; une fois testé, TypeScript connaît son type.
+Le contenu d'un fichier ou un champ de formulaire n'est pas encore du type qu'on attend : on ne
+le suppose pas avec `as` ou `cast`, on le vérifie. En TypeScript, la valeur entre en `unknown`,
+puis chaque champ se teste ; une fois testé, TypeScript connaît son type.
 
 ```ts
-import { isRecord, parseJson } from "./parse";
-
 type Port = { name: string; latitude: number; longitude: number };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 export function parsePort(text: string): Port | null {
-  const raw = parseJson(text); // unknown : on ne sait encore rien
+  const raw: unknown = JSON.parse(text); // unknown : on ne sait encore rien
   if (!isRecord(raw)) return null;
   const { name, latitude, longitude } = raw; // chacun est unknown
   if (typeof name !== "string" || typeof latitude !== "number" || typeof longitude !== "number")
@@ -260,8 +266,9 @@ def parse_port(text: str) -> Port | None:
     return Port(name=name, latitude=float(latitude), longitude=float(longitude))
 ```
 
-Ces deux exemples passent tous les contrôles du dépôt (tsc, oxlint, mypy, le hook). Pour une
-réponse de l'API, le type attendu vient de `src/api/schema.ts`, jamais d'un type écrit à la main.
+Pour une réponse de l'API, le type attendu vient de `src/api/schema.ts` et s'utilise via le
+client typé `src/api/client.ts` ; on ne redéclare pas le type et on ne valide pas ses champs
+manuellement.
 Bloqué malgré tout ? Écris-le dans l'issue ou sur [Front](https://mattermost.services.dataforgood.fr/data-for-good/channels/15-mediterranean-rescue_front) : une vraie exception se discute, puis
 se déclare dans `frontend/.oxlintrc.json` (`overrides`, avec la raison), où elle se relit.
 
@@ -309,7 +316,7 @@ return <h2>{t('map.legend')}</h2>
 | `backend/app/`               | L'API : `main.py` (les routes), `db.py` (la base), `config.py` (les réglages)                                                       |
 | `backend/migrations/`        | Les migrations de la base (Alembic), une par changement de modèle                                                                   |
 | `backend/tests/`             | Les tests du backend ; `conftest.py` fournit la base des tests                                                                      |
-| `frontend/src/`              | L'app React : `App.tsx` (les pages), `pages/`, `api.ts` (les appels à l'API)                                                        |
+| `frontend/src/`              | L'app React : `App.tsx` (les pages), `pages/`, `api/client.ts` (le client typé de l'API)                                            |
 | `frontend/src/i18n/`         | Les langues : les clés des textes, une traduction par langue, `useTranslation`                                                      |
 | `frontend/src/design/`       | Le design system : couleurs et tailles en variables, `Logo`, `Icon` ([docs/design-system.md](docs/design-system.md))                |
 | `frontend/src/assets/`       | Le logo, les 53 pictos, la police Raleway et sa licence (SIL OFL)                                                                   |

@@ -3,6 +3,7 @@ import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { MemoryRouter } from 'react-router'
 import { LanguageProvider, type Language } from './i18n'
+import { setupServer } from 'msw/node'
 
 // Affiche un composant avec ce que l'app lui fournit : la langue (le français par défaut dans
 // les tests), le cache de l'API et le routeur.
@@ -21,3 +22,5 @@ export function renderWithProviders(
     </LanguageProvider>,
   )
 }
+
+export const mockServer = setupServer()

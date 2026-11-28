@@ -1,8 +1,9 @@
 import { screen } from '@testing-library/react'
-import { expect, test, vi } from 'vitest'
+import { expect, test } from 'vitest'
+import { http } from 'msw'
 import App from '../App'
 import { detectLanguage, direction, missingKeys, translate } from '../i18n'
-import { renderWithProviders } from '../test-utils'
+import { mockServer, renderWithProviders } from '../test-utils'
 
 test('takes the browser language, and English when it is not available', () => {
   expect(detectLanguage(['fr-FR', 'en'])).toBe('fr')
@@ -22,7 +23,8 @@ test('replaces the values in the text', () => {
 })
 
 test('Arabic switches the page to right to left', async () => {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
+  mockServer.use(http.get('/api/health', () => Response.json({ status: 'ok' })))
+
   expect(direction('ar')).toBe('rtl')
   renderWithProviders(<App />, { language: 'ar' })
   expect(await screen.findByText('API: ok')).toBeInTheDocument()
@@ -31,7 +33,7 @@ test('Arabic switches the page to right to left', async () => {
 })
 
 test('the home page exists in English', async () => {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ status: 'ok' })))
+  mockServer.use(http.get('/api/health', () => Response.json({ status: 'ok' })))
   renderWithProviders(<App />, { language: 'en' })
   expect(screen.getByText('Rescue Atlas')).toBeInTheDocument()
 })

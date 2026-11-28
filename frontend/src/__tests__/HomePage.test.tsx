@@ -1,7 +1,8 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, test, vi } from 'vitest'
 import App from '../App'
-import { renderWithProviders } from '../test-utils'
+import { mockServer, renderWithProviders } from '../test-utils'
+import { http } from 'msw'
 
 const operation = (id: number, date: string) => ({
   id,
@@ -15,13 +16,9 @@ const operation = (id: number, date: string) => ({
 })
 
 const mockApi = (operations: unknown) => {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async (input: RequestInfo | URL) => {
-      const url = input instanceof Request ? input.url : String(input)
-      if (url.endsWith('/api/health')) return Response.json({ status: 'ok' })
-      return Response.json(operations)
-    }),
+  mockServer.use(
+    http.get('/api/health', () => Response.json({ status: 'ok' })),
+    http.all('/api/operations', () => Response.json(operations)),
   )
 }
 

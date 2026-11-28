@@ -1,19 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
-import { getHealth, getOperations } from '../api'
 import { Icon, Logo } from '../design'
 import { MediterraneanMap } from '../map/MediterraneanMap'
 import { useTranslation, useLanguage } from '../i18n'
 import { formatLongDate } from '@/utils/formatLongDate'
+import { $api } from '@/api/client'
 
 // La page d'accueil : la carte, et l'état de l'API en dessous tant que la carte ne lit rien.
 export function Home() {
   const t = useTranslation()
   const language = useLanguage()
-  const health = useQuery({ queryKey: ['health'], queryFn: getHealth })
-  const operationsQuery = useQuery({
-    queryKey: ['operations'],
-    queryFn: getOperations,
-  })
+  const health = $api.useQuery('get', '/api/health')
+  const operationsQuery = $api.useQuery('get', '/api/operations')
 
   const status = health.isPending
     ? t('home.apiStatus.pending')

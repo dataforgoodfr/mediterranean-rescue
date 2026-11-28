@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useState } from 'react'
-import type { MapOperation } from '@/api'
+import type { MapOperation } from '@/api/types'
 import { useLanguage, useTranslation } from '../i18n'
 import './map.css'
 import { OperationMarker } from './OperationMarker'
